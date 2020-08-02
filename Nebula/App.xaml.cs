@@ -1,5 +1,11 @@
 ﻿using System.IO;
 using System.Windows;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
+using Microsoft.AppCenter.Crashes;
 using Nebula.Core;
 
 namespace Nebula
@@ -11,6 +17,7 @@ namespace Nebula
     {
         private void OnAppStart(object sender, StartupEventArgs e)
         {
+            AppCenter.Start("df3a859e-110a-43b2-892d-71f4650c9c70", typeof(Analytics), typeof(Crashes));
             bool justUpdated = false;
 
             foreach (string argument in e.Args)
