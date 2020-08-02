@@ -1,0 +1,25 @@
+﻿<Window x:Class="Nebula.Installer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Nebula.Installer"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        mc:Ignorable="d"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        ui:ThemeManager.RequestedTheme="Dark"
+        Icon="nebula_icon.ico"
+        Title="Nebula Installer" Height="120" Width="492">
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" Margin="5 5 0 0">
+            <TextBlock Text="Install Path" VerticalAlignment="Center" />
+            <TextBox x:Name="InstallPath" Width="300" Margin="5 0 0 0" />
+            <Button x:Name="SelectPathButton" Margin="2 0 0 0" Content="Select" Click="OnSelectPathClick" />
+            <Button x:Name="ResetPathButton" Margin="2 0 0 0" Content="Reset" Click="OnResetPathClick" />
+        </StackPanel>
+        <Button Margin="76 5 0 0" Width="411" Content="Install" Click="OnInstallClick" />
+        <ui:ProgressBar x:Name="InstallProgressBar" Margin="76 5 0 0" Width="411" />
+    </StackPanel>
+</Window>

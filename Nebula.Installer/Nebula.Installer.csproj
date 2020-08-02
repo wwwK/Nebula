@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <UseWPF>true</UseWPF>
+        <UseWindowsForms>true</UseWindowsForms>
+        <ApplicationIcon>nebula_icon.ico</ApplicationIcon>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ModernWpfUI" Version="0.9.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Resource Include="nebula_icon.ico">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+    </ItemGroup>
+
+</Project>
