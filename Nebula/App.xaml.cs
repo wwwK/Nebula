@@ -18,18 +18,22 @@ namespace Nebula
         private void OnAppStart(object sender, StartupEventArgs e)
         {
             AppCenter.Start("df3a859e-110a-43b2-892d-71f4650c9c70", typeof(Analytics), typeof(Crashes));
+            
             bool justUpdated = false;
+            bool justInstalled = false;
 
             foreach (string argument in e.Args)
             {
-                if (argument == "-justUpdated")
+                if (argument == "/justUpdated")
                     justUpdated = true;
+                else if (argument == "/justInstalled")
+                    justInstalled = true;
             }
 
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
 
-            if (justUpdated)
+            if (justUpdated || justInstalled)
             {
                 foreach (string file in Directory.GetFiles(Directory.GetCurrentDirectory()))
                 {
