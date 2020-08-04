@@ -18,7 +18,7 @@ namespace Nebula
         private void OnAppStart(object sender, StartupEventArgs e)
         {
             AppCenter.Start("df3a859e-110a-43b2-892d-71f4650c9c70", typeof(Analytics), typeof(Crashes));
-            
+
             bool justUpdated = false;
             bool justInstalled = false;
 
@@ -45,6 +45,7 @@ namespace Nebula
 
         private void OnAppExit(object sender, ExitEventArgs e)
         {
+            NebulaClient.Discord.Exit();
             NebulaClient.MediaPlayer.Stop();
         }
     }

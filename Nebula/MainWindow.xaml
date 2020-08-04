@@ -77,6 +77,11 @@
                 <ui:NavigationViewItemHeader Content="Library" />
 
                 <ui:NavigationViewItem Content="Playlists">
+                    <ui:NavigationViewItem.MenuItems>
+                        <ui:NavigationViewItem Content="Chill" />
+                        <ui:NavigationViewItem Content="Billie Eilish" />
+                        <ui:NavigationViewItem Content="Star wars 9" />
+                    </ui:NavigationViewItem.MenuItems>
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE93C;" />
                     </ui:NavigationViewItem.Icon>
@@ -108,9 +113,9 @@
                 </ui:CommandBar>
                 <StackPanel x:Name="CBarPanel" Grid.Row="1" Orientation="Horizontal">
                     <TextBlock x:Name="MediaTitle" VerticalAlignment="Center" HorizontalAlignment="Left"
-                               Margin="10 0 0 0" Text="Now Playing - Billie Eilish Bad guy" />
+                               Margin="10 0 0 0" />
                 </StackPanel>
-                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel x:Name="CBarControls" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                     <ui:AppBarToggleButton Icon="Shuffle" Label="Shuffle" />
                     <ui:AppBarButton x:Name="PlaybackBack" Icon="Back" Label="Back" />
                     <ui:AppBarButton x:Name="PlaybackPlay" Icon="Play" Label="Play" Click="OnPlaybackPlayClicked" />

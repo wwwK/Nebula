@@ -122,7 +122,7 @@ namespace Nebula.Core.Medias.Player
             IMediaInfo oldMedia = CurrentMedia;
             Repeat = false;
             Cleanup();
-            WaveSource = CodecFactory.Instance.GetCodec(new Uri((await mediaInfo.GetStreamUri()).ToString()));
+            WaveSource = CodecFactory.Instance.GetCodec(await mediaInfo.GetStreamUri());
             SoundOut = new WaveOut();
             SoundOut.Initialize(WaveSource);
             SoundOut.Stopped += OnPlaybackStopped;

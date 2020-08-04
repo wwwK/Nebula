@@ -33,7 +33,7 @@ namespace Nebula.Pages
             if (e.Key == Key.Enter)
             {
                 Medias.Clear();
-                IAsyncEnumerable<IMediaInfo> medias = NebulaClient.Search(SearchBox.Text);
+                IAsyncEnumerable<IMediaInfo> medias = NebulaClient.Search(SearchBox.Text, 0, 1);
                 await foreach (IMediaInfo mediaInfo in medias)
                     Application.Current.Dispatcher.Invoke(() => { Medias.Add(mediaInfo); });
             }
@@ -43,12 +43,14 @@ namespace Nebula.Pages
         {
             TextBlock clicked = (TextBlock) sender;
             if (clicked.DataContext is IMediaInfo mediaInfo)
-                NebulaClient.Navigate(typeof(ArtistPage), await mediaInfo.GetArtistInfo(), new DrillInNavigationTransitionInfo());
+                NebulaClient.Navigate(typeof(ArtistPage), await mediaInfo.GetArtistInfo(),
+                    new DrillInNavigationTransitionInfo());
         }
 
         private void OnMediaItemMouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Image image && image.DataContext is IMediaInfo mediaInfo)
+            if (e.ChangedButton == MouseButton.Left && sender is Image image &&
+                image.DataContext is IMediaInfo mediaInfo)
                 NebulaClient.MediaPlayer.Open(mediaInfo);
         }
     }

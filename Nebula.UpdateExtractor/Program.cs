@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nebula.UpdateExtractor
 {
-    public class Program
+    public static class Program
     {
         private const int    ExtractDelay = 2000;
         private const string FileName     = "NebulaUpdateContent.zip";
@@ -16,21 +16,6 @@ namespace Nebula.UpdateExtractor
             Args = args;
             WriteLine("Updating Nebula...", ConsoleColor.Yellow);
             await ExtractUpdate();
-            foreach (string arg in args)
-            {
-                if (arg == "/justInstalled")
-                {
-                    await using StreamWriter writer = new StreamWriter(
-                        Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\" + "Nebula" + ".url");
-                    string app = Path.Combine(Environment.CurrentDirectory, "Nebula.exe");
-                    await writer.WriteLineAsync("[InternetShortcut]");
-                    await writer.WriteLineAsync("URL=file:///" + app);
-                    await writer.WriteLineAsync("IconIndex=0");
-                    string icon = app.Replace('\\', '/');
-                    await writer.WriteLineAsync("IconFile=" +
-                                                Path.Combine(Environment.CurrentDirectory, "nebula_icon.ico"));
-                }
-            }
         }
 
         private static string[] Args { get; set; }

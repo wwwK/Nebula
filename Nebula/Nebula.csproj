@@ -5,8 +5,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
-        <AssemblyVersion>1.0.0.2</AssemblyVersion>
-        <FileVersion>1.0.0.2</FileVersion>
+        <AssemblyVersion>1.0.0.3</AssemblyVersion>
+        <FileVersion>1.0.0.3</FileVersion>
         <ApplicationIcon>nebula_icon.ico</ApplicationIcon>
     </PropertyGroup>
 
@@ -17,6 +17,7 @@
 
     <ItemGroup>
       <PackageReference Include="CSCore" Version="1.2.1.2" />
+      <PackageReference Include="DiscordRichPresence" Version="1.0.150" />
       <PackageReference Include="Microsoft.AppCenter" Version="3.4.0" />
       <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.0" />
       <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.0" />

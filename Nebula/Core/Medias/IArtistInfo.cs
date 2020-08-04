@@ -8,17 +8,17 @@ namespace Nebula.Core.Medias
         /// Artist Id
         /// </summary>
         public string Id { get; }
-        
+
         /// <summary>
         /// Artist Title
         /// </summary>
         public string Title { get; }
-        
+
         /// <summary>
         /// Artist Url
         /// </summary>
         public string Url { get; }
-        
+
         /// <summary>
         /// Artist Logo Url
         /// </summary>

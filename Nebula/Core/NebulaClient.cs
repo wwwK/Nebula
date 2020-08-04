@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using ModernWpf.Media.Animation;
+using Nebula.Core.Discord;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Player;
 using Nebula.Core.Medias.Provider;
@@ -17,6 +18,7 @@ namespace Nebula.Core
         private static MainWindow           MainWindow     { get; }
         public static  MediaPlayer          MediaPlayer    { get; }
         public static  NebulaUpdater        Updater        { get; }
+        public static  DiscordRpc           Discord        { get; }
 
         static NebulaClient()
         {
@@ -24,6 +26,7 @@ namespace Nebula.Core
             MainWindow = Application.Current.MainWindow as MainWindow;
             MediaPlayer = new MediaPlayer();
             Updater = new NebulaUpdater();
+            Discord = new DiscordRpc();
         }
 
         public static void Navigate(Type type)
@@ -53,11 +56,11 @@ namespace Nebula.Core
             return default;
         }
 
-        public static async IAsyncEnumerable<IMediaInfo> Search(string searchQuery)
+        public static async IAsyncEnumerable<IMediaInfo> Search(string searchQuery, params object[] args)
         {
             foreach (IMediaProvider provider in MediaProviders)
             {
-                await foreach (IMediaInfo mediaInfo in provider.SearchMedias(searchQuery))
+                await foreach (IMediaInfo mediaInfo in provider.SearchMedias(searchQuery, args))
                     yield return mediaInfo;
             }
         }

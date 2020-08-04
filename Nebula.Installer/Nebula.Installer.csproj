@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ModernWpfUI" Version="0.9.1"/>
+        <PackageReference Include="ModernWpfUI" Version="0.9.1" />
     </ItemGroup>
 
     <ItemGroup>

@@ -47,7 +47,8 @@ namespace Nebula
         private void OnWindowLoaded(object sender, RoutedEventArgs args)
         {
             Thickness currMargin = AppTitleBar.Margin;
-            AppTitleBar.Margin = new Thickness(currMargin.Left, currMargin.Top, TitleBar.GetSystemOverlayRightInset(this), currMargin.Bottom);
+            AppTitleBar.Margin = new Thickness(currMargin.Left, currMargin.Top,
+                TitleBar.GetSystemOverlayRightInset(this), currMargin.Bottom);
         }
 
         private void OnNavViewDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
@@ -76,12 +77,16 @@ namespace Nebula
 
         private void OnMediaProgressOnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            NebulaClient.MediaPlayer.Position = TimeSpan.FromSeconds(e.GetPosition(MediaProgress).X / (MediaProgress.ActualWidth / MediaProgress.Maximum));
+            NebulaClient.MediaPlayer.Position =
+                TimeSpan.FromSeconds(e.GetPosition(MediaProgress).X /
+                                     (MediaProgress.ActualWidth / MediaProgress.Maximum));
         }
 
         private void OnMediaProgressMouseMove(object sender, MouseEventArgs e)
         {
-            TimeSpan currentMouseTimePos = TimeSpan.FromSeconds(Mouse.GetPosition(MediaProgress).X / (MediaProgress.ActualWidth / MediaProgress.Maximum));
+            TimeSpan currentMouseTimePos =
+                TimeSpan.FromSeconds(Mouse.GetPosition(MediaProgress).X /
+                                     (MediaProgress.ActualWidth / MediaProgress.Maximum));
             MediaProgress.ToolTip = currentMouseTimePos.ToString("hh\\:mm\\:ss");
         }
 
@@ -111,11 +116,13 @@ namespace Nebula
 
         private void OnMediaChanged(object sender, MediaChangedEventArgs e)
         {
-            MediaTitle.Text = e.NewMedia.Title;
+            MediaTitle.Text = Truncate(e.NewMedia.Title, 50);
             MediaProgress.Minimum = 0.0;
             MediaProgress.Maximum = e.NewMedia.Duration.TotalSeconds;
+            PlaybackVolume.Value = NebulaClient.MediaPlayer.Volume;
             PlaybackPlay.Icon = new SymbolIcon(Symbol.Pause);
             PlaybackPlay.Label = "Pause";
+            NebulaClient.Discord.Set(e.NewMedia);
         }
 
         private void PlaybackPositionChanged(object sender, TimeSpan e)
@@ -153,6 +160,11 @@ namespace Nebula
         private void OnPlaybackMuteClicked(object sender, RoutedEventArgs e)
         {
             NebulaClient.MediaPlayer.IsMuted = !NebulaClient.MediaPlayer.IsMuted;
+        }
+
+        public static string Truncate(string value, int maxChars) //Todo: move to helper class
+        {
+            return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
         }
     }
 }
