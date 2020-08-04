@@ -16,7 +16,8 @@
         <ui:CommandBar x:Name="CommandBar" VerticalAlignment="Top" VerticalContentAlignment="Center">
 
             <ui:CommandBar.Content>
-                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="Browse" QueryIcon="Find" Margin="24 0 0 0" Width="400" KeyUp="UIElement_OnKeyUp" />
+                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="Browse" QueryIcon="Find" Margin="24 0 0 0"
+                                   Width="400" KeyUp="UIElement_OnKeyUp" />
             </ui:CommandBar.Content>
         </ui:CommandBar>
         <ScrollViewer x:Name="ScrollViewer">
@@ -25,18 +26,29 @@
                     <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
                     <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Source={StaticResource UniformGridLayout}, Path=Orientation}" Value="Vertical">
+                        <DataTrigger Binding="{Binding Source={StaticResource UniformGridLayout}, Path=Orientation}"
+                                     Value="Vertical">
                             <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
                             <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </ScrollViewer.Style>
-            <ui:ItemsRepeater x:Name="BrowseElements" Layout="{StaticResource UniformGridLayout}" ItemsSource="{Binding Medias}">
+            <ui:ItemsRepeater x:Name="BrowseElements" Layout="{StaticResource UniformGridLayout}"
+                              ItemsSource="{Binding Medias}">
                 <ui:ItemsRepeater.ItemTemplate>
                     <DataTemplate DataType="media:IMediaInfo">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="{Binding ThumbnailUrl}" Width="120" Height="80" Cursor="Hand" MouseUp="OnMediaItemMouseUp" />
+                            <Image Source="{Binding ThumbnailUrl}" Width="120" Height="80" Cursor="Hand"
+                                   MouseUp="OnMediaItemMouseUp">
+                                <Image.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Play" Click="OnMenuPlayClicked" />
+                                        <Separator />
+                                        <MenuItem Header="Add to listening session" Click="OnAddToListeningSessionClicked" />
+                                    </ContextMenu>
+                                </Image.ContextMenu>
+                            </Image>
                             <StackPanel Margin="5 5 0 0" Orientation="Vertical">
                                 <TextBlock Text="{Binding Title}" />
                                 <TextBlock Text="{Binding Author}" Cursor="Hand" MouseUp="OnMediaItemAuthorMouseUp" />

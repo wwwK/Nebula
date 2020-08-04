@@ -27,7 +27,9 @@
                     <DataTemplate DataType="media:IMediaInfo">
                         <StackPanel Orientation="Horizontal" Background="#252525">
                             <ui:AppBarButton IsCompact="True" LabelPosition="Collapsed" Icon="Play" Margin="5 5 0 5" Click="OnPlayClick" />
-                            <ui:AppBarButton IsCompact="True" LabelPosition="Collapsed" Icon="Add" Margin="2 5 0 5" />
+                            <ui:AppBarButton IsCompact="True" LabelPosition="Collapsed" Icon="Add" Margin="2 5 0 5" Click="OnAddClick" >
+
+                            </ui:AppBarButton>
                             <TextBlock VerticalAlignment="Center" Text="{Binding Title}" Margin="15 0 0 0" />
                             <TextBlock VerticalAlignment="Center" Text="{Binding Duration}" Margin=" 5 0 0 0" />
                             <ui:RatingControl HorizontalAlignment="Right" PlaceholderValue="0"></ui:RatingControl>

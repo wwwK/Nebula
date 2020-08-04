@@ -27,6 +27,7 @@ namespace Nebula
             NebulaClient.MediaPlayer.PlaybackVolumeChanged += OnPlaybackVolumeChanged;
             NebulaClient.MediaPlayer.PlaybackMuteChanged += OnPlaybackMuteChanged;
             NebulaClient.MediaPlayer.RepeatChanged += OnPlaybackRepeatChanged;
+            NebulaClient.MediaPlayer.ShuffleChanged += OnPlaybackShuffleChanged;
             FrameTracker = new FrameNavigationTracker(ContentFrame);
         }
 
@@ -114,6 +115,11 @@ namespace Nebula
             PlaybackRepeat.IsChecked = e.Repeat;
         }
 
+        private void OnPlaybackShuffleChanged(object sender, PlaybackShuffleChangedEventArgs e)
+        {
+            PlaybackShuffle.IsChecked = e.Shuffle;
+        }
+
         private void OnMediaChanged(object sender, MediaChangedEventArgs e)
         {
             MediaTitle.Text = Truncate(e.NewMedia.Title, 50);
@@ -122,7 +128,7 @@ namespace Nebula
             PlaybackVolume.Value = NebulaClient.MediaPlayer.Volume;
             PlaybackPlay.Icon = new SymbolIcon(Symbol.Pause);
             PlaybackPlay.Label = "Pause";
-            NebulaClient.Discord.Set(e.NewMedia);
+            NebulaClient.Discord?.Set(e.NewMedia);
         }
 
         private void PlaybackPositionChanged(object sender, TimeSpan e)
@@ -155,6 +161,11 @@ namespace Nebula
         private void OnPlaybackRepeatClicked(object sender, RoutedEventArgs e)
         {
             NebulaClient.MediaPlayer.Repeat = !NebulaClient.MediaPlayer.Repeat;
+        }
+
+        private void OnPlaybackShuffleClicked(object sender, RoutedEventArgs e)
+        {
+            NebulaClient.MediaPlayer.Shuffle = !NebulaClient.MediaPlayer.Shuffle;
         }
 
         private void OnPlaybackMuteClicked(object sender, RoutedEventArgs e)

@@ -67,5 +67,10 @@ namespace Nebula.Pages
                 NebulaClient.MediaPlayer.Open(mediaInfo);
             }
         }
+
+        private void OnAddClick(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

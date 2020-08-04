@@ -20,6 +20,8 @@ namespace Nebula.Pages
             SizeChanged += OnSizeChanged;
         }
 
+        private IMediaInfo CurrentRightClick { get; set; }
+
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             ScrollViewer.Width = ActualWidth;
@@ -49,9 +51,23 @@ namespace Nebula.Pages
 
         private void OnMediaItemMouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left && sender is Image image &&
-                image.DataContext is IMediaInfo mediaInfo)
-                NebulaClient.MediaPlayer.Open(mediaInfo);
+            if (sender is Image image && image.DataContext is IMediaInfo mediaInfo)
+            {
+                if (e.ChangedButton == MouseButton.Left)
+                    NebulaClient.MediaPlayer.Open(mediaInfo);
+                else if (e.ChangedButton == MouseButton.Right)
+                    CurrentRightClick = mediaInfo;
+            }
+        }
+
+        private void OnAddToListeningSessionClicked(object sender, RoutedEventArgs e)
+        {
+            NebulaClient.MediaPlayer.Session.AddMedia(CurrentRightClick);
+        }        
+        
+        private void OnMenuPlayClicked(object sender, RoutedEventArgs e)
+        {
+            NebulaClient.MediaPlayer.Open(CurrentRightClick);
         }
     }
 }

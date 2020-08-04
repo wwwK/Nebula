@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using ModernWpf.Media.Animation;
 using Nebula.Core.Discord;
+using Nebula.Core.Events;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Player;
 using Nebula.Core.Medias.Provider;
@@ -20,13 +23,20 @@ namespace Nebula.Core
         public static  NebulaUpdater        Updater        { get; }
         public static  DiscordRpc           Discord        { get; }
 
+        public static event EventHandler<NebulaAppLoopEventArgs> Tick;
+
+        private static CancellationTokenSource CancellationTokenSource { get; }
+
         static NebulaClient()
         {
             MediaProviders.Add(new YoutubeMediaProvider());
             MainWindow = Application.Current.MainWindow as MainWindow;
             MediaPlayer = new MediaPlayer();
             Updater = new NebulaUpdater();
-            Discord = new DiscordRpc();
+            //Discord = new DiscordRpc();
+
+            CancellationTokenSource = new CancellationTokenSource();
+            Task.Run(() => AppTick(CancellationTokenSource.Token, 500));
         }
 
         public static void Navigate(Type type)
@@ -62,6 +72,35 @@ namespace Nebula.Core
             {
                 await foreach (IMediaInfo mediaInfo in provider.SearchMedias(searchQuery, args))
                     yield return mediaInfo;
+            }
+        }
+
+        public static void Invoke(Action action)
+        {
+            Application.Current.Dispatcher.Invoke(action);
+        }
+
+        public static void BeginInvoke(Action action)
+        {
+            Application.Current.Dispatcher.BeginInvoke(action);
+        }
+
+        private static async void AppTick(CancellationToken token, int delay)
+        {
+            try
+            {
+                while (true)
+                {
+                    token.ThrowIfCancellationRequested();
+                    await Task.Delay(delay, token);
+                    Application.Current.Dispatcher.Invoke(() =>
+                        Tick?.Invoke(Application.Current, new NebulaAppLoopEventArgs()));
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                MessageBox.Show(e.StackTrace);
+                throw;
             }
         }
     }

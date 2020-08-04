@@ -3,22 +3,28 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using CSCore;
 using CSCore.Codecs;
 using CSCore.CoreAudioAPI;
 using CSCore.SoundOut;
 using CSCore.Streams.Effects;
+using Nebula.Core.Events;
 using Nebula.Core.Medias.Player.Events;
 
 namespace Nebula.Core.Medias.Player
 {
     public class MediaPlayer : Component
     {
-        private bool _repeat = false;
-        private bool _muted  = false;
+        private bool     _repeat       = false;
+        private bool     _muted        = false;
+        private bool     _shuffle      = false;
+        private TimeSpan _lastPosition = TimeSpan.Zero;
 
         public MediaPlayer()
         {
+            Session = new MediaPlayerSession(this);
+            NebulaClient.Tick += NebulaClientOnTick;
         }
 
         private ISoundOut   SoundOut   { get; set; }
@@ -26,11 +32,11 @@ namespace Nebula.Core.Medias.Player
 
         private int VolumeBeforeMute { get; set; }
 
-        private CancellationTokenSource CancellationToken { get; set; } = null;
-
         public PlaybackState PlaybackState => SoundOut?.PlaybackState ?? PlaybackState.Stopped;
 
         public TimeSpan Length => WaveSource?.GetLength() ?? TimeSpan.Zero;
+
+        public MediaPlayerSession Session { get; }
 
         public IMediaInfo CurrentMedia { get; private set; }
 
@@ -43,6 +49,16 @@ namespace Nebula.Core.Medias.Player
             {
                 _repeat = value;
                 RepeatChanged?.Invoke(this, new PlaybackRepeatChangedEventArgs(value));
+            }
+        }
+
+        public bool Shuffle
+        {
+            get => _shuffle;
+            set
+            {
+                _shuffle = value;
+                ShuffleChanged?.Invoke(this, new PlaybackShuffleChangedEventArgs(value));
             }
         }
 
@@ -83,35 +99,14 @@ namespace Nebula.Core.Medias.Player
             }
         }
 
-        public event EventHandler<PlaybackVolumeChangedEventArgs> PlaybackVolumeChanged;
-        public event EventHandler<PlaybackMuteChangedEventArgs>   PlaybackMuteChanged;
-        public event EventHandler<TimeSpan>                       PlaybackPositionChanged;
-        public event EventHandler<PlaybackRepeatChangedEventArgs> RepeatChanged;
-        public event EventHandler<PlaybackStoppedEventArgs>       PlaybackStopped;
-        public event EventHandler<MediaChangingEventArgs>         MediaChanging;
-        public event EventHandler<MediaChangedEventArgs>          MediaChanged;
-
-        private async void EventBusLoop()
-        {
-            CancellationToken = new CancellationTokenSource();
-            TimeSpan position = TimeSpan.Zero;
-            while (true)
-            {
-                if (CancellationToken == null || CancellationToken.IsCancellationRequested)
-                    break;
-                await Task.Delay(1000);
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    if (WaveSource != null && position != WaveSource.GetPosition())
-                    {
-                        position = WaveSource.GetPosition();
-                        PlaybackPositionChanged?.Invoke(this, position);
-                    }
-                });
-            }
-
-            CancellationToken = null;
-        }
+        public event EventHandler<PlaybackVolumeChangedEventArgs>  PlaybackVolumeChanged;
+        public event EventHandler<PlaybackMuteChangedEventArgs>    PlaybackMuteChanged;
+        public event EventHandler<TimeSpan>                        PlaybackPositionChanged;
+        public event EventHandler<PlaybackRepeatChangedEventArgs>  RepeatChanged;
+        public event EventHandler<PlaybackShuffleChangedEventArgs> ShuffleChanged;
+        public event EventHandler<PlaybackStoppedEventArgs>        PlaybackStopped;
+        public event EventHandler<MediaChangingEventArgs>          MediaChanging;
+        public event EventHandler<MediaChangedEventArgs>           MediaChanged;
 
         public async void Open(IMediaInfo mediaInfo, bool play = true)
         {
@@ -128,7 +123,6 @@ namespace Nebula.Core.Medias.Player
             SoundOut.Stopped += OnPlaybackStopped;
             CurrentMedia = mediaInfo;
             MediaChanged?.Invoke(this, new MediaChangedEventArgs(oldMedia, mediaInfo));
-            Task.Run(EventBusLoop);
             if (play)
                 Play();
         }
@@ -175,6 +169,15 @@ namespace Nebula.Core.Medias.Player
             }
         }
 
+        private void NebulaClientOnTick(object sender, NebulaAppLoopEventArgs e)
+        {
+            if (WaveSource != null && _lastPosition != WaveSource.GetPosition())
+            {
+                _lastPosition = WaveSource.GetPosition();
+                PlaybackPositionChanged?.Invoke(this, _lastPosition);
+            }
+        }
+
         private void OnPlaybackStopped(object sender, PlaybackStoppedEventArgs e)
         {
             if (Repeat && SoundOut != null && WaveSource != null)
@@ -183,9 +186,8 @@ namespace Nebula.Core.Medias.Player
                 Play();
                 return;
             }
-
-            CancellationToken?.Cancel();
-            PlaybackStopped?.Invoke(this, e);
+            
+            NebulaClient.BeginInvoke(() => PlaybackStopped?.Invoke(this, new PlaybackStoppedEventArgs()));
         }
 
         protected override void Dispose(bool disposing)

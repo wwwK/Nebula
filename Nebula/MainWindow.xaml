@@ -116,7 +116,7 @@
                                Margin="10 0 0 0" />
                 </StackPanel>
                 <StackPanel x:Name="CBarControls" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <ui:AppBarToggleButton Icon="Shuffle" Label="Shuffle" />
+                    <ui:AppBarToggleButton x:Name="PlaybackShuffle" Icon="Shuffle" Label="Shuffle" Click="OnPlaybackShuffleClicked" />
                     <ui:AppBarButton x:Name="PlaybackBack" Icon="Back" Label="Back" />
                     <ui:AppBarButton x:Name="PlaybackPlay" Icon="Play" Label="Play" Click="OnPlaybackPlayClicked" />
                     <ui:AppBarButton x:Name="PlaybackForward" Icon="Forward" Label="Forward" />

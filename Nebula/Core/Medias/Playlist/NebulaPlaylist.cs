@@ -5,32 +5,64 @@ namespace Nebula.Core.Medias.Playlist
 {
     public class NebulaPlaylist : IPlaylist
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int MediasCount { get; }
-        public TimeSpan TotalDuration { get; }
+        private static Random _random = new Random();
+
+        public NebulaPlaylist(string name, string description, string author, List<IMediaInfo> medias = null)
+        {
+            Name = name;
+            Description = description;
+            Author = author;
+            if (medias != null)
+                AddMedias(medias.ToArray());
+        }
+
+        public string   Name          { get; set; }
+        public string   Description   { get; set; }
+        public string   Author        { get; }
+        public TimeSpan TotalDuration { get; private set; } = TimeSpan.Zero;
+        public int      MediasCount   => MediaList.Count;
+
+        private List<IMediaInfo> MediaList { get; } = new List<IMediaInfo>();
 
         public void AddMedia(IMediaInfo mediaInfo, int insertIndex = -1)
         {
-            throw new NotImplementedException();
+            if (insertIndex >= 0)
+                MediaList.Insert(insertIndex, mediaInfo);
+            else
+                MediaList.Add(mediaInfo);
+            TotalDuration += mediaInfo.Duration;
+        }
+
+        public void AddMedias(IMediaInfo[] medias) //Todo: bad way of doing that
+        {
+            foreach (IMediaInfo mediaInfo in medias)
+                AddMedia(mediaInfo);
         }
 
         public void RemoveMedia(IMediaInfo mediaInfo)
         {
-            throw new NotImplementedException();
+            if (!MediaList.Contains(mediaInfo))
+                return;
+            MediaList.Remove(mediaInfo);
+            TotalDuration -= mediaInfo.Duration;
+        }
+
+        public void RemoveMedias(params IMediaInfo[] medias) //Todo: bad way of doing that
+        {
+            foreach (IMediaInfo mediaInfo in medias)
+                RemoveMedia(mediaInfo);
         }
 
         public IMediaInfo GetMedia(int index)
         {
-            throw new NotImplementedException();
+            if (index < 0 || index > MediasCount - 1)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            return MediaList[index];
         }
 
-        public IMediaInfo GetRandomMedia(params IMediaInfo[] excludedMedias)
+        public IMediaInfo GetRandomMedia()
         {
-            throw new NotImplementedException();
+            return MediaList[_random.Next(MediasCount)];
         }
-
-        private List<IMediaInfo> MediasList { get; } = new List<IMediaInfo>();
-
     }
 }
