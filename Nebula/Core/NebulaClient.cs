@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using ModernWpf.Media.Animation;
-using Nebula.Core.Discord;
 using Nebula.Core.Events;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Player;
@@ -21,7 +20,7 @@ namespace Nebula.Core
         private static MainWindow           MainWindow     { get; }
         public static  MediaPlayer          MediaPlayer    { get; }
         public static  NebulaUpdater        Updater        { get; }
-        public static  DiscordRpc           Discord        { get; }
+        public static  NebulaSession        Session        { get; }
 
         public static event EventHandler<NebulaAppLoopEventArgs> Tick;
 
@@ -33,7 +32,7 @@ namespace Nebula.Core
             MainWindow = Application.Current.MainWindow as MainWindow;
             MediaPlayer = new MediaPlayer();
             Updater = new NebulaUpdater();
-            //Discord = new DiscordRpc();
+            Session = new NebulaSession();
 
             CancellationTokenSource = new CancellationTokenSource();
             Task.Run(() => AppTick(CancellationTokenSource.Token, 500));

@@ -1,13 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using AngleSharp.Common;
+using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
 using Nebula.Core.Medias;
+using Page = System.Windows.Controls.Page;
 
 namespace Nebula.Pages
 {
@@ -30,14 +33,20 @@ namespace Nebula.Pages
 
         public ObservableCollection<IMediaInfo> Medias { get; } = new ObservableCollection<IMediaInfo>();
 
+        private async void Search(string query)
+        {
+            NebulaClient.Session.AddBrowserSearch(SearchBox.Text);
+            Medias.Clear();
+            IAsyncEnumerable<IMediaInfo> medias = NebulaClient.Search(query, 0, 1);
+            await foreach (IMediaInfo mediaInfo in medias)
+                NebulaClient.BeginInvoke(() => { Medias.Add(mediaInfo); }); //Todo: BeginInvoke > Invoke
+        }
+
         private async void UIElement_OnKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                Medias.Clear();
-                IAsyncEnumerable<IMediaInfo> medias = NebulaClient.Search(SearchBox.Text, 0, 1);
-                await foreach (IMediaInfo mediaInfo in medias)
-                    Application.Current.Dispatcher.Invoke(() => { Medias.Add(mediaInfo); });
+                Search(SearchBox.Text);
             }
         }
 
@@ -63,11 +72,19 @@ namespace Nebula.Pages
         private void OnAddToListeningSessionClicked(object sender, RoutedEventArgs e)
         {
             NebulaClient.MediaPlayer.Session.AddMedia(CurrentRightClick);
-        }        
-        
+        }
+
         private void OnMenuPlayClicked(object sender, RoutedEventArgs e)
         {
             NebulaClient.MediaPlayer.Open(CurrentRightClick);
+        }
+
+        private void OnSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+                sender.ItemsSource = NebulaClient.Session.GetSearchHistory();
+            else if (args.Reason == AutoSuggestionBoxTextChangeReason.SuggestionChosen)
+                Search(SearchBox.Text);
         }
     }
 }

@@ -45,7 +45,6 @@ namespace Nebula
 
         private void OnAppExit(object sender, ExitEventArgs e)
         {
-            NebulaClient.Discord?.Exit();
             NebulaClient.MediaPlayer.Stop();
         }
     }

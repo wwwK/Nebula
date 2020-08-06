@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <PackageReference Include="CSCore" Version="1.2.1.2" />
-      <PackageReference Include="DiscordRichPresence" Version="1.0.150" />
       <PackageReference Include="Microsoft.AppCenter" Version="3.4.0" />
       <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.0" />
       <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.0" />
@@ -50,6 +49,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Core\Discord" />
       <Folder Include="Core\Medias\Player\Filters" />
     </ItemGroup>
 

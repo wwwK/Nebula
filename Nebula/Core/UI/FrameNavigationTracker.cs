@@ -15,7 +15,7 @@ namespace Nebula.Core.UI
         public Frame Frame { get; }
 
         public int MaxHistory { get; set; } = 0;
-        
+
         public int HistoryCount { get; private set; }
 
         public void Clear()
@@ -28,9 +28,13 @@ namespace Nebula.Core.UI
 
         private void OnNavigated(object sender, NavigationEventArgs e)
         {
-            if(MaxHistory <= 0)
+            if (MaxHistory <= 0)
+            {
                 Frame.NavigationService.RemoveBackEntry();
-            else if (HistoryCount == MaxHistory)
+                return;
+            }
+
+            if (HistoryCount == MaxHistory)
                 Frame.NavigationService.RemoveBackEntry();
             HistoryCount++;
         }

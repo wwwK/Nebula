@@ -128,7 +128,6 @@ namespace Nebula
             PlaybackVolume.Value = NebulaClient.MediaPlayer.Volume;
             PlaybackPlay.Icon = new SymbolIcon(Symbol.Pause);
             PlaybackPlay.Label = "Pause";
-            NebulaClient.Discord?.Set(e.NewMedia);
         }
 
         private void PlaybackPositionChanged(object sender, TimeSpan e)
