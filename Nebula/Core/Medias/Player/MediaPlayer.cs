@@ -118,7 +118,7 @@ namespace Nebula.Core.Medias.Player
             Repeat = false;
             Cleanup();
             WaveSource = CodecFactory.Instance.GetCodec(await mediaInfo.GetStreamUri());
-            SoundOut = new WaveOut();
+            SoundOut = new WasapiOut();
             SoundOut.Initialize(WaveSource);
             SoundOut.Stopped += OnPlaybackStopped;
             CurrentMedia = mediaInfo;
@@ -186,7 +186,7 @@ namespace Nebula.Core.Medias.Player
                 Play();
                 return;
             }
-            
+
             NebulaClient.BeginInvoke(() => PlaybackStopped?.Invoke(this, new PlaybackStoppedEventArgs()));
         }
 

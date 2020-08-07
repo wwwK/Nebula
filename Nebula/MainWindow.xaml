@@ -14,7 +14,7 @@
         MinWidth="500"
         MinHeight="500"
         WindowStartupLocation="CenterScreen"
-        Icon="nebula_icon.ico"
+        Icon="Resources/nebula_icon.ico"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.RequestedTheme="Dark"
         ui:TitleBar.ExtendViewIntoTitleBar="True"
@@ -76,11 +76,9 @@
 
                 <ui:NavigationViewItemHeader Content="Library" />
 
-                <ui:NavigationViewItem Content="Playlists">
+                <ui:NavigationViewItem Content="Playlists" Tag="{x:Type pages:PlaylistsPage}">
                     <ui:NavigationViewItem.MenuItems>
-                        <ui:NavigationViewItem Content="Chill" />
-                        <ui:NavigationViewItem Content="Billie Eilish" />
-                        <ui:NavigationViewItem Content="Star wars 9" />
+
                     </ui:NavigationViewItem.MenuItems>
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE93C;" />

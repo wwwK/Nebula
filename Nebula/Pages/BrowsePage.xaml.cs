@@ -10,7 +10,7 @@ using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
 using Nebula.Core.Medias;
-using Page = System.Windows.Controls.Page;
+using Page = ModernWpf.Controls.Page;
 
 namespace Nebula.Pages
 {

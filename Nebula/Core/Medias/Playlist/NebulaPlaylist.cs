@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Media.Imaging;
 
 namespace Nebula.Core.Medias.Playlist
 {
@@ -7,20 +8,24 @@ namespace Nebula.Core.Medias.Playlist
     {
         private static Random _random = new Random();
 
-        public NebulaPlaylist(string name, string description, string author, List<IMediaInfo> medias = null)
+        public NebulaPlaylist(string name, string description, string author, BitmapImage thumbnail = null,
+                              List<IMediaInfo> medias = null)
         {
             Name = name;
             Description = description;
             Author = author;
+            Thumbnail = thumbnail ??
+                        new BitmapImage(new Uri("pack://application:,,/Resources/default_playlist_thumbnail.png"));
             if (medias != null)
                 AddMedias(medias.ToArray());
         }
 
-        public string   Name          { get; set; }
-        public string   Description   { get; set; }
-        public string   Author        { get; }
-        public TimeSpan TotalDuration { get; private set; } = TimeSpan.Zero;
-        public int      MediasCount   => MediaList.Count;
+        public string      Name          { get; set; }
+        public string      Description   { get; set; }
+        public string      Author        { get; }
+        public BitmapImage Thumbnail     { get; }
+        public TimeSpan    TotalDuration { get; private set; } = TimeSpan.Zero;
+        public int         MediasCount   => MediaList.Count;
 
         private List<IMediaInfo> MediaList { get; } = new List<IMediaInfo>();
 
@@ -58,11 +63,6 @@ namespace Nebula.Core.Medias.Playlist
             if (index < 0 || index > MediasCount - 1)
                 throw new ArgumentOutOfRangeException(nameof(index));
             return MediaList[index];
-        }
-
-        public IMediaInfo GetRandomMedia()
-        {
-            return MediaList[_random.Next(MediasCount)];
         }
     }
 }

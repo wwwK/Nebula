@@ -10,19 +10,20 @@ using System.Windows.Navigation;
 using ModernWpf.Controls;
 using Nebula.Core;
 using Nebula.Core.Medias;
+using Nebula.Core.Medias.Playlist;
 
 namespace Nebula.Pages
 {
-    public partial class ArtistPage : Page
+    public partial class PlaylistPage : Page
     {
-        public ArtistPage()
+        public PlaylistPage()
         {
             InitializeComponent();
 
             DataContext = this;
         }
 
-        public IArtistInfo ArtistInfo { get; private set; }
+        public IPlaylist Playlist { get; private set; }
 
         public ObservableCollection<IMediaInfo> Medias { get; } = new ObservableCollection<IMediaInfo>();
 
@@ -30,33 +31,16 @@ namespace Nebula.Pages
         {
             base.OnNavigatedTo(e);
 
-            if (e.ExtraData is IArtistInfo artistInfo)
+            if (e.ExtraData is IPlaylist playlist)
             {
-                ArtistInfo = artistInfo;
-                ArtistLogo.Source = new BitmapImage(new Uri(artistInfo.LogoUrl));
-                ArtistTitle.Text = artistInfo.Title;
-                ArtistUrl.Text = artistInfo.Url;
-                int max = 20;
-                int current = 0;
-                await foreach (IMediaInfo mediaInfo in artistInfo.GetMedias())
-                {
-                    if (current >= max)
-                        break;
-                    Medias.Add(mediaInfo);
-                    current++;
-                }
+                Playlist = playlist;
             }
-        }
-
-        private void OnArtistUrlMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            Process.Start("explorer.exe", ArtistUrl.Text);
         }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             ScrollViewer.Width = ActualWidth - 7;
-            ScrollViewer.Height = (ActualHeight - ArtistInfoPanel.ActualHeight) - 10;
+            ScrollViewer.Height = (ActualHeight - PlaylistInfoPanel.ActualHeight) - 10;
         }
 
         private void OnPlayClick(object sender, RoutedEventArgs e)
@@ -68,9 +52,11 @@ namespace Nebula.Pages
             }
         }
 
-        private void OnAddClick(object sender, RoutedEventArgs e)
+        private void OnRemoveClick(object sender, RoutedEventArgs e)
         {
-
+            AppBarButton clicked = (AppBarButton) sender;
+            if (clicked.DataContext is IMediaInfo mediaInfo)
+                Playlist.RemoveMedia(mediaInfo);
         }
     }
 }

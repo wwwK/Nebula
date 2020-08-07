@@ -7,6 +7,7 @@ using ModernWpf.Media.Animation;
 using Nebula.Core.Events;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Player;
+using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Provider;
 using Nebula.Core.Medias.Provider.Providers.Youtube;
 using Nebula.Core.Updater;
@@ -21,18 +22,23 @@ namespace Nebula.Core
         public static  MediaPlayer          MediaPlayer    { get; }
         public static  NebulaUpdater        Updater        { get; }
         public static  NebulaSession        Session        { get; }
+        public static  NebulaSettings       Settings       { get; }
+        public static  PlaylistsManager     Playlists      { get; }
 
         public static event EventHandler<NebulaAppLoopEventArgs> Tick;
 
-        private static CancellationTokenSource CancellationTokenSource { get; }
+        internal static CancellationTokenSource CancellationTokenSource { get; }
 
         static NebulaClient()
         {
-            MediaProviders.Add(new YoutubeMediaProvider());
             MainWindow = Application.Current.MainWindow as MainWindow;
+            Settings = new NebulaSettings();
             MediaPlayer = new MediaPlayer();
             Updater = new NebulaUpdater();
             Session = new NebulaSession();
+            Playlists = new PlaylistsManager();
+
+            MediaProviders.Add(new YoutubeMediaProvider());
 
             CancellationTokenSource = new CancellationTokenSource();
             Task.Run(() => AppTick(CancellationTokenSource.Token, 500));
@@ -92,8 +98,7 @@ namespace Nebula.Core
                 {
                     token.ThrowIfCancellationRequested();
                     await Task.Delay(delay, token);
-                    Application.Current.Dispatcher.Invoke(() =>
-                        Tick?.Invoke(Application.Current, new NebulaAppLoopEventArgs()));
+                    Invoke(() => Tick?.Invoke(Application.Current, new NebulaAppLoopEventArgs()));
                 }
             }
             catch (OperationCanceledException e)

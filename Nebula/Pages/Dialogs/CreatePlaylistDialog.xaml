@@ -1,0 +1,22 @@
+﻿<ui:ContentDialog x:Class="Nebula.Pages.Dialogs.CreatePlaylistDialog"
+                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                  xmlns:ui="http://schemas.modernwpf.com/2019"
+                  xmlns:local="clr-namespace:Nebula.Pages.Dialogs"
+                  mc:Ignorable="d"
+                  PrimaryButtonText="Create"
+                  CloseButtonText="Cancel"
+                  DefaultButton="Primary"
+                  PrimaryButtonClick="OnPrimaryButtonClick"
+                  CloseButtonClick="OnCloseButtonClick"
+                  Closed="OnClosed">
+    <ui:SimpleStackPanel Spacing="10">
+        <TextBox x:Name="PlaylistName" ui:ControlHelper.Header="Name" />
+        <TextBox x:Name="PlaylistDescription" ui:ControlHelper.Header="Description" />
+        <TextBox x:Name="PlaylistAuthor" ui:ControlHelper.Header="Author" />
+        <TextBox x:Name="PlaylistThumbnail" ui:ControlHelper.Header="Thumbnail" MouseUp="OnPlaylistThumbnailMouseUp"
+                 Cursor="Hand" />
+    </ui:SimpleStackPanel>
+</ui:ContentDialog>

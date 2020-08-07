@@ -5,9 +5,9 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
-        <AssemblyVersion>1.0.0.4</AssemblyVersion>
-        <FileVersion>1.0.0.4</FileVersion>
-        <ApplicationIcon>nebula_icon.ico</ApplicationIcon>
+        <AssemblyVersion>1.0.0.5</AssemblyVersion>
+        <FileVersion>1.0.0.5</FileVersion>
+        <ApplicationIcon>Resources/nebula_icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -34,6 +34,15 @@
       <Page Update="Pages\ArtistPage.xaml">
         <Generator></Generator>
       </Page>
+      <Page Update="Pages\PlaylistPage.xaml">
+        <Generator></Generator>
+      </Page>
+      <Page Update="Pages\PlaylistsPage.xaml">
+        <Generator></Generator>
+      </Page>
+      <Page Update="Pages\Dialogs\CreatePlaylistDialog.xaml">
+        <Generator></Generator>
+      </Page>
     </ItemGroup>
 
     <ItemGroup>
@@ -46,6 +55,15 @@
       <Compile Update="Pages\ArtistPage.xaml.cs">
         <DependentUpon>ArtistPage.xaml</DependentUpon>
       </Compile>
+      <Compile Update="Pages\PlaylistPage.xaml.cs">
+        <DependentUpon>PlaylistPage.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\PlaylistsPage.xaml.cs">
+        <DependentUpon>PlaylistsPage.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\Dialogs\CreatePlaylistDialog.xaml.cs">
+        <DependentUpon>CreatePlaylistDialog.xaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -56,7 +74,12 @@
     <ItemGroup>
       <None Remove="nebula_icon.png" />
       <None Remove="nebula_icon.ico" />
-      <Resource Include="nebula_icon.ico">
+      <None Remove="default_playlist_thumbnail.jpg" />
+      <Resource Include="Resources\nebula_icon.ico">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
+      <None Remove="Resources\default_playlist_thumbnail.png" />
+      <Resource Include="Resources\default_playlist_thumbnail.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Resource>
     </ItemGroup>
