@@ -29,7 +29,7 @@ namespace Nebula.Pages
             if (result == ContentDialogResult.Primary)
             {
                 NebulaPlaylist playlist = new NebulaPlaylist(dialog.PlaylistName.Text, dialog.PlaylistDescription.Text,
-                    dialog.PlaylistAuthor.Text, new BitmapImage(new Uri(dialog.PlaylistThumbnail.Text)));
+                    dialog.PlaylistAuthor.Text, string.IsNullOrWhiteSpace(dialog.PlaylistThumbnail.Text) ? null : new BitmapImage(new Uri(dialog.PlaylistThumbnail.Text)));
                 NebulaClient.Playlists.AddPlaylist(playlist);
                 RefreshPlaylists();
             }
