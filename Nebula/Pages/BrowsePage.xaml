@@ -1,13 +1,13 @@
 ﻿<ui:Page x:Class="Nebula.Pages.BrowsePage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:ui="http://schemas.modernwpf.com/2019"
-      xmlns:pages="clr-namespace:Nebula.Pages"
-      xmlns:media="clr-namespace:Nebula.Core.Medias"
-      mc:Ignorable="d"
-      Title="Browse">
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:ui="http://schemas.modernwpf.com/2019"
+         xmlns:pages="clr-namespace:Nebula.Pages"
+         xmlns:media="clr-namespace:Nebula.Core.Medias"
+         mc:Ignorable="d"
+         Title="Browse">
 
     <Page.Resources>
         <ui:UniformGridLayout x:Key="UniformGridLayout" MinItemWidth="350" MinRowSpacing="8" MinColumnSpacing="24" />
@@ -17,7 +17,7 @@
 
             <ui:CommandBar.Content>
                 <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="Browse" QueryIcon="Find" Margin="24 0 0 0"
-                                   Width="400" KeyUp="UIElement_OnKeyUp" TextChanged="OnSearchBoxTextChanged" />
+                                   Width="400" KeyUp="OnSearchBoxKeyUp" TextChanged="OnSearchBoxTextChanged" />
             </ui:CommandBar.Content>
         </ui:CommandBar>
         <ScrollViewer x:Name="ScrollViewer">
@@ -45,7 +45,15 @@
                                     <ContextMenu>
                                         <MenuItem Header="Play" Click="OnMenuPlayClicked" />
                                         <Separator />
-                                        <MenuItem Header="Add to listening session" Click="OnAddToListeningSessionClicked" />
+                                        <MenuItem Header="Add to listening session"
+                                                  Click="OnAddToListeningSessionClicked" />
+                                        <MenuItem Header="Add to playlist" Click="OnAddToPlaylistClick"
+                                                  SubmenuOpened="OnAddToPlaylistSubmenuOpened">
+                                            <MenuItem.Items>
+                                                <MenuItem Header="Create playlist" Tag="CREATE_PLAYLIST" />
+                                                <Separator />
+                                            </MenuItem.Items>
+                                        </MenuItem>
                                     </ContextMenu>
                                 </Image.ContextMenu>
                             </Image>

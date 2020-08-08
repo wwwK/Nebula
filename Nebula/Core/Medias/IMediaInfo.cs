@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Nebula.Core.Medias
 {

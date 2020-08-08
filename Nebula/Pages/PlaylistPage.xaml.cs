@@ -27,13 +27,20 @@ namespace Nebula.Pages
 
         public ObservableCollection<IMediaInfo> Medias { get; } = new ObservableCollection<IMediaInfo>();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
             if (e.ExtraData is IPlaylist playlist)
             {
                 Playlist = playlist;
+                PlaylistLogo.Source = playlist.Thumbnail;
+                PlaylistTitle.Text = playlist.Name;
+                PlaylistDescription.Text = playlist.Description;
+                PlaylistAuthor.Text = $"By {playlist.Name}";
+                PlaylistMediaCount.Text = $"{playlist.MediasCount} Title(s) | {playlist.TotalDuration}";
+                foreach (IMediaInfo media in playlist)
+                    Medias.Add(media);
             }
         }
 
@@ -47,9 +54,7 @@ namespace Nebula.Pages
         {
             AppBarButton clicked = (AppBarButton) sender;
             if (clicked.DataContext is IMediaInfo mediaInfo)
-            {
                 NebulaClient.MediaPlayer.Open(mediaInfo);
-            }
         }
 
         private void OnRemoveClick(object sender, RoutedEventArgs e)

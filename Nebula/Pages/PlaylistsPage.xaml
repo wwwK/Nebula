@@ -14,7 +14,9 @@
     </Page.Resources>
     <StackPanel Orientation="Vertical">
         <ui:CommandBar x:Name="CommandBar" VerticalAlignment="Top" VerticalContentAlignment="Center">
-            <ui:AppBarButton Icon="Add" Label="Create Playlist" Click="OnCreatePlaylistClicked"></ui:AppBarButton>
+            <ui:AppBarButton Label="Create Playlist" Click="OnCreatePlaylistClicked" />
+            <ui:AppBarButton Label="Import Playlist" />
+            <ui:AppBarButton Label="Export Playlist" />
             <ui:CommandBar.Content>
                 <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="Find Playlist" QueryIcon="Find"
                                    Margin="24 0 0 0"
@@ -36,22 +38,22 @@
                 </Style>
             </ScrollViewer.Style>
             <ui:ItemsRepeater x:Name="PlaylistsElements" Layout="{StaticResource UniformGridLayout}"
-                              ItemsSource="{Binding Playlists}">
+                              ItemsSource="{Binding Playlists}" Margin="0 5 0 0">
                 <ui:ItemsRepeater.ItemTemplate>
                     <DataTemplate DataType="media:IPlaylist">
-                        <Grid Background="#323232">
+                        <Grid Background="#323232" Cursor="Hand" MouseUp="OnPlaylistElementMouseDown">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="100" />
                             </Grid.RowDefinitions>
-                            <Image Grid.Row="0" Source="{Binding Thumbnail}" Stretch="UniformToFill" />
+                            <Image Grid.Row="0" Source="{Binding Thumbnail}" Stretch="Uniform" />
                             <StackPanel Grid.Row="1"
                                         Orientation="Vertical"
                                         HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#222222">
-                                <TextBlock Text="{Binding Name}" />
-                                <TextBlock Text="{Binding Description}" />
-                                <TextBlock Text="{Binding Author, StringFormat='By {0}'}" />
-                                <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="2 0 0 0" Text="{Binding Name}" />
+                                <TextBlock Margin="2 0 0 0" Text="{Binding Description}" />
+                                <TextBlock Margin="2 0 0 0" Text="{Binding Author, StringFormat='By {0}'}" />
+                                <StackPanel Margin="2 0 0 0" Orientation="Horizontal">
                                     <TextBlock Text="{Binding Path=MediasCount, StringFormat='\{0\} Title(s) | '}" />
                                     <TextBlock Text="{Binding TotalDuration}" />
                                 </StackPanel>

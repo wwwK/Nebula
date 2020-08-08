@@ -1,20 +1,33 @@
 ﻿using System;
+using System.IO;
+using Nebula.Core.Medias.Playlist;
 
 namespace Nebula.Core
 {
     public class NebulaSettings
     {
-        private const string SettingsFolderName = "Nebula";
-        private const string SettingsFileName   = "NebulaSettings.json";
+        public const string SettingsFolderName = "Nebula";
+        public const string SettingsFileName   = "NebulaSettings.json";
 
         public NebulaSettings()
         {
+            SettingsDirectory =
+                new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    SettingsFolderName));
             LoadSettings();
         }
 
+        public DirectoryInfo SettingsDirectory { get; }
+
         private void LoadSettings()
         {
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            if (!SettingsDirectory.Exists)
+                SettingsDirectory.Create();
+        }
+
+        public void SavePlaylist(IPlaylist playlist)
+        {
+            
         }
     }
 }

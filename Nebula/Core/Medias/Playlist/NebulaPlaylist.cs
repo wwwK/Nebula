@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
+using System.Xml;
 
 namespace Nebula.Core.Medias.Playlist
 {
@@ -35,13 +37,14 @@ namespace Nebula.Core.Medias.Playlist
                 MediaList.Insert(insertIndex, mediaInfo);
             else
                 MediaList.Add(mediaInfo);
-            TotalDuration += mediaInfo.Duration;
+            Save();
         }
 
         public void AddMedias(IMediaInfo[] medias) //Todo: bad way of doing that
         {
-            foreach (IMediaInfo mediaInfo in medias)
-                AddMedia(mediaInfo);
+            MediaList.AddRange(medias);
+            UpdateTotalDuration();
+            Save();
         }
 
         public void RemoveMedia(IMediaInfo mediaInfo)
@@ -49,13 +52,13 @@ namespace Nebula.Core.Medias.Playlist
             if (!MediaList.Contains(mediaInfo))
                 return;
             MediaList.Remove(mediaInfo);
-            TotalDuration -= mediaInfo.Duration;
+            UpdateTotalDuration();
+            Save();
         }
 
         public void RemoveMedias(params IMediaInfo[] medias) //Todo: bad way of doing that
         {
-            foreach (IMediaInfo mediaInfo in medias)
-                RemoveMedia(mediaInfo);
+            throw new NotImplementedException();
         }
 
         public IMediaInfo GetMedia(int index)
@@ -63,6 +66,32 @@ namespace Nebula.Core.Medias.Playlist
             if (index < 0 || index > MediasCount - 1)
                 throw new ArgumentOutOfRangeException(nameof(index));
             return MediaList[index];
+        }
+
+        private void Save()
+        {
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public IEnumerator<IMediaInfo> GetEnumerator()
+        {
+            return MediaList.GetEnumerator();
+        }
+
+        private void UpdateTotalDuration()
+        {
+            TotalDuration = TimeSpan.Zero;
+            foreach (IMediaInfo mediaInfo in MediaList)
+                TotalDuration += mediaInfo.Duration;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

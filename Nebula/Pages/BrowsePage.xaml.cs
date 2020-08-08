@@ -10,6 +10,7 @@ using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
 using Nebula.Core.Medias;
+using Nebula.Core.Medias.Playlist;
 using Page = ModernWpf.Controls.Page;
 
 namespace Nebula.Pages
@@ -42,12 +43,10 @@ namespace Nebula.Pages
                 NebulaClient.BeginInvoke(() => { Medias.Add(mediaInfo); }); //Todo: BeginInvoke > Invoke
         }
 
-        private async void UIElement_OnKeyUp(object sender, KeyEventArgs e)
+        private async void OnSearchBoxKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
-            {
                 Search(SearchBox.Text);
-            }
         }
 
         private async void OnMediaItemAuthorMouseUp(object sender, MouseButtonEventArgs e)
@@ -85,6 +84,37 @@ namespace Nebula.Pages
                 sender.ItemsSource = NebulaClient.Session.GetSearchHistory();
             else if (args.Reason == AutoSuggestionBoxTextChangeReason.SuggestionChosen)
                 Search(SearchBox.Text);
+        }
+
+        private void OnAddToPlaylistSubmenuOpened(object sender, RoutedEventArgs e)
+        {
+            if (sender is MenuItem item)
+            {
+                if (item.Items.Count > 2)
+                {
+                    for (int i = item.Items.Count - 1; i > 1; i--)
+                        item.Items.RemoveAt(i);
+                }
+
+                foreach (IPlaylist playlist in NebulaClient.Playlists.GetPlaylists())
+                    item.Items.Add(new MenuItem {Header = playlist.Name, Tag = playlist});
+            }
+        }
+
+        private void OnAddToPlaylistClick(object sender, RoutedEventArgs e)
+        {
+            if (e.OriginalSource is MenuItem item)
+            {
+                switch (item.Tag)
+                {
+                    case IPlaylist playlist:
+                        playlist.AddMedia(CurrentRightClick);
+                        break;
+                    case "CREATE_PLAYLIST":
+
+                        break;
+                }
+            }
         }
     }
 }

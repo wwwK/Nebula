@@ -23,7 +23,7 @@ namespace Nebula.Core.Medias.Player
         /// <summary>
         /// Current Played playlists
         /// </summary>
-        public IPlaylist CurrentPlaylist { get; }
+        public IPlaylist CurrentPlaylist { get; private set; }
 
         private List<IMediaInfo> MediaQueue { get; } = new List<IMediaInfo>();
 
@@ -36,6 +36,14 @@ namespace Nebula.Core.Medias.Player
         /// True if a playlist is being played
         /// </summary>
         public bool HasPlaylist => CurrentPlaylist != null;
+
+        public void SetPlaylist(IPlaylist playlist)
+        {
+            CurrentPlaylist = playlist;
+            foreach (IMediaInfo mediaInfo in playlist)
+                MediaQueue.Add(mediaInfo);
+            MediaPlayer.Open(Dequeue(MediaPlayer.Shuffle));
+        }
 
         public void AddMedia(IMediaInfo mediaInfo)
         {

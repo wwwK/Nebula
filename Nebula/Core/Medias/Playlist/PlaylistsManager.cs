@@ -36,8 +36,9 @@ namespace Nebula.Core.Medias.Playlist
             Playlists.Remove(playlist);
         }
 
-        public void Save()
+        public void SavePlaylists()
         {
+            
         }
     }
 }

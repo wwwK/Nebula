@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
 namespace Nebula.Core.Medias.Playlist
 {
-    public interface IPlaylist
+    public interface IPlaylist : IEnumerable<IMediaInfo>
     {
         string      Name          { get; set; }
         string      Description   { get; set; }

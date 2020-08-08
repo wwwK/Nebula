@@ -9,6 +9,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemeResources>
                     <ui:ThemeResources.ThemeDictionaries>
+                        <!---
                         <ResourceDictionary x:Key="Dark">
                             <ResourceDictionary.MergedDictionaries>
                                 <ui:ColorPaletteResources
@@ -16,7 +17,7 @@
                                     Accent="Purple"
                                     AltHigh="#262626" />
                             </ResourceDictionary.MergedDictionaries>
-                        </ResourceDictionary>
+                        </ResourceDictionary> -->
                     </ui:ThemeResources.ThemeDictionaries>
                 </ui:ThemeResources>
                 <ui:XamlControlsResources />

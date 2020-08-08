@@ -20,11 +20,14 @@
             <Image x:Name="PlaylistLogo" Width="150" Height="150" />
             <StackPanel Orientation="Vertical" Margin="10 0 0 0">
                 <TextBlock x:Name="PlaylistTitle" FontSize="24" />
+                <TextBlock x:Name="PlaylistDescription" FontSize="22" />
+                <TextBlock x:Name="PlaylistAuthor" FontSize="22" />
                 <TextBlock x:Name="PlaylistMediaCount" FontSize="22" />
             </StackPanel>
         </StackPanel>
         <ScrollViewer x:Name="ScrollViewer" VerticalAlignment="Bottom" Margin="4 5 0 0">
-            <ui:ItemsRepeater x:Name="PlaylistMedias" Layout="{StaticResource VerticalStackLayout}" ItemsSource="{Binding Medias}">
+            <ui:ItemsRepeater x:Name="PlaylistMedias" Layout="{StaticResource VerticalStackLayout}"
+                              ItemsSource="{Binding Medias}">
                 <ui:ItemsRepeater.ItemTemplate>
                     <DataTemplate DataType="media:IMediaInfo">
                         <StackPanel Orientation="Horizontal" Background="#252525">

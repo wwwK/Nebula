@@ -19,6 +19,7 @@ namespace Nebula.Core.Medias.Player
         private bool     _repeat       = false;
         private bool     _muted        = false;
         private bool     _shuffle      = false;
+        private int      _volume       = 50;
         private TimeSpan _lastPosition = TimeSpan.Zero;
 
         public MediaPlayer()
@@ -88,13 +89,13 @@ namespace Nebula.Core.Medias.Player
 
         public int Volume
         {
-            get => SoundOut != null ? Math.Min(100, Math.Max((int) (SoundOut.Volume * 100), 0)) : 100;
+            get => _volume;
             set
             {
-                if (SoundOut == null)
-                    return;
-                int oldVolume = Volume;
-                SoundOut.Volume = Math.Min(1.0f, Math.Max(value / 100f, 0f));
+                int oldVolume = _volume;
+                _volume = value;
+                if (SoundOut != null)
+                    SoundOut.Volume = Math.Min(1.0f, Math.Max(value / 100f, 0f));
                 PlaybackVolumeChanged?.Invoke(this, new PlaybackVolumeChangedEventArgs(oldVolume, Volume));
             }
         }
@@ -121,6 +122,7 @@ namespace Nebula.Core.Medias.Player
             SoundOut = new WasapiOut();
             SoundOut.Initialize(WaveSource);
             SoundOut.Stopped += OnPlaybackStopped;
+            SoundOut.Volume = Math.Min(1.0f, Math.Max(Volume / 100f, 0f));
             CurrentMedia = mediaInfo;
             MediaChanged?.Invoke(this, new MediaChangedEventArgs(oldMedia, mediaInfo));
             if (play)
