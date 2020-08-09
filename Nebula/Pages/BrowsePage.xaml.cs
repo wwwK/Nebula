@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using AngleSharp.Common;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
@@ -24,15 +26,25 @@ namespace Nebula.Pages
             SizeChanged += OnSizeChanged;
         }
 
-        private IMediaInfo CurrentRightClick { get; set; }
+        private IMediaInfo                       CurrentRightClick { get; set; }
+        public  ObservableCollection<IMediaInfo> Medias            { get; } = new ObservableCollection<IMediaInfo>();
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+
+            if (e.ExtraData is string searchQuery)
+            {
+                SearchBox.Text = searchQuery;
+                Search(searchQuery);
+            }
+        }
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             ScrollViewer.Width = ActualWidth;
             ScrollViewer.Height = ActualHeight - CommandBar.ActualHeight;
         }
-
-        public ObservableCollection<IMediaInfo> Medias { get; } = new ObservableCollection<IMediaInfo>();
 
         private async void Search(string query)
         {
@@ -57,12 +69,12 @@ namespace Nebula.Pages
                     new DrillInNavigationTransitionInfo());
         }
 
-        private void OnMediaItemMouseUp(object sender, MouseButtonEventArgs e)
+        private async void OnMediaItemMouseUp(object sender, MouseButtonEventArgs e)
         {
             if (sender is Image image && image.DataContext is IMediaInfo mediaInfo)
             {
                 if (e.ChangedButton == MouseButton.Left)
-                    NebulaClient.MediaPlayer.Open(mediaInfo);
+                    await NebulaClient.MediaPlayer.Open(mediaInfo, true);
                 else if (e.ChangedButton == MouseButton.Right)
                     CurrentRightClick = mediaInfo;
             }
@@ -70,12 +82,12 @@ namespace Nebula.Pages
 
         private void OnAddToListeningSessionClicked(object sender, RoutedEventArgs e)
         {
-            NebulaClient.MediaPlayer.Session.AddMedia(CurrentRightClick);
+            NebulaClient.MediaPlayer.Queue.Enqueue(CurrentRightClick);
         }
 
-        private void OnMenuPlayClicked(object sender, RoutedEventArgs e)
+        private async void OnMenuPlayClicked(object sender, RoutedEventArgs e)
         {
-            NebulaClient.MediaPlayer.Open(CurrentRightClick);
+            await NebulaClient.MediaPlayer.Open(CurrentRightClick);
         }
 
         private void OnSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

@@ -35,8 +35,8 @@ namespace Nebula.Core
             Settings = new NebulaSettings();
             MediaPlayer = new MediaPlayer();
             Updater = new NebulaUpdater();
-            Session = new NebulaSession();
             Playlists = new PlaylistsManager();
+            Session = new NebulaSession(); //Needs to be latest
 
             MediaProviders.Add(new YoutubeMediaProvider());
 

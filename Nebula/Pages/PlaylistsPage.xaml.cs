@@ -35,7 +35,7 @@ namespace Nebula.Pages
                     dialog.PlaylistAuthor.Text,
                     string.IsNullOrWhiteSpace(dialog.PlaylistThumbnail.Text)
                         ? null
-                        : new BitmapImage(new Uri(dialog.PlaylistThumbnail.Text)));
+                        : new Uri(dialog.PlaylistThumbnail.Text));
                 NebulaClient.Playlists.AddPlaylist(playlist);
                 RefreshPlaylists();
             }
@@ -45,9 +45,10 @@ namespace Nebula.Pages
         {
             if (sender is Grid grid && grid.DataContext is IPlaylist playlist)
             {
-                if (e.ClickCount == 1)
-                    NebulaClient.MediaPlayer.Session.SetPlaylist(playlist);
-                else if (e.ClickCount == 2)
+                int rowId = Grid.GetRow((UIElement) e.Source);
+                if (rowId == 0 && playlist.MediasCount > 0)
+                    NebulaClient.MediaPlayer.OpenPlaylist(playlist, true);
+                else if (rowId == 1)
                     NebulaClient.Navigate(typeof(PlaylistPage), playlist, new DrillInNavigationTransitionInfo());
             }
         }

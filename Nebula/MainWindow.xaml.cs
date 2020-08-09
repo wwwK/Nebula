@@ -8,6 +8,7 @@ using Nebula.Core;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Player.Events;
 using Nebula.Core.UI;
+using Nebula.Pages;
 
 namespace Nebula
 {
@@ -170,6 +171,29 @@ namespace Nebula
         private void OnPlaybackMuteClicked(object sender, RoutedEventArgs e)
         {
             NebulaClient.MediaPlayer.IsMuted = !NebulaClient.MediaPlayer.IsMuted;
+        }
+
+        private void OnPlaybackForwardClicked(object sender, RoutedEventArgs e)
+        {
+            NebulaClient.MediaPlayer.Forward();
+        }
+
+        private void OnPlaybackBackwardClicked(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void OnSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+                sender.ItemsSource = NebulaClient.Session.GetSearchHistory();
+            else if (args.Reason == AutoSuggestionBoxTextChangeReason.SuggestionChosen)
+                NebulaClient.Navigate(typeof(BrowsePage), SearchBox.Text);
+        }
+
+        private void OnSearchBoxKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                NebulaClient.Navigate(typeof(BrowsePage), SearchBox.Text);
         }
 
         public static string Truncate(string value, int maxChars) //Todo: move to helper class

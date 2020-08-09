@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Nebula.Core.Medias;
 
 namespace Nebula.Core
 {
@@ -7,11 +8,11 @@ namespace Nebula.Core
     {
         public NebulaSession()
         {
+
         }
 
-        public int MaxSearchHistory { get; set; } = 5;
-
-        private List<string> SearchHistory { get; } = new List<string>();
+        public  int          MaxSearchHistory { get; set; } = 5;
+        private List<string> SearchHistory    { get; }      = new List<string>();
 
         public IEnumerable<string> GetSearchHistory()
         {

@@ -14,7 +14,7 @@ namespace Nebula.UpdateExtractor
         private static async Task Main(string[] args)
         {
             Args = args;
-            WriteLine("Updating Nebula...", ConsoleColor.Yellow);
+            WriteLine("Updating Nebula...", ConsoleColor.Green);
             await ExtractUpdate();
         }
 
@@ -30,17 +30,39 @@ namespace Nebula.UpdateExtractor
         {
             foreach (Process process in Process.GetProcessesByName("Nebula"))
             {
-                WriteLine($"Found running process '{process.ProcessName}', Killing it.", ConsoleColor.Yellow);
+                WriteLine($"Found running process '{process.ProcessName}', Killing it.", ConsoleColor.Green);
                 process.Kill();
+            }
+        }
+
+        private static void ClearFiles()
+        {
+            WriteLine("Cleaning old files...", ConsoleColor.Yellow);
+            foreach (string file in Directory.GetFiles(Environment.CurrentDirectory, "*", SearchOption.AllDirectories)
+            )
+            {
+                if (Path.GetFileName(file).ToLower().Contains("update"))
+                    continue;
+                File.Delete(file);
+                WriteLine($"File {file} Deleted !", ConsoleColor.Green);
+            }
+
+            foreach (string directory in Directory.GetDirectories(Environment.CurrentDirectory))
+            {
+                Directory.Delete(directory, true);
+                WriteLine($"Directory {directory} Deleted !", ConsoleColor.Green);
             }
         }
 
         private static async Task ExtractUpdate()
         {
+            await Task.Delay(ExtractDelay);
             ShutdownNebula();
             try
             {
                 await Task.Delay(ExtractDelay);
+                ClearFiles();
+                WriteLine("Extracting Update...", ConsoleColor.Yellow);
                 await using FileStream stream = new FileStream(FileName, FileMode.Open);
                 using ZipArchive zip = new ZipArchive(stream);
                 foreach (ZipArchiveEntry zipEntry in zip.Entries)
@@ -52,12 +74,12 @@ namespace Nebula.UpdateExtractor
                     if (!string.IsNullOrWhiteSpace(zipEntry.Name))
                     {
                         zipEntry.ExtractToFile(path, true);
-                        WriteLine($"Extracted '{path}'.", ConsoleColor.Yellow);
+                        WriteLine($"Extracted '{path}'.", ConsoleColor.Green);
                     }
                 }
 
                 stream.Close();
-                WriteLine("Nebula update completed ! Nebula is restarting.");
+                WriteLine("Nebula update completed ! Nebula is restarting.", ConsoleColor.Yellow);
             }
             catch (Exception e)
             {

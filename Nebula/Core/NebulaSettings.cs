@@ -1,33 +1,126 @@
 ﻿using System;
+using System.Buffers.Text;
+using System.Collections.Generic;
 using System.IO;
+using System.Windows.Media.Imaging;
+using System.Xml;
+using Nebula.Core.Medias;
 using Nebula.Core.Medias.Playlist;
+using YoutubeExplode.Playlists;
 
 namespace Nebula.Core
 {
     public class NebulaSettings
     {
-        public const string SettingsFolderName = "Nebula";
-        public const string SettingsFileName   = "NebulaSettings.json";
+        public const string SettingsFolderName                = "Nebula";
+        public const string PlaylistsFolderName               = "playlists";
+        public const string PlaylistsThumbnailCacheFolderName = "thumbnails_cache";
+        public const string SettingsFileName                  = "NebulaSettings.json";
 
         public NebulaSettings()
         {
             SettingsDirectory =
                 new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                     SettingsFolderName));
+            PlaylistsDirectory = new DirectoryInfo(Path.Combine(SettingsDirectory.FullName, PlaylistsFolderName));
+            PlaylistsThumbnailSCacheDirectory =
+                new DirectoryInfo(Path.Combine(PlaylistsDirectory.FullName, PlaylistsThumbnailCacheFolderName));
             LoadSettings();
         }
 
-        public DirectoryInfo SettingsDirectory { get; }
+        public DirectoryInfo SettingsDirectory                 { get; }
+        public DirectoryInfo PlaylistsDirectory                { get; }
+        public DirectoryInfo PlaylistsThumbnailSCacheDirectory { get; }
 
         private void LoadSettings()
         {
             if (!SettingsDirectory.Exists)
                 SettingsDirectory.Create();
+            if (!PlaylistsDirectory.Exists)
+                PlaylistsDirectory.Create();
+            if (!PlaylistsThumbnailSCacheDirectory.Exists)
+                PlaylistsThumbnailSCacheDirectory.Create();
+        }
+
+        public IEnumerable<IPlaylist> LoadPlaylists() //Todo: provider load support by type
+        {
+            foreach (FileInfo fileInfo in PlaylistsDirectory.GetFiles())
+            {
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(fileInfo.FullName);
+                if (xmlDocument.DocumentElement == null)
+                    continue;
+                string playListName = xmlDocument.DocumentElement.GetAttribute("Name");
+                string playListDescription = xmlDocument.DocumentElement.GetAttribute("Description");
+                string playListAuthor = xmlDocument.DocumentElement.GetAttribute("Author");
+                string thumbnailFile = Path.Combine(PlaylistsThumbnailSCacheDirectory.FullName,
+                    xmlDocument.DocumentElement.GetAttribute("Thumbnail"));
+                NebulaPlaylist playlist =
+                    new NebulaPlaylist(playListName, playListDescription, playListAuthor,
+                        File.Exists(thumbnailFile) ? new Uri(thumbnailFile) : null);
+                playlist.AutoSave = false;
+                foreach (XmlElement child in xmlDocument.DocumentElement.ChildNodes)
+                {
+                    Type type = Type.GetType(child.GetAttribute("ProviderType"));
+                    if (type == null)
+                        continue;
+                    object instance = Activator.CreateInstance(type, child);
+                    if (instance is IMediaInfo mediaInfo)
+                        playlist.AddMedia(mediaInfo);
+                }
+
+                playlist.AutoSave = true;
+                yield return playlist;
+            }
         }
 
         public void SavePlaylist(IPlaylist playlist)
         {
-            
+            XmlDocument xmlDocument = new XmlDocument();
+            XmlElement rootElement = xmlDocument.CreateElement(nameof(NebulaPlaylist));
+            rootElement.SetAttribute("Name", playlist.Name);
+            rootElement.SetAttribute("Description", playlist.Description);
+            rootElement.SetAttribute("Author", playlist.Author);
+            string thumbnailFileName = $"{playlist.Name}_thumbnail{Path.GetExtension(playlist.Thumbnail.LocalPath)}";
+            rootElement.SetAttribute("Thumbnail",
+                thumbnailFileName);
+            xmlDocument.AppendChild(rootElement);
+            foreach (IMediaInfo mediaInfo in playlist)
+            {
+                XmlElement mediaElement = xmlDocument.CreateElement("Media");
+                mediaElement.SetAttribute("ProviderType", mediaInfo.GetType().FullName);
+                mediaElement.SetAttribute("Id", mediaInfo.Id);
+                mediaElement.SetAttribute("OwnerId", mediaInfo.OwnerId);
+                mediaElement.SetAttribute("Title", mediaInfo.Title);
+                mediaElement.SetAttribute("Description", mediaInfo.Description);
+                mediaElement.SetAttribute("Author", mediaInfo.Author);
+                mediaElement.SetAttribute("Thumbnail", mediaInfo.ThumbnailUrl);
+                mediaElement.SetAttribute("Duration", mediaInfo.Duration.TotalSeconds.ToString());
+                rootElement.AppendChild(mediaElement);
+            }
+
+            if (!File.Exists(Path.Combine(PlaylistsThumbnailSCacheDirectory.FullName, thumbnailFileName)))
+                File.Copy(playlist.Thumbnail.LocalPath,
+                    Path.Combine(PlaylistsThumbnailSCacheDirectory.FullName, thumbnailFileName));
+            xmlDocument.Save(Path.Combine(PlaylistsDirectory.FullName, playlist.Name + ".playlist"));
+        }
+
+        private string ToBase64(BitmapImage bitmapImage)
+        {
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+            using MemoryStream memStream = new MemoryStream();
+            encoder.Save(memStream);
+            return Convert.ToBase64String(memStream.ToArray());
+        }
+
+        private BitmapImage FromBase64(string base64)
+        {
+            byte[] byteBuffer = Convert.FromBase64String(base64);
+            MemoryStream memoryStream = new MemoryStream(byteBuffer) {Position = 0};
+            BitmapImage bitmapImage = new BitmapImage {StreamSource = memoryStream};
+            memoryStream.Close();
+            return bitmapImage;
         }
     }
 }

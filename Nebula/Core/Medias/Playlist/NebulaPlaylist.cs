@@ -3,31 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 using System.Xml;
+using Nebula.Core.Medias.Playlist.Events;
 
 namespace Nebula.Core.Medias.Playlist
 {
     public class NebulaPlaylist : IPlaylist
     {
-        private static Random _random = new Random();
-
-        public NebulaPlaylist(string name, string description, string author, BitmapImage thumbnail = null,
+        public NebulaPlaylist(string name, string description, string author, Uri thumbnail = null,
                               List<IMediaInfo> medias = null)
         {
             Name = name;
             Description = description;
             Author = author;
-            Thumbnail = thumbnail ??
-                        new BitmapImage(new Uri("pack://application:,,/Resources/default_playlist_thumbnail.png"));
+            Thumbnail = thumbnail ?? new Uri("pack://application:,,/Resources/default_playlist_thumbnail.png");
             if (medias != null)
                 AddMedias(medias.ToArray());
         }
 
-        public string      Name          { get; set; }
-        public string      Description   { get; set; }
-        public string      Author        { get; }
-        public BitmapImage Thumbnail     { get; }
-        public TimeSpan    TotalDuration { get; private set; } = TimeSpan.Zero;
-        public int         MediasCount   => MediaList.Count;
+        public string   Name          { get; set; }
+        public string   Description   { get; set; }
+        public string   Author        { get; }
+        public bool     AutoSave      { get; set; } = true;
+        public Uri      Thumbnail     { get; }
+        public TimeSpan TotalDuration { get; private set; } = TimeSpan.Zero;
+        public int      MediasCount   => MediaList.Count;
+
+        public event EventHandler<PlaylistMediaAddedEventArgs> MediaAdded;
 
         private List<IMediaInfo> MediaList { get; } = new List<IMediaInfo>();
 
@@ -37,7 +38,9 @@ namespace Nebula.Core.Medias.Playlist
                 MediaList.Insert(insertIndex, mediaInfo);
             else
                 MediaList.Add(mediaInfo);
+            UpdateTotalDuration();
             Save();
+            MediaAdded?.Invoke(this, new PlaylistMediaAddedEventArgs(this, mediaInfo, insertIndex));
         }
 
         public void AddMedias(IMediaInfo[] medias) //Todo: bad way of doing that
@@ -70,6 +73,9 @@ namespace Nebula.Core.Medias.Playlist
 
         private void Save()
         {
+            if (!AutoSave)
+                return;
+            NebulaClient.Settings.SavePlaylist(this);
         }
 
         public override string ToString()

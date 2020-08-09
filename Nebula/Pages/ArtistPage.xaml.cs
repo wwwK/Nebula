@@ -10,6 +10,8 @@ using System.Windows.Navigation;
 using ModernWpf.Controls;
 using Nebula.Core;
 using Nebula.Core.Medias;
+using Nebula.Core.Medias.Playlist;
+using Nebula.Pages.Dialogs;
 
 namespace Nebula.Pages
 {
@@ -70,7 +72,6 @@ namespace Nebula.Pages
 
         private void OnAddClick(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

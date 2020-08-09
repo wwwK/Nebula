@@ -11,6 +11,7 @@ using CSCore.SoundOut;
 using CSCore.Streams.Effects;
 using Nebula.Core.Events;
 using Nebula.Core.Medias.Player.Events;
+using Nebula.Core.Medias.Playlist;
 
 namespace Nebula.Core.Medias.Player
 {
@@ -19,29 +20,24 @@ namespace Nebula.Core.Medias.Player
         private bool     _repeat       = false;
         private bool     _muted        = false;
         private bool     _shuffle      = false;
+        private bool     _manualStop   = false;
         private int      _volume       = 50;
         private TimeSpan _lastPosition = TimeSpan.Zero;
 
         public MediaPlayer()
         {
-            Session = new MediaPlayerSession(this);
             NebulaClient.Tick += NebulaClientOnTick;
         }
 
-        private ISoundOut   SoundOut   { get; set; }
-        private IWaveSource WaveSource { get; set; }
-
-        private int VolumeBeforeMute { get; set; }
-
-        public PlaybackState PlaybackState => SoundOut?.PlaybackState ?? PlaybackState.Stopped;
-
-        public TimeSpan Length => WaveSource?.GetLength() ?? TimeSpan.Zero;
-
-        public MediaPlayerSession Session { get; }
-
-        public IMediaInfo CurrentMedia { get; private set; }
-
-        public bool IsPaused { get; private set; } = false;
+        public  PlaybackState PlaybackState    => SoundOut?.PlaybackState ?? PlaybackState.Stopped;
+        public  TimeSpan      Length           => WaveSource?.GetLength() ?? TimeSpan.Zero;
+        public  MediaQueue    Queue            { get; } = new MediaQueue();
+        public  IMediaInfo    CurrentMedia     { get; private set; }
+        public  IPlaylist     CurrentPlaylist  { get; private set; }
+        public  bool          IsPaused         { get; private set; }
+        private ISoundOut     SoundOut         { get; set; }
+        private IWaveSource   WaveSource       { get; set; }
+        private int           VolumeBeforeMute { get; set; }
 
         public bool Repeat
         {
@@ -109,14 +105,28 @@ namespace Nebula.Core.Medias.Player
         public event EventHandler<MediaChangingEventArgs>          MediaChanging;
         public event EventHandler<MediaChangedEventArgs>           MediaChanged;
 
-        public async void Open(IMediaInfo mediaInfo, bool play = true)
+        public void OpenPlaylist(IPlaylist playlist, bool manualStop = false, bool play = true)
         {
+            if (playlist.MediasCount == 0)
+                return;
+            Queue.Clear();
+            CurrentPlaylist = playlist;
+            foreach (IMediaInfo mediaInfo in playlist)
+                Queue.Enqueue(mediaInfo);
+            Open(Queue.Dequeue(Shuffle), manualStop, play);
+        }
+
+        public async Task Open(IMediaInfo mediaInfo, bool manualStop = false, bool play = true)
+        {
+            if (mediaInfo == null)
+                return;
+            _manualStop = manualStop;
             MediaChangingEventArgs mediaChangingEvent = new MediaChangingEventArgs(CurrentMedia, mediaInfo);
             MediaChanging?.Invoke(this, mediaChangingEvent);
             if (mediaChangingEvent.Cancel)
                 return;
             IMediaInfo oldMedia = CurrentMedia;
-            Repeat = false;
+            Stop();
             Cleanup();
             WaveSource = CodecFactory.Instance.GetCodec(await mediaInfo.GetStreamUri());
             SoundOut = new WasapiOut();
@@ -127,6 +137,7 @@ namespace Nebula.Core.Medias.Player
             MediaChanged?.Invoke(this, new MediaChangedEventArgs(oldMedia, mediaInfo));
             if (play)
                 Play();
+            manualStop = false;
         }
 
         public void Play()
@@ -148,6 +159,13 @@ namespace Nebula.Core.Medias.Player
                 return;
             SoundOut?.Resume();
             IsPaused = false;
+        }
+
+        public void Forward()
+        {
+            if (Queue.IsEmpty)
+                return;
+            Open(Queue.Dequeue(Shuffle), true);
         }
 
         public void Stop()
@@ -186,7 +204,14 @@ namespace Nebula.Core.Medias.Player
             {
                 Position = TimeSpan.Zero;
                 Play();
-                return;
+            }
+            else if (!_manualStop && !Queue.IsEmpty)
+            {
+                Forward();
+            }
+            else
+            {
+                CurrentPlaylist = null;
             }
 
             NebulaClient.BeginInvoke(() => PlaybackStopped?.Invoke(this, new PlaybackStoppedEventArgs()));
