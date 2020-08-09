@@ -137,7 +137,7 @@ namespace Nebula.Core.Medias.Player
             MediaChanged?.Invoke(this, new MediaChangedEventArgs(oldMedia, mediaInfo));
             if (play)
                 Play();
-            manualStop = false;
+            _manualStop = false;
         }
 
         public void Play()
@@ -161,11 +161,9 @@ namespace Nebula.Core.Medias.Player
             IsPaused = false;
         }
 
-        public void Forward()
+        public void Forward(bool manualStop = false)
         {
-            if (Queue.IsEmpty)
-                return;
-            Open(Queue.Dequeue(Shuffle), true);
+            Open(Queue.Dequeue(Shuffle), manualStop);
         }
 
         public void Stop()
@@ -207,6 +205,7 @@ namespace Nebula.Core.Medias.Player
             }
             else if (!_manualStop && !Queue.IsEmpty)
             {
+                System.Diagnostics.Debug.Print("DD");
                 Forward();
             }
             else

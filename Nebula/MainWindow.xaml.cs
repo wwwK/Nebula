@@ -175,7 +175,7 @@ namespace Nebula
 
         private void OnPlaybackForwardClicked(object sender, RoutedEventArgs e)
         {
-            NebulaClient.MediaPlayer.Forward();
+            NebulaClient.MediaPlayer.Forward(true);
         }
 
         private void OnPlaybackBackwardClicked(object sender, RoutedEventArgs e)

@@ -81,9 +81,14 @@ namespace Nebula.Core
             rootElement.SetAttribute("Name", playlist.Name);
             rootElement.SetAttribute("Description", playlist.Description);
             rootElement.SetAttribute("Author", playlist.Author);
-            string thumbnailFileName = $"{playlist.Name}_thumbnail{Path.GetExtension(playlist.Thumbnail.LocalPath)}";
-            rootElement.SetAttribute("Thumbnail",
-                thumbnailFileName);
+            if (playlist.Thumbnail != null)
+            {
+                string thumbnailFileName =
+                    $"{playlist.Name}_thumbnail{Path.GetExtension(playlist.Thumbnail.LocalPath)}";
+                rootElement.SetAttribute("Thumbnail",
+                    thumbnailFileName);
+            }
+
             xmlDocument.AppendChild(rootElement);
             foreach (IMediaInfo mediaInfo in playlist)
             {
@@ -99,9 +104,15 @@ namespace Nebula.Core
                 rootElement.AppendChild(mediaElement);
             }
 
-            if (!File.Exists(Path.Combine(PlaylistsThumbnailSCacheDirectory.FullName, thumbnailFileName)))
-                File.Copy(playlist.Thumbnail.LocalPath,
-                    Path.Combine(PlaylistsThumbnailSCacheDirectory.FullName, thumbnailFileName));
+            if (playlist.Thumbnail != null)
+            {
+                string thumbnailFileName =
+                    $"{playlist.Name}_thumbnail{Path.GetExtension(playlist.Thumbnail.LocalPath)}";
+                if (!File.Exists(Path.Combine(PlaylistsThumbnailSCacheDirectory.FullName, thumbnailFileName)))
+                    File.Copy(playlist.Thumbnail.LocalPath,
+                        Path.Combine(PlaylistsThumbnailSCacheDirectory.FullName, thumbnailFileName));
+            }
+
             xmlDocument.Save(Path.Combine(PlaylistsDirectory.FullName, playlist.Name + ".playlist"));
         }
 

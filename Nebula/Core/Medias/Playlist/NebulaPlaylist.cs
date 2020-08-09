@@ -12,10 +12,10 @@ namespace Nebula.Core.Medias.Playlist
         public NebulaPlaylist(string name, string description, string author, Uri thumbnail = null,
                               List<IMediaInfo> medias = null)
         {
-            Name = name;
-            Description = description;
-            Author = author;
-            Thumbnail = thumbnail ?? new Uri("pack://application:,,/Resources/default_playlist_thumbnail.png");
+            Name = name ?? "";
+            Description = description ?? " ";
+            Author = author ?? " ";
+            Thumbnail = thumbnail;
             if (medias != null)
                 AddMedias(medias.ToArray());
         }
