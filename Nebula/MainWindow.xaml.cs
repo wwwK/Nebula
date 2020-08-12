@@ -200,5 +200,9 @@ namespace Nebula
         {
             return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
         }
+
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+        }
     }
 }

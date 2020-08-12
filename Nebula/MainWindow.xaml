@@ -18,7 +18,7 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.RequestedTheme="Dark"
         ui:TitleBar.ExtendViewIntoTitleBar="True"
-        Loaded="OnWindowLoaded">
+        Loaded="OnWindowLoaded" SizeChanged="OnSizeChanged">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -58,7 +58,8 @@
                            BackRequested="OnNavViewBackRequested">
 
             <ui:NavigationView.AutoSuggestBox>
-                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="Search" QueryIcon="Find" KeyUp="OnSearchBoxKeyUp" TextChanged="OnSearchBoxTextChanged" />
+                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="Search" QueryIcon="Find"
+                                   KeyUp="OnSearchBoxKeyUp" TextChanged="OnSearchBoxTextChanged" />
             </ui:NavigationView.AutoSuggestBox>
 
             <ui:NavigationView.MenuItems>
