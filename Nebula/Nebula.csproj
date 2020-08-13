@@ -5,8 +5,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
-        <AssemblyVersion>1.0.0.13</AssemblyVersion>
-        <FileVersion>1.0.0.13</FileVersion>
+        <AssemblyVersion>1.0.0.14</AssemblyVersion>
+        <FileVersion>1.0.0.14</FileVersion>
         <ApplicationIcon>Resources/nebula_icon.ico</ApplicationIcon>
     </PropertyGroup>
 

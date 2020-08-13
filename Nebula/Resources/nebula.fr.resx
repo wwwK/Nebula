@@ -96,4 +96,19 @@
     <data name="PlaylistTotalDuration" xml:space="preserve">
         <value>Temps Total {0}</value>
     </data>
+    <data name="Author" xml:space="preserve">
+        <value>Auteur</value>
+    </data>
+    <data name="Thumbnail" xml:space="preserve">
+        <value>Miniature</value>
+    </data>
+    <data name="Cancel" xml:space="preserve">
+        <value>Annuler</value>
+    </data>
+    <data name="Create" xml:space="preserve">
+        <value>Créer</value>
+    </data>
+    <data name="Name" xml:space="preserve">
+        <value>Nom</value>
+    </data>
 </root>

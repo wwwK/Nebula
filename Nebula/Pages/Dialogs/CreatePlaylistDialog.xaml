@@ -5,18 +5,20 @@
                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                   xmlns:ui="http://schemas.modernwpf.com/2019"
                   xmlns:local="clr-namespace:Nebula.Pages.Dialogs"
+                  xmlns:resx="clr-namespace:Nebula.Resources"
                   mc:Ignorable="d"
-                  PrimaryButtonText="Create"
-                  CloseButtonText="Cancel"
+                  PrimaryButtonText="{x:Static resx:nebula.Create}"
+                  CloseButtonText="{x:Static resx:nebula.Cancel}"
                   DefaultButton="Primary"
                   PrimaryButtonClick="OnPrimaryButtonClick"
                   CloseButtonClick="OnCloseButtonClick"
                   Closed="OnClosed">
     <ui:SimpleStackPanel Spacing="10">
-        <TextBox x:Name="PlaylistName" ui:ControlHelper.Header="Name" />
-        <TextBox x:Name="PlaylistDescription" ui:ControlHelper.Header="Description" />
-        <TextBox x:Name="PlaylistAuthor" ui:ControlHelper.Header="Author" />
-        <TextBox x:Name="PlaylistThumbnail" ui:ControlHelper.Header="Thumbnail" MouseUp="OnPlaylistThumbnailMouseUp"
+        <TextBox x:Name="PlaylistName" ui:ControlHelper.Header="{x:Static resx:nebula.Name}" />
+        <TextBox x:Name="PlaylistDescription" ui:ControlHelper.Header="{x:Static resx:nebula.Description}" />
+        <TextBox x:Name="PlaylistAuthor" ui:ControlHelper.Header="{x:Static resx:nebula.Author}" />
+        <TextBox x:Name="PlaylistThumbnail" ui:ControlHelper.Header="{x:Static resx:nebula.Thumbnail}"
+                 MouseUp="OnPlaylistThumbnailMouseUp"
                  Cursor="Hand" />
     </ui:SimpleStackPanel>
 </ui:ContentDialog>

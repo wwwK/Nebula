@@ -27,7 +27,7 @@ namespace Nebula.Pages
 
         private async void OnCreatePlaylistClicked(object sender, RoutedEventArgs e)
         {
-            CreatePlaylistDialog dialog = new CreatePlaylistDialog {Title = "Create Playlist"};
+            CreatePlaylistDialog dialog = new CreatePlaylistDialog {Title = NebulaClient.GetLocString("CreatePlaylist")};
             ContentDialogResult result = await dialog.ShowAsync(ContentDialogPlacement.Popup);
             if (result == ContentDialogResult.Primary)
             {
