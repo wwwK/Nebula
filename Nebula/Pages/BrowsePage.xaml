@@ -6,6 +6,7 @@
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:pages="clr-namespace:Nebula.Pages"
          xmlns:media="clr-namespace:Nebula.Core.Medias"
+         xmlns:resx="clr-namespace:Nebula.Resources"
          mc:Ignorable="d"
          Title="Browse">
 
@@ -16,7 +17,7 @@
         <ui:CommandBar x:Name="CommandBar" VerticalAlignment="Top" VerticalContentAlignment="Center">
 
             <ui:CommandBar.Content>
-                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="Browse" QueryIcon="Find" Margin="24 0 0 0"
+                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.Search}" QueryIcon="Find" Margin="24 0 0 0"
                                    Width="400" KeyUp="OnSearchBoxKeyUp" TextChanged="OnSearchBoxTextChanged" />
             </ui:CommandBar.Content>
         </ui:CommandBar>
@@ -43,14 +44,14 @@
                                    MouseUp="OnMediaItemMouseUp">
                                 <Image.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="Play" Click="OnMenuPlayClicked" />
+                                        <MenuItem Header="{x:Static resx:nebula.Play}" Click="OnMenuPlayClicked" />
                                         <Separator />
-                                        <MenuItem Header="Add to listening session"
+                                        <MenuItem Header="{x:Static resx:nebula.AddToListeningSession}"
                                                   Click="OnAddToListeningSessionClicked" />
-                                        <MenuItem Header="Add to playlist" Click="OnAddToPlaylistClick"
+                                        <MenuItem Header="{x:Static resx:nebula.AddToPlaylist}" Click="OnAddToPlaylistClick"
                                                   SubmenuOpened="OnAddToPlaylistSubmenuOpened">
                                             <MenuItem.Items>
-                                                <MenuItem Header="Create playlist" Tag="CREATE_PLAYLIST" />
+                                                <MenuItem Header="{x:Static resx:nebula.CreatePlaylist}" Tag="CREATE_PLAYLIST" />
                                                 <Separator />
                                             </MenuItem.Items>
                                         </MenuItem>

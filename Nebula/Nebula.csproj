@@ -5,8 +5,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
-        <AssemblyVersion>1.0.0.11</AssemblyVersion>
-        <FileVersion>1.0.0.11</FileVersion>
+        <AssemblyVersion>1.0.0.12</AssemblyVersion>
+        <FileVersion>1.0.0.12</FileVersion>
         <ApplicationIcon>Resources/nebula_icon.ico</ApplicationIcon>
     </PropertyGroup>
 
@@ -64,6 +64,21 @@
       <Compile Update="Pages\Dialogs\CreatePlaylistDialog.xaml.cs">
         <DependentUpon>CreatePlaylistDialog.xaml</DependentUpon>
       </Compile>
+      <Compile Update="Resources\nebula.en.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>nebula.en.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\nebula.fr.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>nebula.fr.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\nebula.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>nebula.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -79,6 +94,18 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Resource>
       <None Remove="Resources\default_playlist_thumbnail.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\nebula.fr.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\nebula.en.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\nebula.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

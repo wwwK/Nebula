@@ -102,12 +102,12 @@ namespace Nebula
             if (e.IsMuted)
             {
                 MediaMute.Icon = new SymbolIcon(Symbol.Mute);
-                MediaMute.Label = "Unmute";
+                MediaMute.Label = NebulaClient.GetLocString("Unmute");
             }
             else
             {
                 MediaMute.Icon = new SymbolIcon(Symbol.Volume);
-                MediaMute.Label = "Mute";
+                MediaMute.Label = NebulaClient.GetLocString("Mute");
             }
         }
 
@@ -128,7 +128,7 @@ namespace Nebula
             MediaProgress.Maximum = e.NewMedia.Duration.TotalSeconds;
             PlaybackVolume.Value = NebulaClient.MediaPlayer.Volume;
             PlaybackPlay.Icon = new SymbolIcon(Symbol.Pause);
-            PlaybackPlay.Label = "Pause";
+            PlaybackPlay.Label = NebulaClient.GetLocString("Pause");
         }
 
         private void PlaybackPositionChanged(object sender, TimeSpan e)
@@ -147,13 +147,13 @@ namespace Nebula
             if (NebulaClient.MediaPlayer.IsPaused)
             {
                 playBtn.Icon = new SymbolIcon(Symbol.Pause);
-                playBtn.Label = "Pause";
+                playBtn.Label = NebulaClient.GetLocString("Pause");
                 NebulaClient.MediaPlayer.Resume();
             }
             else
             {
                 playBtn.Icon = new SymbolIcon(Symbol.Play);
-                playBtn.Label = "Play";
+                playBtn.Label = NebulaClient.GetLocString("Play");
                 NebulaClient.MediaPlayer.Pause();
             }
         }

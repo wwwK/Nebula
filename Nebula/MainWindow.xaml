@@ -7,6 +7,7 @@
         xmlns:ui="http://schemas.modernwpf.com/2019"
         xmlns:local="clr-namespace:Nebula"
         xmlns:pages="clr-namespace:Nebula.Pages"
+        xmlns:resx="clr-namespace:Nebula.Resources"
         mc:Ignorable="d"
         Title="Nebula"
         Width="1360"
@@ -58,26 +59,26 @@
                            BackRequested="OnNavViewBackRequested">
 
             <ui:NavigationView.AutoSuggestBox>
-                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="Search" QueryIcon="Find"
+                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.Search}" QueryIcon="Find"
                                    KeyUp="OnSearchBoxKeyUp" TextChanged="OnSearchBoxTextChanged" />
             </ui:NavigationView.AutoSuggestBox>
 
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Content="Home" Tag="{x:Type pages:HomePage}">
+                <ui:NavigationViewItem Content="{x:Static resx:nebula.Home}" Tag="{x:Type pages:HomePage}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE80F;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Content="Browse" Tag="{x:Type pages:BrowsePage}">
+                <ui:NavigationViewItem Content="{x:Static resx:nebula.Browse}" Tag="{x:Type pages:BrowsePage}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE721F;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItemHeader Content="Library" />
+                <ui:NavigationViewItemHeader Content="{x:Static resx:nebula.Library}" />
 
-                <ui:NavigationViewItem Content="Playlists" Tag="{x:Type pages:PlaylistsPage}">
+                <ui:NavigationViewItem Content="{x:Static resx:nebula.Playlists}" Tag="{x:Type pages:PlaylistsPage}">
                     <ui:NavigationViewItem.MenuItems>
 
                     </ui:NavigationViewItem.MenuItems>
@@ -86,13 +87,7 @@
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Content="Albums">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon Glyph="&#xE721F;" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-
-                <ui:NavigationViewItem Content="Recently Listened">
+                <ui:NavigationViewItem Content="{x:Static resx:nebula.RecentlyListened}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE7F6;" />
                     </ui:NavigationViewItem.Icon>
@@ -108,23 +103,26 @@
                 </Grid.RowDefinitions>
                 <ui:Frame x:Name="ContentFrame" />
                 <ui:CommandBar x:Name="CBar" Grid.Row="1" DefaultLabelPosition="Bottom">
-                    <ui:AppBarToggleButton Icon="Back" Label="Back" Visibility="Hidden" />
+                    <ui:AppBarToggleButton Icon="Back" Label="-" Visibility="Hidden" />
                 </ui:CommandBar>
                 <StackPanel x:Name="CBarPanel" Grid.Row="1" Orientation="Horizontal">
                     <TextBlock x:Name="MediaTitle" VerticalAlignment="Center" HorizontalAlignment="Left"
                                Margin="10 0 0 0" />
                 </StackPanel>
                 <StackPanel x:Name="CBarControls" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <ui:AppBarToggleButton x:Name="PlaybackShuffle" Icon="Shuffle" Label="Shuffle"
+                    <ui:AppBarToggleButton x:Name="PlaybackShuffle" Icon="Shuffle"
+                                           Label="{x:Static resx:nebula.Shuffle}"
                                            Click="OnPlaybackShuffleClicked" />
-                    <ui:AppBarButton x:Name="PlaybackBack" Icon="Back" Label="Back" />
-                    <ui:AppBarButton x:Name="PlaybackPlay" Icon="Play" Label="Play" Click="OnPlaybackPlayClicked" />
-                    <ui:AppBarButton x:Name="PlaybackForward" Icon="Forward" Label="Forward"
+                    <ui:AppBarButton x:Name="PlaybackBack" Icon="Back" Label="{x:Static resx:nebula.Back}" />
+                    <ui:AppBarButton x:Name="PlaybackPlay" Icon="Play" Label="{x:Static resx:nebula.Play}"
+                                     Click="OnPlaybackPlayClicked" />
+                    <ui:AppBarButton x:Name="PlaybackForward" Icon="Forward" Label="{x:Static resx:nebula.Forward}"
                                      Click="OnPlaybackForwardClicked" />
-                    <ui:AppBarToggleButton x:Name="PlaybackRepeat" Icon="RepeatAll" Label="Repeat"
+                    <ui:AppBarToggleButton x:Name="PlaybackRepeat" Icon="RepeatAll"
+                                           Label="{x:Static resx:nebula.Repeat}"
                                            Click="OnPlaybackRepeatClicked" />
                     <ui:AppBarSeparator VerticalAlignment="Center" />
-                    <ui:AppBarToggleButton x:Name="MediaMute" Icon="Volume" Label="Mute"
+                    <ui:AppBarToggleButton x:Name="MediaMute" Icon="Volume" Label="{x:Static resx:nebula.Mute}"
                                            Click="OnPlaybackMuteClicked" />
                     <Slider x:Name="PlaybackVolume"
                             Margin="5 0 0 0"
@@ -135,6 +133,7 @@
                             AutoToolTipPlacement="TopLeft"
                             TickPlacement="Both"
                             VerticalAlignment="Center"
+
                             ValueChanged="OnPlaybackVolumeValueChanged" />
                 </StackPanel>
                 <ui:ProgressBar x:Name="MediaProgress"

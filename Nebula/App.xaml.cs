@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Globalization;
+using System.IO;
+using System.Threading;
 using System.Windows;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
@@ -20,6 +22,7 @@ namespace Nebula
 #if RELEASE
             AppCenter.Start("df3a859e-110a-43b2-892d-71f4650c9c70", typeof(Analytics), typeof(Crashes));
 #endif
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.CurrentUICulture;
             bool justUpdated = false;
             bool justInstalled = false;
 

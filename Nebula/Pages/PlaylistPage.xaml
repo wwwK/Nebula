@@ -6,6 +6,7 @@
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:media="clr-namespace:Nebula.Core.Medias"
          xmlns:local="clr-namespace:Nebula.Pages"
+         xmlns:resx="clr-namespace:Nebula.Resources"
          mc:Ignorable="d"
          Title="Artist"
          SizeChanged="OnSizeChanged">
@@ -32,13 +33,14 @@
                     <DataTemplate DataType="media:IMediaInfo">
                         <StackPanel Orientation="Horizontal" Background="#252525">
                             <ui:AppBarButton IsCompact="True" LabelPosition="Collapsed" Icon="Play" Margin="5 5 0 5"
-                                             ToolTip="Play"
+                                             ToolTip="{x:Static resx:nebula.Play}"
                                              Click="OnPlayClick" />
                             <ui:AppBarButton IsCompact="True" LabelPosition="Collapsed" Icon="Remove" Margin="2 5 0 5"
-                                             ToolTip="Remove"
+                                             ToolTip="{x:Static resx:nebula.Remove}"
                                              Click="OnRemoveClick" />
                             <TextBlock VerticalAlignment="Center" Text="{Binding Title}" Margin="15 0 0 0" />
-                            <TextBlock VerticalAlignment="Center" Text="{Binding Author, StringFormat='By \{0\} | '}"
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{Binding Author, StringFormat={x:Static resx:nebula.By}}"
                                        Margin="15 0 0 0" />
                             <TextBlock VerticalAlignment="Center" Text="{Binding Duration}" Margin=" 5 0 0 0" />
                         </StackPanel>

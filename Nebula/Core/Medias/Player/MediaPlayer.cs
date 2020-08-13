@@ -205,7 +205,6 @@ namespace Nebula.Core.Medias.Player
             }
             else if (!_manualStop && !Queue.IsEmpty)
             {
-                System.Diagnostics.Debug.Print("DD");
                 Forward();
             }
             else

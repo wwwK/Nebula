@@ -80,6 +80,11 @@ namespace Nebula.Core
             }
         }
 
+        public static string GetLocString(string key)
+        {
+            return Nebula.Resources.nebula.ResourceManager.GetString(key);
+        }
+        
         public static void Invoke(Action action)
         {
             Application.Current.Dispatcher.Invoke(action);
