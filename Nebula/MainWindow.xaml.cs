@@ -193,7 +193,10 @@ namespace Nebula
         private void OnSearchBoxKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
+            {
                 NebulaClient.Navigate(typeof(BrowsePage), SearchBox.Text);
+                SearchBox.IsSuggestionListOpen = false;
+            }
         }
 
         public static string Truncate(string value, int maxChars) //Todo: move to helper class

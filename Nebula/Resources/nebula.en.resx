@@ -114,4 +114,22 @@
     <data name="Create" xml:space="preserve">
         <value>Create</value>
     </data>
+    <data name="EditPlaylist" xml:space="preserve">
+        <value>Edit Playlist</value>
+    </data>
+    <data name="DeletePlaylist" xml:space="preserve">
+        <value>Delete Playlist</value>
+    </data>
+    <data name="ButtonYes" xml:space="preserve">
+        <value>Yes</value>
+    </data>
+    <data name="ButtonNo" xml:space="preserve">
+        <value>No</value>
+    </data>
+    <data name="DeletePlaylistMsg" xml:space="preserve">
+        <value>Do you really want to delete the playlist '{0}'</value>
+    </data>
+    <data name="Edit" xml:space="preserve">
+        <value>Edit</value>
+    </data>
 </root>

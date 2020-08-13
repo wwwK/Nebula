@@ -5,8 +5,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
-        <AssemblyVersion>1.0.0.14</AssemblyVersion>
-        <FileVersion>1.0.0.14</FileVersion>
+        <AssemblyVersion>1.0.0.17</AssemblyVersion>
+        <FileVersion>1.0.0.17</FileVersion>
         <ApplicationIcon>Resources/nebula_icon.ico</ApplicationIcon>
     </PropertyGroup>
 
@@ -40,7 +40,7 @@
       <Page Update="Pages\PlaylistsPage.xaml">
         <Generator></Generator>
       </Page>
-      <Page Update="Pages\Dialogs\CreatePlaylistDialog.xaml">
+      <Page Update="Pages\Dialogs\PlaylistEditDialog.xaml">
         <Generator></Generator>
       </Page>
     </ItemGroup>
@@ -61,7 +61,7 @@
       <Compile Update="Pages\PlaylistsPage.xaml.cs">
         <DependentUpon>PlaylistsPage.xaml</DependentUpon>
       </Compile>
-      <Compile Update="Pages\Dialogs\CreatePlaylistDialog.xaml.cs">
+      <Compile Update="Pages\Dialogs\PlaylistEditDialog.xaml.cs">
         <DependentUpon>CreatePlaylistDialog.xaml</DependentUpon>
       </Compile>
       <Compile Update="Resources\nebula.en.Designer.cs">

@@ -1,4 +1,4 @@
-﻿<ui:ContentDialog x:Class="Nebula.Pages.Dialogs.CreatePlaylistDialog"
+﻿<ui:ContentDialog x:Class="Nebula.Pages.Dialogs.PlaylistEditDialog"
                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -7,7 +7,6 @@
                   xmlns:local="clr-namespace:Nebula.Pages.Dialogs"
                   xmlns:resx="clr-namespace:Nebula.Resources"
                   mc:Ignorable="d"
-                  PrimaryButtonText="{x:Static resx:nebula.Create}"
                   CloseButtonText="{x:Static resx:nebula.Cancel}"
                   DefaultButton="Primary"
                   PrimaryButtonClick="OnPrimaryButtonClick"

@@ -38,6 +38,7 @@ namespace Nebula.Core.Medias.Playlist
             if (!Playlists.Contains(playlist))
                 return;
             Playlists.Remove(playlist);
+            NebulaClient.Settings.DeletePlaylist(playlist);
             playlist.MediaAdded -= OnPlaylistMediaAdded;
         }
 

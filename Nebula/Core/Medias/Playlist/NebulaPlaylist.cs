@@ -22,9 +22,9 @@ namespace Nebula.Core.Medias.Playlist
 
         public string   Name          { get; set; }
         public string   Description   { get; set; }
-        public string   Author        { get; }
+        public string   Author        { get; set; }
         public bool     AutoSave      { get; set; } = true;
-        public Uri      Thumbnail     { get; }
+        public Uri      Thumbnail     { get; set; }
         public TimeSpan TotalDuration { get; private set; } = TimeSpan.Zero;
         public int      MediasCount   => MediaList.Count;
 
@@ -43,7 +43,7 @@ namespace Nebula.Core.Medias.Playlist
             MediaAdded?.Invoke(this, new PlaylistMediaAddedEventArgs(this, mediaInfo, insertIndex));
         }
 
-        public void AddMedias(IMediaInfo[] medias) //Todo: bad way of doing that
+        public void AddMedias(IMediaInfo[] medias)
         {
             MediaList.AddRange(medias);
             UpdateTotalDuration();

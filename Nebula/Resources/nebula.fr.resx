@@ -19,7 +19,7 @@
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Home" xml:space="preserve">
-        <value>Acceuil</value>
+        <value>Accueil</value>
     </data>
     <data name="Search" xml:space="preserve">
         <value>Rechercher</value>
@@ -110,5 +110,26 @@
     </data>
     <data name="Name" xml:space="preserve">
         <value>Nom</value>
+    </data>
+    <data name="EditPlaylist" xml:space="preserve">
+        <value>Éditer la Playlist</value>
+    </data>
+    <data name="Description" xml:space="preserve">
+        <value>Description</value>
+    </data>
+    <data name="DeletePlaylist" xml:space="preserve">
+        <value>Supprimer la Playlist</value>
+    </data>
+    <data name="ButtonYes" xml:space="preserve">
+        <value>Oui</value>
+    </data>
+    <data name="ButtonNo" xml:space="preserve">
+        <value>Non</value>
+    </data>
+    <data name="DeletePlaylistMsg" xml:space="preserve">
+        <value>Voulez-vous vraiment supprimer la playlist '{0}'</value>
+    </data>
+    <data name="Edit" xml:space="preserve">
+        <value>Éditer</value>
     </data>
 </root>

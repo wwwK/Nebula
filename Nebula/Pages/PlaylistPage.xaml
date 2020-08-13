@@ -18,7 +18,8 @@
         <StackPanel x:Name="PlaylistInfoPanel"
                     VerticalAlignment="Top" HorizontalAlignment="Left"
                     Orientation="Horizontal" Margin="5 5 0 0">
-            <Image x:Name="PlaylistLogo" Width="150" Height="150" />
+            <Image x:Name="PlaylistLogo" VerticalAlignment="Center" HorizontalAlignment="Center"
+                   Stretch="UniformToFill" Width="150" Height="150" />
             <StackPanel Orientation="Vertical" Margin="10 0 0 0">
                 <TextBlock x:Name="PlaylistTitle" FontSize="24" />
                 <TextBlock x:Name="PlaylistDescription" FontSize="16" />
@@ -26,6 +27,16 @@
                 <TextBlock x:Name="PlaylistMediaCount" FontSize="16" />
             </StackPanel>
         </StackPanel>
+        <ui:CommandBar x:Name="PlaylistCommandBar" VerticalContentAlignment="Center">
+            <ui:AppBarButton Label="{x:Static resx:nebula.EditPlaylist}" Click="OnEditPlaylistClick" />
+            <ui:AppBarButton Label="{x:Static resx:nebula.DeletePlaylist}" Click="OnDeletePlaylistClick" />
+            <ui:CommandBar.Content>
+                <ui:AutoSuggestBox x:Name="SearchBox"
+                                   PlaceholderText="{x:Static resx:nebula.Search}" Margin="5 0 0 0"
+                                   QueryIcon="Find"
+                                   Width="300" KeyUp="OnSearchBoxKeyUp" />
+            </ui:CommandBar.Content>
+        </ui:CommandBar>
         <ScrollViewer x:Name="ScrollViewer" VerticalAlignment="Bottom" Margin="4 5 0 0">
             <ui:ItemsRepeater x:Name="PlaylistMedias" Layout="{StaticResource VerticalStackLayout}"
                               ItemsSource="{Binding Medias}">

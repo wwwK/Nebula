@@ -5,9 +5,6 @@ using System.Windows;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
-using Microsoft.AppCenter.Crashes;
 using Nebula.Core;
 
 namespace Nebula
@@ -21,6 +18,7 @@ namespace Nebula
         {
 #if RELEASE
             AppCenter.Start("df3a859e-110a-43b2-892d-71f4650c9c70", typeof(Analytics), typeof(Crashes));
+            Analytics.TrackEvent("SessionDuration");
 #endif
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CurrentUICulture;
             bool justUpdated = false;

@@ -35,7 +35,7 @@
                     </Style.Triggers>
                 </Style>
             </ScrollViewer.Style>
-            <ui:ItemsRepeater x:Name="BrowseElements" Layout="{StaticResource UniformGridLayout}"
+            <ui:ItemsRepeater x:Name="BrowseElements" Margin="19 0 0 0" Layout="{StaticResource UniformGridLayout}"
                               ItemsSource="{Binding Medias}">
                 <ui:ItemsRepeater.ItemTemplate>
                     <DataTemplate DataType="media:IMediaInfo">

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -13,6 +14,7 @@ using ModernWpf.Media.Animation;
 using Nebula.Core;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Playlist;
+using Nebula.Pages.Dialogs;
 using Page = ModernWpf.Controls.Page;
 
 namespace Nebula.Pages
@@ -55,10 +57,13 @@ namespace Nebula.Pages
                 NebulaClient.BeginInvoke(() => { Medias.Add(mediaInfo); }); //Todo: BeginInvoke > Invoke
         }
 
-        private async void OnSearchBoxKeyUp(object sender, KeyEventArgs e)
+        private void OnSearchBoxKeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
+            {
                 Search(SearchBox.Text);
+                SearchBox.IsSuggestionListOpen = false;
+            }
         }
 
         private async void OnMediaItemAuthorMouseUp(object sender, MouseButtonEventArgs e)
@@ -113,7 +118,7 @@ namespace Nebula.Pages
             }
         }
 
-        private void OnAddToPlaylistClick(object sender, RoutedEventArgs e)
+        private async void OnAddToPlaylistClick(object sender, RoutedEventArgs e)
         {
             if (e.OriginalSource is MenuItem item)
             {
@@ -123,7 +128,21 @@ namespace Nebula.Pages
                         playlist.AddMedia(CurrentRightClick);
                         break;
                     case "CREATE_PLAYLIST":
-
+                    {
+                        PlaylistEditDialog dialog = new PlaylistEditDialog(PlaylistEditDialogAction.CreatePlaylist);
+                        ContentDialogResult result = await dialog.ShowAsync(ContentDialogPlacement.Popup);
+                        if (result == ContentDialogResult.Primary)
+                        {
+                            NebulaPlaylist playlist = new NebulaPlaylist(dialog.PlaylistName.Text,
+                                dialog.PlaylistDescription.Text,
+                                dialog.PlaylistAuthor.Text,
+                                string.IsNullOrWhiteSpace(dialog.PlaylistThumbnail.Text)
+                                    ? null
+                                    : new Uri(dialog.PlaylistThumbnail.Text));
+                            playlist.AddMedia(CurrentRightClick);
+                            NebulaClient.Playlists.AddPlaylist(playlist);
+                        }
+                    }
                         break;
                 }
             }

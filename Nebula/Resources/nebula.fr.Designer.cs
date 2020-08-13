@@ -124,6 +124,24 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Non.
+        /// </summary>
+        public static string ButtonNo {
+            get {
+                return ResourceManager.GetString("ButtonNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oui.
+        /// </summary>
+        public static string ButtonYes {
+            get {
+                return ResourceManager.GetString("ButtonYes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Par {0}.
         /// </summary>
         public static string By {
@@ -160,6 +178,51 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Supprimer la Playlist.
+        /// </summary>
+        public static string DeletePlaylist {
+            get {
+                return ResourceManager.GetString("DeletePlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Voulez-vous vraiment supprimer la playlist &apos;{0}&apos;.
+        /// </summary>
+        public static string DeletePlaylistMsg {
+            get {
+                return ResourceManager.GetString("DeletePlaylistMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        public static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Éditer.
+        /// </summary>
+        public static string Edit {
+            get {
+                return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Éditer la Playlist.
+        /// </summary>
+        public static string EditPlaylist {
+            get {
+                return ResourceManager.GetString("EditPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exporter une playlist.
         /// </summary>
         public static string ExportPlaylist {
@@ -187,7 +250,7 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Acceuil.
+        ///   Looks up a localized string similar to Accueil.
         /// </summary>
         public static string Home {
             get {

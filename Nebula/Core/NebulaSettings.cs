@@ -122,6 +122,21 @@ namespace Nebula.Core
             xmlDocument.Save(Path.Combine(PlaylistsDirectory.FullName, playlist.Name + ".playlist"));
         }
 
+        public void DeletePlaylist(IPlaylist playlist)
+        {
+            string filePath = $"{Path.Combine(PlaylistsDirectory.FullName, playlist.Name)}.playlist";
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+        }
+
+        public void RenamePlaylist(string oldName, IPlaylist playlist)
+        {
+            string filePath = $"{Path.Combine(PlaylistsDirectory.FullName, oldName)}.playlist";
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+            SavePlaylist(playlist);
+        }
+
         private string ToBase64(BitmapImage bitmapImage)
         {
             BitmapEncoder encoder = new PngBitmapEncoder();

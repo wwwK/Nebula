@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.AppCenter;
+using Microsoft.AppCenter.Analytics;
 using ModernWpf.Media.Animation;
 using Nebula.Core.Events;
 using Nebula.Core.Medias;
@@ -84,7 +86,7 @@ namespace Nebula.Core
         {
             return Nebula.Resources.nebula.ResourceManager.GetString(key);
         }
-        
+
         public static void Invoke(Action action)
         {
             Application.Current.Dispatcher.Invoke(action);
@@ -94,6 +96,7 @@ namespace Nebula.Core
         {
             Application.Current.Dispatcher.BeginInvoke(action);
         }
+
 
         private static async void AppTick(CancellationToken token, int delay)
         {
@@ -108,8 +111,6 @@ namespace Nebula.Core
             }
             catch (OperationCanceledException e)
             {
-                MessageBox.Show(e.StackTrace);
-                throw;
             }
         }
     }
