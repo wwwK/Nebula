@@ -11,7 +11,7 @@
          Title="Artist"
          SizeChanged="OnSizeChanged">
     <Page.Resources>
-        <ui:StackLayout x:Key="VerticalStackLayout" Orientation="Vertical" Spacing="8" />
+        <ui:StackLayout x:Key="VerticalStackLayout" Orientation="Vertical" Spacing="5" />
     </Page.Resources>
 
     <Grid>

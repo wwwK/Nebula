@@ -49,8 +49,10 @@ namespace Nebula.Pages
                 PlaylistLogo.Source = new BitmapImage(playlist.Thumbnail);
                 PlaylistTitle.Text = playlist.Name;
                 PlaylistDescription.Text = playlist.Description;
-                PlaylistAuthor.Text = $"By {playlist.Author}";
-                PlaylistMediaCount.Text = $"{playlist.MediasCount} Title(s) | {playlist.TotalDuration}";
+                PlaylistAuthor.Text = string.Format(NebulaClient.GetLocString("By"), playlist.Author);
+                ;
+                PlaylistMediaCount.Text =
+                    $"{string.Format(NebulaClient.GetLocString("PlaylistTitles"), playlist.MediasCount)} - {string.Format(NebulaClient.GetLocString("PlaylistTotalDuration"), playlist.TotalDuration)}";
                 foreach (IMediaInfo media in playlist)
                     Medias.Add(media);
             }

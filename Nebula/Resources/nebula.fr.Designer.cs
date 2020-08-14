@@ -277,6 +277,24 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Contenu déjà existant.
+        /// </summary>
+        public static string MediaAlreadyExists {
+            get {
+                return ResourceManager.GetString("MediaAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cette playlist contient déjà &apos;{0}&apos;, voulez-vous vraiment l’ajouter ?.
+        /// </summary>
+        public static string MediaAlreadyExistsMsg {
+            get {
+                return ResourceManager.GetString("MediaAlreadyExistsMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Muet.
         /// </summary>
         public static string Mute {
@@ -331,7 +349,7 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Temps Total {0}.
+        ///   Looks up a localized string similar to Durée de la playlist {0}.
         /// </summary>
         public static string PlaylistTotalDuration {
             get {

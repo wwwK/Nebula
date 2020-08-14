@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Windows.Media.Imaging;
-using System.Xml;
+using System.Linq;
 using Nebula.Core.Medias.Playlist.Events;
 
 namespace Nebula.Core.Medias.Playlist
@@ -31,6 +30,11 @@ namespace Nebula.Core.Medias.Playlist
         public event EventHandler<PlaylistMediaAddedEventArgs> MediaAdded;
 
         private List<IMediaInfo> MediaList { get; } = new List<IMediaInfo>();
+
+        public bool Contains(IMediaInfo mediaInfo)
+        {
+            return MediaList.Any(media => media.Id == mediaInfo.Id);
+        }
 
         public void AddMedia(IMediaInfo mediaInfo, int insertIndex = -1)
         {

@@ -16,6 +16,7 @@ namespace Nebula.Core.Medias.Playlist
 
         event EventHandler<PlaylistMediaAddedEventArgs> MediaAdded;
 
+        bool Contains(IMediaInfo mediaInfo);
         void AddMedia(IMediaInfo mediaInfo, int insertIndex = -1);
         void AddMedias(IMediaInfo[] mediaInfo);
         void RemoveMedia(IMediaInfo mediaInfo);

@@ -94,7 +94,7 @@
         <value>{0} Title(s)</value>
     </data>
     <data name="PlaylistTotalDuration" xml:space="preserve">
-        <value>Total Duration {0}</value>
+        <value>Playlist Duration {0}</value>
     </data>
     <data name="Name" xml:space="preserve">
         <value>Name</value>
@@ -131,5 +131,11 @@
     </data>
     <data name="Edit" xml:space="preserve">
         <value>Edit</value>
+    </data>
+    <data name="MediaAlreadyExists" xml:space="preserve">
+        <value>Already Existing Content</value>
+    </data>
+    <data name="MediaAlreadyExistsMsg" xml:space="preserve">
+        <value>This playlist already contains '{0}', do you really want to add it ?</value>
     </data>
 </root>

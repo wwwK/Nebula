@@ -125,7 +125,18 @@ namespace Nebula.Pages
                 switch (item.Tag)
                 {
                     case IPlaylist playlist:
-                        playlist.AddMedia(CurrentRightClick);
+                    {
+                        if (playlist.Contains(CurrentRightClick))
+                        {
+                            ContentDialogResult result = await NebulaMessageBox.ShowYesNo("MediaAlreadyExists",
+                                "MediaAlreadyExistsMsg",
+                                CurrentRightClick.Title);
+                            if (result == ContentDialogResult.Primary)
+                                playlist.AddMedia(CurrentRightClick);
+                        }
+                        else
+                            playlist.AddMedia(CurrentRightClick);
+                    }
                         break;
                     case "CREATE_PLAYLIST":
                     {

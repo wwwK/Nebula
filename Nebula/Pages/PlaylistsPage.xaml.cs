@@ -62,7 +62,7 @@ namespace Nebula.Pages
             if (sender is Grid grid && grid.Parent is Grid rootGrid &&
                 rootGrid.Name == "ItemRootPanel" & rootGrid.IsMouseOver)
             {
-                ControlUtils.ApplyBlur(grid, 4, TimeSpan.FromSeconds(0.2), TimeSpan.Zero);
+                ControlUtils.ApplyBlur(grid, 4, TimeSpan.FromSeconds(0.1), TimeSpan.Zero);
                 if (rootGrid.Children[1] is AppBarButton button)
                     button.Visibility = Visibility.Visible;
             }
@@ -73,7 +73,7 @@ namespace Nebula.Pages
             if (sender is Grid grid && grid.Parent is Grid rootGrid &&
                 rootGrid.Name == "ItemRootPanel" && !rootGrid.IsMouseOver)
             {
-                ControlUtils.RemoveBlur(grid, TimeSpan.FromSeconds(0.2), TimeSpan.Zero);
+                ControlUtils.RemoveBlur(grid, TimeSpan.FromSeconds(0.1), TimeSpan.Zero);
                 if (rootGrid.Children[1] is AppBarButton button)
                     button.Visibility = Visibility.Collapsed;
             }
