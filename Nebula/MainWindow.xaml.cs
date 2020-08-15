@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using ModernWpf.Controls;
 using Nebula.Core;
@@ -123,12 +126,16 @@ namespace Nebula
 
         private void OnMediaChanged(object sender, MediaChangedEventArgs e)
         {
-            MediaTitle.Text = Truncate(e.NewMedia.Title, 50);
+            MediaTitle.Text = e.NewMedia.Title;
+            MediaAuthor.Text = e.NewMedia.Author;
+            MediaThumbnail.Height = CBar.ActualHeight;
+            MediaThumbnail.Source = new BitmapImage(new Uri(e.NewMedia.ThumbnailUrl));
             MediaProgress.Minimum = 0.0;
             MediaProgress.Maximum = e.NewMedia.Duration.TotalSeconds;
             PlaybackVolume.Value = NebulaClient.MediaPlayer.Volume;
             PlaybackPlay.Icon = new SymbolIcon(Symbol.Pause);
             PlaybackPlay.Label = NebulaClient.GetLocString("Pause");
+            UpdateMediaInfoWidth();
         }
 
         private void PlaybackPositionChanged(object sender, TimeSpan e)
@@ -199,6 +206,13 @@ namespace Nebula
             }
         }
 
+        private void UpdateMediaInfoWidth()
+        {
+            Point relativePoint = PlaybackShuffle.TransformToAncestor(CBarControls).Transform(new Point(0, 0));
+            double availableSpace = relativePoint.X - MediaThumbnail.ActualWidth - 10;
+            MediaInfosPanel.Width = availableSpace > 1 ? availableSpace : 1;
+        }
+
         public static string Truncate(string value, int maxChars) //Todo: move to helper class
         {
             return value.Length <= maxChars ? value : value.Substring(0, maxChars) + "...";
@@ -206,6 +220,7 @@ namespace Nebula
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
+            UpdateMediaInfoWidth();
         }
     }
 }

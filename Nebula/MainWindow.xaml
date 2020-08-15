@@ -105,37 +105,43 @@
                 <ui:CommandBar x:Name="CBar" Grid.Row="1" DefaultLabelPosition="Bottom">
                     <ui:AppBarToggleButton Icon="Back" Label="-" Visibility="Hidden" />
                 </ui:CommandBar>
-                <StackPanel x:Name="CBarPanel" Grid.Row="1" Orientation="Horizontal">
-                    <TextBlock x:Name="MediaTitle" VerticalAlignment="Center" HorizontalAlignment="Left"
-                               Margin="10 0 0 0" />
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Image x:Name="MediaThumbnail" Stretch="Fill" />
+                    <StackPanel x:Name="MediaInfosPanel" Orientation="Vertical" VerticalAlignment="Center" Margin="10 0 0 0">
+                        <TextBlock x:Name="MediaTitle" HorizontalAlignment="Left"/>
+                        <TextBlock x:Name="MediaAuthor" HorizontalAlignment="Left" FontSize="12" Foreground="Gray" />
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel x:Name="CBarControls" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
-                    <ui:AppBarToggleButton x:Name="PlaybackShuffle" Icon="Shuffle"
-                                           Label="{x:Static resx:nebula.Shuffle}"
-                                           Click="OnPlaybackShuffleClicked" />
-                    <ui:AppBarButton x:Name="PlaybackBack" Icon="Back" Label="{x:Static resx:nebula.Back}" />
-                    <ui:AppBarButton x:Name="PlaybackPlay" Icon="Play" Label="{x:Static resx:nebula.Play}"
-                                     Click="OnPlaybackPlayClicked" />
-                    <ui:AppBarButton x:Name="PlaybackForward" Icon="Forward" Label="{x:Static resx:nebula.Forward}"
-                                     Click="OnPlaybackForwardClicked" />
-                    <ui:AppBarToggleButton x:Name="PlaybackRepeat" Icon="RepeatAll"
-                                           Label="{x:Static resx:nebula.Repeat}"
-                                           Click="OnPlaybackRepeatClicked" />
-                    <ui:AppBarSeparator VerticalAlignment="Center" />
-                    <ui:AppBarToggleButton x:Name="MediaMute" Icon="Volume" Label="{x:Static resx:nebula.Mute}"
-                                           Click="OnPlaybackMuteClicked" />
-                    <Slider x:Name="PlaybackVolume"
-                            Margin="5 0 0 0"
-                            Minimum="0"
-                            Maximum="100"
-                            Width="200"
-                            TickFrequency="10"
-                            AutoToolTipPlacement="TopLeft"
-                            TickPlacement="Both"
-                            VerticalAlignment="Center"
-
-                            ValueChanged="OnPlaybackVolumeValueChanged" />
-                </StackPanel>
+                <Grid x:Name="CBarControls" Grid.Row="1">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <ui:AppBarToggleButton x:Name="PlaybackShuffle" Icon="Shuffle"
+                                               Label="{x:Static resx:nebula.Shuffle}"
+                                               Click="OnPlaybackShuffleClicked" />
+                        <ui:AppBarButton x:Name="PlaybackBack" Icon="Back" Label="{x:Static resx:nebula.Back}" />
+                        <ui:AppBarButton x:Name="PlaybackPlay" Icon="Play" Label="{x:Static resx:nebula.Play}"
+                                         Click="OnPlaybackPlayClicked" />
+                        <ui:AppBarButton x:Name="PlaybackForward" Icon="Forward" Label="{x:Static resx:nebula.Forward}"
+                                         Click="OnPlaybackForwardClicked" />
+                        <ui:AppBarToggleButton x:Name="PlaybackRepeat" Icon="RepeatAll"
+                                               Label="{x:Static resx:nebula.Repeat}"
+                                               Click="OnPlaybackRepeatClicked" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <ui:AppBarToggleButton x:Name="MediaMute" Icon="Volume" Label="{x:Static resx:nebula.Mute}"
+                                               Click="OnPlaybackMuteClicked" />
+                        <Slider x:Name="PlaybackVolume"
+                                Margin="5 0 0 0"
+                                Minimum="0"
+                                Maximum="100"
+                                Width="200"
+                                TickFrequency="10"
+                                AutoToolTipPlacement="TopLeft"
+                                TickPlacement="Both"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                ValueChanged="OnPlaybackVolumeValueChanged" />
+                    </StackPanel>
+                </Grid>
                 <ui:ProgressBar x:Name="MediaProgress"
                                 Grid.Row="1"
                                 Cursor="Hand"

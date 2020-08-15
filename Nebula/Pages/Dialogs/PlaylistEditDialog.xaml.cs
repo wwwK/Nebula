@@ -24,12 +24,14 @@ namespace Nebula.Pages.Dialogs
                 Title = NebulaClient.GetLocString("EditPlaylist");
                 PrimaryButtonText = NebulaClient.GetLocString("Edit");
             }
+
             if (playlist != null && action == PlaylistEditDialogAction.EditPlaylist)
             {
                 PlaylistName.Text = playlist.Name;
                 PlaylistDescription.Text = playlist.Description;
                 PlaylistAuthor.Text = playlist.Author;
-                PlaylistThumbnail.Text = playlist.Thumbnail.ToString();
+                string thumbnailUri = playlist.Thumbnail.ToString();
+                PlaylistThumbnail.Text = thumbnailUri.StartsWith("file") ? playlist.Thumbnail.LocalPath : thumbnailUri;
             }
         }
 

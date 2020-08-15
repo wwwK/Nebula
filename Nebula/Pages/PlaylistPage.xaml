@@ -37,7 +37,7 @@
                                    Width="300" KeyUp="OnSearchBoxKeyUp" />
             </ui:CommandBar.Content>
         </ui:CommandBar>
-        <ScrollViewer x:Name="ScrollViewer" VerticalAlignment="Bottom" Margin="4 5 0 0">
+        <ScrollViewer x:Name="ScrollViewer" VerticalAlignment="Bottom" Margin="3 5 0 0">
             <ui:ItemsRepeater x:Name="PlaylistMedias" Layout="{StaticResource VerticalStackLayout}"
                               ItemsSource="{Binding Medias}">
                 <ui:ItemsRepeater.ItemTemplate>
