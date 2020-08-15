@@ -30,6 +30,8 @@ namespace Nebula
             NebulaClient.MediaPlayer.PlaybackPositionChanged += PlaybackPositionChanged;
             NebulaClient.MediaPlayer.PlaybackVolumeChanged += OnPlaybackVolumeChanged;
             NebulaClient.MediaPlayer.PlaybackMuteChanged += OnPlaybackMuteChanged;
+            NebulaClient.MediaPlayer.PlaybackPaused += OnPlaybackPaused;
+            NebulaClient.MediaPlayer.PlaybackResumed += OnPlaybackResumed;
             NebulaClient.MediaPlayer.RepeatChanged += OnPlaybackRepeatChanged;
             NebulaClient.MediaPlayer.ShuffleChanged += OnPlaybackShuffleChanged;
             FrameTracker = new FrameNavigationTracker(ContentFrame);
@@ -56,6 +58,16 @@ namespace Nebula
                 TitleBar.GetSystemOverlayRightInset(this), currMargin.Bottom);
         }
 
+        private void OnPaneOpened(NavigationView sender, object obj)
+        {
+            UpdateMediaInfoWidth();
+        }
+        
+        private void OnPaneClosed(NavigationView sender, object obj)
+        {
+            UpdateMediaInfoWidth();
+        }
+        
         private void OnNavViewDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
         {
             Thickness currMargin = AppTitleBar.Margin;
@@ -63,6 +75,7 @@ namespace Nebula
                 ? new Thickness(sender.CompactPaneLength * 2, currMargin.Top, currMargin.Right, currMargin.Bottom)
                 : new Thickness(sender.CompactPaneLength, currMargin.Top, currMargin.Right, currMargin.Bottom);
             UpdateAppTitleMargin(sender);
+            UpdateMediaInfoWidth();
         }
 
         private void OnNavViewItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -93,6 +106,19 @@ namespace Nebula
                 TimeSpan.FromSeconds(Mouse.GetPosition(MediaProgress).X /
                                      (MediaProgress.ActualWidth / MediaProgress.Maximum));
             MediaProgress.ToolTip = currentMouseTimePos.ToString("hh\\:mm\\:ss");
+        }
+
+
+        private void OnPlaybackPaused(object sender, PlaybackPausedEventArgs e)
+        {
+            PlaybackPlay.Icon = new SymbolIcon(Symbol.Play);
+            PlaybackPlay.Label = NebulaClient.GetLocString("Play");
+        }
+
+        private void OnPlaybackResumed(object sender, PlaybackResumedEventArgs e)
+        {
+            PlaybackPlay.Icon = new SymbolIcon(Symbol.Pause);
+            PlaybackPlay.Label = NebulaClient.GetLocString("Pause");
         }
 
         private void OnPlaybackVolumeValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -150,19 +176,10 @@ namespace Nebula
 
         private void OnPlaybackPlayClicked(object sender, RoutedEventArgs e)
         {
-            AppBarButton playBtn = (AppBarButton) sender;
             if (NebulaClient.MediaPlayer.IsPaused)
-            {
-                playBtn.Icon = new SymbolIcon(Symbol.Pause);
-                playBtn.Label = NebulaClient.GetLocString("Pause");
                 NebulaClient.MediaPlayer.Resume();
-            }
             else
-            {
-                playBtn.Icon = new SymbolIcon(Symbol.Play);
-                playBtn.Label = NebulaClient.GetLocString("Play");
                 NebulaClient.MediaPlayer.Pause();
-            }
         }
 
         private void OnPlaybackRepeatClicked(object sender, RoutedEventArgs e)

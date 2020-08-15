@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using EasySharp.Windows.Hookers;
+using EasySharp.Windows.Hookers.Keyboard;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using ModernWpf.Media.Animation;
@@ -26,6 +28,7 @@ namespace Nebula.Core
         public static  NebulaSession        Session        { get; }
         public static  NebulaSettings       Settings       { get; }
         public static  PlaylistsManager     Playlists      { get; }
+        public static  KeyboardHooker       KeyboardHooker { get; }
 
         public static event EventHandler<NebulaAppLoopEventArgs> Tick;
 
@@ -38,12 +41,51 @@ namespace Nebula.Core
             MediaPlayer = new MediaPlayer();
             Updater = new NebulaUpdater();
             Playlists = new PlaylistsManager();
+            KeyboardHooker = new KeyboardHooker();
             Session = new NebulaSession(); //Needs to be latest
 
             MediaProviders.Add(new YoutubeMediaProvider());
 
+            KeyboardHooker.KeyDown += OnGlobalKeyDown;
+            KeyboardHooker.Hook();
+
             CancellationTokenSource = new CancellationTokenSource();
             Task.Run(() => AppTick(CancellationTokenSource.Token, 500));
+        }
+
+        private static void OnGlobalKeyDown(object sender, KeyboardKeyDownEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case EVirtualKeys.MEDIA_PLAY_PAUSE when MediaPlayer.IsPaused:
+                    MediaPlayer.Resume();
+                    e.Handled = true;
+                    break;
+                case EVirtualKeys.MEDIA_PLAY_PAUSE when !MediaPlayer.IsPaused:
+                    MediaPlayer.Pause();
+                    e.Handled = true;
+                    break;
+                case EVirtualKeys.MEDIA_STOP:
+                    MediaPlayer.Stop();
+                    e.Handled = true;
+                    break;
+                case EVirtualKeys.MEDIA_NEXT_TRACK:
+                    MediaPlayer.Forward(true);
+                    e.Handled = true;
+                    break;
+                case EVirtualKeys.VOLUME_MUTE:
+                    MediaPlayer.IsMuted = !MediaPlayer.IsMuted;
+                    e.Handled = true;
+                    break;
+                case EVirtualKeys.VOLUME_UP:
+                    MediaPlayer.Volume += 10;
+                    e.Handled = true;
+                    break;
+                case EVirtualKeys.VOLUME_DOWN:
+                    MediaPlayer.Volume -= 10;
+                    e.Handled = true;
+                    break;
+            }
         }
 
         public static void Navigate(Type type)

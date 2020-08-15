@@ -89,7 +89,7 @@ namespace Nebula.Core.Medias.Player
             set
             {
                 int oldVolume = _volume;
-                _volume = value;
+                _volume = value < 0 ? 0 : value > 100 ? 100 : value;
                 if (SoundOut != null)
                     SoundOut.Volume = Math.Min(1.0f, Math.Max(value / 100f, 0f));
                 PlaybackVolumeChanged?.Invoke(this, new PlaybackVolumeChangedEventArgs(oldVolume, Volume));
@@ -99,6 +99,8 @@ namespace Nebula.Core.Medias.Player
         public event EventHandler<PlaybackVolumeChangedEventArgs>  PlaybackVolumeChanged;
         public event EventHandler<PlaybackMuteChangedEventArgs>    PlaybackMuteChanged;
         public event EventHandler<TimeSpan>                        PlaybackPositionChanged;
+        public event EventHandler<PlaybackPausedEventArgs>         PlaybackPaused;
+        public event EventHandler<PlaybackResumedEventArgs>        PlaybackResumed;
         public event EventHandler<PlaybackRepeatChangedEventArgs>  RepeatChanged;
         public event EventHandler<PlaybackShuffleChangedEventArgs> ShuffleChanged;
         public event EventHandler<PlaybackStoppedEventArgs>        PlaybackStopped;
@@ -151,6 +153,7 @@ namespace Nebula.Core.Medias.Player
                 return;
             SoundOut?.Pause();
             IsPaused = true;
+            PlaybackPaused?.Invoke(this, new PlaybackPausedEventArgs());
         }
 
         public void Resume()
@@ -159,6 +162,7 @@ namespace Nebula.Core.Medias.Player
                 return;
             SoundOut?.Resume();
             IsPaused = false;
+            PlaybackResumed?.Invoke(this, new PlaybackResumedEventArgs());
         }
 
         public void Forward(bool manualStop = false)

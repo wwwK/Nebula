@@ -84,6 +84,7 @@
     <ItemGroup>
       <Folder Include="Core\Discord" />
       <Folder Include="Core\Medias\Player\Filters" />
+      <Folder Include="Windows" />
     </ItemGroup>
 
     <ItemGroup>
@@ -106,6 +107,15 @@
       <EmbeddedResource Update="Resources\nebula.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
       </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="EasySharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\EasySharp\EasySharp.Windows\bin\Release\netcoreapp3.1\EasySharp.dll</HintPath>
+      </Reference>
+      <Reference Include="EasySharp.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\EasySharp\EasySharp.Windows\bin\Release\netcoreapp3.1\EasySharp.Windows.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

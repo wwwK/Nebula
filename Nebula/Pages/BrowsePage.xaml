@@ -17,7 +17,8 @@
         <ui:CommandBar x:Name="CommandBar" VerticalAlignment="Top" VerticalContentAlignment="Center">
 
             <ui:CommandBar.Content>
-                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.Search}" QueryIcon="Find" Margin="24 0 0 0"
+                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.Search}" QueryIcon="Find"
+                                   Margin="24 0 0 0"
                                    Width="400" KeyUp="OnSearchBoxKeyUp" TextChanged="OnSearchBoxTextChanged" />
             </ui:CommandBar.Content>
         </ui:CommandBar>
@@ -48,10 +49,12 @@
                                         <Separator />
                                         <MenuItem Header="{x:Static resx:nebula.AddToListeningSession}"
                                                   Click="OnAddToListeningSessionClicked" />
-                                        <MenuItem Header="{x:Static resx:nebula.AddToPlaylist}" Click="OnAddToPlaylistClick"
+                                        <MenuItem Header="{x:Static resx:nebula.AddToPlaylist}"
+                                                  Click="OnAddToPlaylistClick"
                                                   SubmenuOpened="OnAddToPlaylistSubmenuOpened">
                                             <MenuItem.Items>
-                                                <MenuItem Header="{x:Static resx:nebula.CreatePlaylist}" Tag="CREATE_PLAYLIST" />
+                                                <MenuItem Header="{x:Static resx:nebula.CreatePlaylist}"
+                                                          Tag="CREATE_PLAYLIST" />
                                                 <Separator />
                                             </MenuItem.Items>
                                         </MenuItem>
@@ -60,8 +63,9 @@
                             </Image>
                             <StackPanel Margin="5 5 0 0" Orientation="Vertical">
                                 <TextBlock Text="{Binding Title}" />
-                                <TextBlock Text="{Binding Author}" Cursor="Hand" MouseUp="OnMediaItemAuthorMouseUp" />
-                                <TextBlock Text="{Binding Duration}" />
+                                <TextBlock Text="{Binding Author}" Cursor="Hand" Foreground="Gray" FontSize="12"
+                                           MouseUp="OnMediaItemAuthorMouseUp" />
+                                <TextBlock Text="{Binding Duration}" FontSize="12" />
                             </StackPanel>
                         </StackPanel>
                     </DataTemplate>

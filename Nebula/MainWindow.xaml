@@ -56,7 +56,9 @@
                            IsBackEnabled="{Binding ElementName=ContentFrame, Path=CanGoBack}"
                            DisplayModeChanged="OnNavViewDisplayModeChanged"
                            ItemInvoked="OnNavViewItemInvoked"
-                           BackRequested="OnNavViewBackRequested">
+                           BackRequested="OnNavViewBackRequested"
+                           PaneOpened="OnPaneOpened"
+                           PaneClosed="OnPaneClosed">
 
             <ui:NavigationView.AutoSuggestBox>
                 <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.Search}" QueryIcon="Find"
