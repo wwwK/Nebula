@@ -78,11 +78,11 @@ namespace Nebula.Core
                     e.Handled = true;
                     break;
                 case EVirtualKeys.VOLUME_UP:
-                    MediaPlayer.Volume += 10;
+                    MediaPlayer.Volume += 5;
                     e.Handled = true;
                     break;
                 case EVirtualKeys.VOLUME_DOWN:
-                    MediaPlayer.Volume -= 10;
+                    MediaPlayer.Volume -= 5;
                     e.Handled = true;
                     break;
             }
