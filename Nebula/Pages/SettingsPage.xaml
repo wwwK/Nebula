@@ -21,7 +21,7 @@
                 <ListViewItem Content="{x:Static resx:nebula.About}" Tag="ABOUT" />
             </ListView.Items>
         </ListView>
-        <Button Grid.Column="0" Content="Save Settings" Margin="24 0 0 0" Background="Green"
+        <Button Grid.Column="0" Content="{x:Static resx:nebula.SaveSettings}" Margin="24 0 0 0" Background="Green"
                 HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Click="OnSaveSettingsClick" />
         <StackPanel Orientation="Vertical" Grid.Column="1" Margin="15 0 0 0">
             <TextBlock x:Name="Header" FontSize="24" />

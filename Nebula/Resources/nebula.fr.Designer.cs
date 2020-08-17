@@ -232,7 +232,7 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Creer une Playlist.
+        ///   Looks up a localized string similar to Créer une Playlist.
         /// </summary>
         public static string CreatePlaylist {
             get {
@@ -286,7 +286,7 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Exporter une playlist.
+        ///   Looks up a localized string similar to Exporter une Playlist.
         /// </summary>
         public static string ExportPlaylist {
             get {
@@ -471,6 +471,15 @@ namespace Nebula.Resources {
         public static string Repeat {
             get {
                 return ResourceManager.GetString("Repeat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sauvegarder.
+        /// </summary>
+        public static string SaveSettings {
+            get {
+                return ResourceManager.GetString("SaveSettings", resourceCulture);
             }
         }
         

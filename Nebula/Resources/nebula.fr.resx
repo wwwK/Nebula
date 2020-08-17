@@ -73,7 +73,7 @@
         <value>Ajouter a une playlist</value>
     </data>
     <data name="CreatePlaylist" xml:space="preserve">
-        <value>Creer une Playlist</value>
+        <value>Créer une Playlist</value>
     </data>
     <data name="Remove" xml:space="preserve">
         <value>Supprimer</value>
@@ -82,7 +82,7 @@
         <value>Par {0}</value>
     </data>
     <data name="ExportPlaylist" xml:space="preserve">
-        <value>Exporter une playlist</value>
+        <value>Exporter une Playlist</value>
     </data>
     <data name="ImportPlaylist" xml:space="preserve">
         <value>Importer une Playlist</value>
@@ -194,5 +194,8 @@
     </data>
     <data name="Keyboard" xml:space="preserve">
         <value>Clavier</value>
+    </data>
+    <data name="SaveSettings" xml:space="preserve">
+        <value>Sauvegarder</value>
     </data>
 </root>

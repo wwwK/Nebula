@@ -192,4 +192,7 @@
     <data name="Keyboard" xml:space="preserve">
         <value>Keyboard</value>
     </data>
+    <data name="SaveSettings" xml:space="preserve">
+        <value>Save Settings</value>
+    </data>
 </root>
