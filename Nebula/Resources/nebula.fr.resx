@@ -138,4 +138,61 @@
     <data name="MediaAlreadyExistsMsg" xml:space="preserve">
         <value>Cette playlist contient déjà '{0}', voulez-vous vraiment l’ajouter ?</value>
     </data>
+    <data name="General" xml:space="preserve">
+        <value>Général</value>
+    </data>
+    <data name="Appearance" xml:space="preserve">
+        <value>Apparence</value>
+    </data>
+    <data name="About" xml:space="preserve">
+        <value>À propos</value>
+    </data>
+    <data name="Privacy" xml:space="preserve">
+        <value>Confidentialité</value>
+    </data>
+    <data name="AboutMadeBy" xml:space="preserve">
+        <value>Créer avec ❤ par Unreal852</value>
+    </data>
+    <data name="AboutNebula" xml:space="preserve">
+        <value>Nebula Version {0}</value>
+    </data>
+    <data name="AboutThanksTo" xml:space="preserve">
+        <value>Merci à Jetbrains pour fournir une licence Open Source gratuite.</value>
+    </data>
+    <data name="CheckForUpdate" xml:space="preserve">
+        <value>Rechercher les mises à jour</value>
+    </data>
+    <data name="UpdateCheckFailedMsg" xml:space="preserve">
+        <value>Échec de la recherche des mises à jour, veuillez réessayer plus tard. si ce problème persiste veuillez essayez de réinstaller Nebula.</value>
+    </data>
+    <data name="UpdateCheckFailed" xml:space="preserve">
+        <value>Échec de la vérification des mises à jour</value>
+    </data>
+    <data name="UpdateCheckAvailableMsg" xml:space="preserve">
+        <value>Une mise à jour est disponible souhaitez-vous la télécharger ?</value>
+    </data>
+    <data name="UpdateCheckUpToDate" xml:space="preserve">
+        <value>Aucune mise à jour disponible</value>
+    </data>
+    <data name="UpdateCheckUpToDateMsg" xml:space="preserve">
+        <value>Aucune mise à jour disponible, voulez-vous forcer la mise a jour ?</value>
+    </data>
+    <data name="UpdateCheckAvailable" xml:space="preserve">
+        <value>Mise a jour disponible</value>
+    </data>
+    <data name="ButtonOk" xml:space="preserve">
+        <value>Ok</value>
+    </data>
+    <data name="SettingsDefaultSoundLevel" xml:space="preserve">
+        <value>Volume du son par défaut</value>
+    </data>
+    <data name="SettingsKeyboardMediaEnable" xml:space="preserve">
+        <value>Activer le support des touches média du clavier</value>
+    </data>
+    <data name="SettingsKeyboardMediaSoundIncDecValue" xml:space="preserve">
+        <value>Valeur d'augmentation / diminution du son via les touches média</value>
+    </data>
+    <data name="Keyboard" xml:space="preserve">
+        <value>Clavier</value>
+    </data>
 </root>

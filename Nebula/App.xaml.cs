@@ -16,9 +16,6 @@ namespace Nebula
     {
         private void OnAppStart(object sender, StartupEventArgs e)
         {
-#if RELEASE
-            AppCenter.Start("df3a859e-110a-43b2-892d-71f4650c9c70", typeof(Analytics), typeof(Crashes));
-#endif
             Thread.CurrentThread.CurrentUICulture = CultureInfo.CurrentUICulture;
             bool justUpdated = false;
             bool justInstalled = false;
@@ -42,6 +39,11 @@ namespace Nebula
 
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
+            
+#if RELEASE
+            
+            AppCenter.Start("df3a859e-110a-43b2-892d-71f4650c9c70", typeof(Analytics), typeof(Crashes));
+#endif
         }
 
         private void OnAppExit(object sender, ExitEventArgs e)

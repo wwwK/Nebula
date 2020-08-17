@@ -61,6 +61,42 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string About {
+            get {
+                return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Made with ❤ by Unreal852.
+        /// </summary>
+        public static string AboutMadeBy {
+            get {
+                return ResourceManager.GetString("AboutMadeBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nebula Version {0}.
+        /// </summary>
+        public static string AboutNebula {
+            get {
+                return ResourceManager.GetString("AboutNebula", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thanks to Jetbrains for providing a free Open Source License..
+        /// </summary>
+        public static string AboutThanksTo {
+            get {
+                return ResourceManager.GetString("AboutThanksTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add to listening session.
         /// </summary>
         public static string AddToListeningSession {
@@ -133,6 +169,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string ButtonOk {
+            get {
+                return ResourceManager.GetString("ButtonOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
         public static string ButtonYes {
@@ -156,6 +201,15 @@ namespace Nebula.Resources {
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check for Updates.
+        /// </summary>
+        public static string CheckForUpdate {
+            get {
+                return ResourceManager.GetString("CheckForUpdate", resourceCulture);
             }
         }
         
@@ -250,6 +304,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string General {
+            get {
+                return ResourceManager.GetString("General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home.
         /// </summary>
         public static string Home {
@@ -264,6 +327,15 @@ namespace Nebula.Resources {
         public static string ImportPlaylist {
             get {
                 return ResourceManager.GetString("ImportPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keyboard.
+        /// </summary>
+        public static string Keyboard {
+            get {
+                return ResourceManager.GetString("Keyboard", resourceCulture);
             }
         }
         
@@ -358,6 +430,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Privacy.
+        /// </summary>
+        public static string Privacy {
+            get {
+                return ResourceManager.GetString("Privacy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recently Listened.
         /// </summary>
         public static string RecentlyListened {
@@ -394,6 +475,33 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Default sound level.
+        /// </summary>
+        public static string SettingsDefaultSoundLevel {
+            get {
+                return ResourceManager.GetString("SettingsDefaultSoundLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable keyboard&apos;s media keys support.
+        /// </summary>
+        public static string SettingsKeyboardMediaEnable {
+            get {
+                return ResourceManager.GetString("SettingsKeyboardMediaEnable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sound value increase / decrease via media keys.
+        /// </summary>
+        public static string SettingsKeyboardMediaSoundIncDecValue {
+            get {
+                return ResourceManager.GetString("SettingsKeyboardMediaSoundIncDecValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shuffle.
         /// </summary>
         public static string Shuffle {
@@ -417,6 +525,60 @@ namespace Nebula.Resources {
         public static string Unmute {
             get {
                 return ResourceManager.GetString("Unmute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Available.
+        /// </summary>
+        public static string UpdateCheckAvailable {
+            get {
+                return ResourceManager.GetString("UpdateCheckAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Available, would you like to download it ?.
+        /// </summary>
+        public static string UpdateCheckAvailableMsg {
+            get {
+                return ResourceManager.GetString("UpdateCheckAvailableMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to check updates.
+        /// </summary>
+        public static string UpdateCheckFailed {
+            get {
+                return ResourceManager.GetString("UpdateCheckFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to search for updates, please try again later. If this problem persists please try reinstalling Nebula..
+        /// </summary>
+        public static string UpdateCheckFailedMsg {
+            get {
+                return ResourceManager.GetString("UpdateCheckFailedMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No updates available.
+        /// </summary>
+        public static string UpdateCheckUpToDate {
+            get {
+                return ResourceManager.GetString("UpdateCheckUpToDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No updates available, would you like to force update ?.
+        /// </summary>
+        public static string UpdateCheckUpToDateMsg {
+            get {
+                return ResourceManager.GetString("UpdateCheckUpToDateMsg", resourceCulture);
             }
         }
     }

@@ -70,7 +70,7 @@ namespace Nebula.Pages
         {
             AppBarButton clicked = (AppBarButton) sender;
             if (clicked.DataContext is IMediaInfo mediaInfo)
-                await NebulaClient.MediaPlayer.Open(mediaInfo);
+                await NebulaClient.MediaPlayer.Open(mediaInfo, true);
         }
 
         private void OnRemoveClick(object sender, RoutedEventArgs e)
@@ -105,9 +105,9 @@ namespace Nebula.Pages
                     ? null
                     : new Uri(dialog.PlaylistThumbnail.Text);
                 if (oldname != Playlist.Name)
-                    NebulaClient.Settings.RenamePlaylist(oldname, Playlist);
+                    NebulaClient.Playlists.RenamePlaylist(oldname, Playlist);
                 else
-                    NebulaClient.Settings.SavePlaylist(Playlist);
+                    NebulaClient.Playlists.SavePlaylist(Playlist);
                 NebulaClient.Navigate(typeof(PlaylistPage), Playlist);
             }
         }

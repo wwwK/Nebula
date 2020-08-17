@@ -17,16 +17,17 @@ namespace Nebula.Core.Medias.Player
 {
     public class MediaPlayer : Component
     {
-        private bool     _repeat       = false;
-        private bool     _muted        = false;
-        private bool     _shuffle      = false;
-        private bool     _manualStop   = false;
-        private int      _volume       = 50;
+        private bool     _repeat;
+        private bool     _muted;
+        private bool     _shuffle;
+        private bool     _manualStop;
+        private int      _volume;
         private TimeSpan _lastPosition = TimeSpan.Zero;
 
         public MediaPlayer()
         {
             NebulaClient.Tick += NebulaClientOnTick;
+            _volume = NebulaClient.Settings.General.DefaultSoundLevel;
         }
 
         public  PlaybackState PlaybackState    => SoundOut?.PlaybackState ?? PlaybackState.Stopped;

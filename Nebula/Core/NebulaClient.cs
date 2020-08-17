@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using EasySharp.Windows.Hookers;
 using EasySharp.Windows.Hookers.Keyboard;
-using Microsoft.AppCenter;
-using Microsoft.AppCenter.Analytics;
+using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core.Events;
 using Nebula.Core.Medias;
@@ -14,8 +13,10 @@ using Nebula.Core.Medias.Player;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Provider;
 using Nebula.Core.Medias.Provider.Providers.Youtube;
+using Nebula.Core.Settings;
 using Nebula.Core.Updater;
 using Nebula.Pages;
+using Nebula.Pages.Dialogs;
 
 namespace Nebula.Core
 {
@@ -24,7 +25,7 @@ namespace Nebula.Core
         private static List<IMediaProvider> MediaProviders { get; } = new List<IMediaProvider>();
         private static MainWindow           MainWindow     { get; }
         public static  MediaPlayer          MediaPlayer    { get; }
-        public static  NebulaUpdater        Updater        { get; }
+        public static  NebulaUpdaterV2      Updater        { get; }
         public static  NebulaSession        Session        { get; }
         public static  NebulaSettings       Settings       { get; }
         public static  PlaylistsManager     Playlists      { get; }
@@ -37,9 +38,9 @@ namespace Nebula.Core
         static NebulaClient()
         {
             MainWindow = Application.Current.MainWindow as MainWindow;
-            Settings = new NebulaSettings();
+            Settings = new NebulaSettings(); //Needs to be first 
             MediaPlayer = new MediaPlayer();
-            Updater = new NebulaUpdater();
+            Updater = new NebulaUpdaterV2();
             Playlists = new PlaylistsManager();
             KeyboardHooker = new KeyboardHooker();
             Session = new NebulaSession(); //Needs to be latest
@@ -47,10 +48,14 @@ namespace Nebula.Core
             MediaProviders.Add(new YoutubeMediaProvider());
 
             KeyboardHooker.KeyDown += OnGlobalKeyDown;
-            KeyboardHooker.Hook();
+            if (Settings.General.MediaKeyEnabled)
+                KeyboardHooker.Hook();
 
             CancellationTokenSource = new CancellationTokenSource();
             Task.Run(() => AppTick(CancellationTokenSource.Token, 500));
+#if RELEASE
+            CheckForUpdate(true);
+#endif
         }
 
         private static void OnGlobalKeyDown(object sender, KeyboardKeyDownEventArgs e)
@@ -78,11 +83,11 @@ namespace Nebula.Core
                     e.Handled = true;
                     break;
                 case EVirtualKeys.VOLUME_UP:
-                    MediaPlayer.Volume += 5;
+                    MediaPlayer.Volume += Settings.General.MediaKeySoundIncDecValue;
                     e.Handled = true;
                     break;
                 case EVirtualKeys.VOLUME_DOWN:
-                    MediaPlayer.Volume -= 5;
+                    MediaPlayer.Volume -= Settings.General.MediaKeySoundIncDecValue;
                     e.Handled = true;
                     break;
             }
@@ -102,6 +107,39 @@ namespace Nebula.Core
         public static void Navigate(Type type, object arg, NavigationTransitionInfo transitionInfo)
         {
             MainWindow.ContentFrame.Navigate(type, arg, transitionInfo);
+        }
+
+        public static async Task CheckForUpdate(bool silentIfUpToDate)
+        {
+            UpdateCheckResult checkResult = await Updater.CheckForUpdate();
+            switch (checkResult)
+            {
+                case UpdateCheckResult.Failed when !silentIfUpToDate:
+                    await NebulaMessageBox.ShowOk("UpdateCheckFailed", "UpdateCheckFailedMsg");
+                    break;
+                case UpdateCheckResult.UpdateAvailable:
+                {
+                    ContentDialogResult result =
+                        await NebulaMessageBox.ShowYesNo("UpdateCheckAvailable", "UpdateCheckAvailableMsg");
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        Updater.DownloadUpdate();
+                        Navigate(typeof(SettingsPage), "ABOUT");
+                    }
+                }
+                    break;
+                case UpdateCheckResult.UpToDate when !silentIfUpToDate:
+                {
+                    ContentDialogResult result =
+                        await NebulaMessageBox.ShowYesNo("UpdateCheckUpToDate", "UpdateCheckUpToDateMsg");
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        Updater.DownloadUpdate();
+                        Navigate(typeof(SettingsPage), "ABOUT");
+                    }
+                }
+                    break;
+            }
         }
 
         public static TProvider GetMediaProvider<TProvider>() where TProvider : IMediaProvider

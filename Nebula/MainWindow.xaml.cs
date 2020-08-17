@@ -62,12 +62,12 @@ namespace Nebula
         {
             UpdateMediaInfoWidth();
         }
-        
+
         private void OnPaneClosed(NavigationView sender, object obj)
         {
             UpdateMediaInfoWidth();
         }
-        
+
         private void OnNavViewDisplayModeChanged(NavigationView sender, NavigationViewDisplayModeChangedEventArgs args)
         {
             Thickness currMargin = AppTitleBar.Margin;
@@ -82,7 +82,7 @@ namespace Nebula
         {
             if (args.IsSettingsInvoked)
             {
-                //
+                NebulaClient.Navigate(typeof(SettingsPage));
             }
             else if (args.InvokedItemContainer is NavigationViewItem navItem)
                 NebulaClient.Navigate(navItem.Tag as Type);

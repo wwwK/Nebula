@@ -43,7 +43,8 @@ namespace Nebula.Core.Medias.Playlist
             else
                 MediaList.Add(mediaInfo);
             UpdateTotalDuration();
-            Save();
+            if (AutoSave)
+                Save();
             MediaAdded?.Invoke(this, new PlaylistMediaAddedEventArgs(this, mediaInfo, insertIndex));
         }
 
@@ -51,7 +52,8 @@ namespace Nebula.Core.Medias.Playlist
         {
             MediaList.AddRange(medias);
             UpdateTotalDuration();
-            Save();
+            if (AutoSave)
+                Save();
         }
 
         public void RemoveMedia(IMediaInfo mediaInfo)
@@ -60,7 +62,8 @@ namespace Nebula.Core.Medias.Playlist
                 return;
             MediaList.Remove(mediaInfo);
             UpdateTotalDuration();
-            Save();
+            if (AutoSave)
+                Save();
         }
 
         public void RemoveMedias(params IMediaInfo[] medias) //Todo: bad way of doing that
@@ -77,9 +80,7 @@ namespace Nebula.Core.Medias.Playlist
 
         private void Save()
         {
-            if (!AutoSave)
-                return;
-            NebulaClient.Settings.SavePlaylist(this);
+            NebulaClient.Playlists.SavePlaylist(this);
         }
 
         public override string ToString()

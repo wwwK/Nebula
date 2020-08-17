@@ -13,20 +13,22 @@ namespace Nebula.Pages.Dialogs
             InitializeComponent();
             Title = NebulaClient.GetLocString(titleKey);
             MessageBoxText.Text = text;
-            PrimaryButtonText = primaryKey == null
-                ? NebulaClient.GetLocString("ButtonYes")
-                : NebulaClient.GetLocString(primaryKey);
-            SecondaryButtonText = secondaryKey == null
-                ? null
-                : NebulaClient.GetLocString(secondaryKey);
-            CloseButtonText = cancelKey == null
-                ? NebulaClient.GetLocString("ButtonNo")
-                : NebulaClient.GetLocString(cancelKey);
+            if (!string.IsNullOrWhiteSpace(primaryKey))
+                PrimaryButtonText = NebulaClient.GetLocString(primaryKey);
+            if (!string.IsNullOrWhiteSpace(secondaryKey))
+                SecondaryButtonText = NebulaClient.GetLocString(secondaryKey);
+            if (!string.IsNullOrWhiteSpace(cancelKey))
+                CloseButtonText = NebulaClient.GetLocString(cancelKey);
         }
 
         public static async Task<ContentDialogResult> ShowYesNo(string titleKey, string text, params object[] format)
         {
-            return await Show(titleKey, text, null, null, null, format);
+            return await Show(titleKey, text, "ButtonYes", null, "ButtonNo", format);
+        }
+
+        public static async Task<ContentDialogResult> ShowOk(string titleKey, string text, params object[] format)
+        {
+            return await Show(titleKey, text, null, null, "ButtonOk", format);
         }
 
         public static async Task<ContentDialogResult> Show(string titleKey, string text, string primary = null,
