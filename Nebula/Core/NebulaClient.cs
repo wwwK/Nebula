@@ -104,7 +104,9 @@ namespace Nebula.Core
 
         public static void Navigate(Type type, object arg)
         {
-            MainWindow.ContentFrame.Navigate(type, arg);
+            MainWindow.ContentFrame.Navigate(type, arg, Settings.Appearance.DisplayMode == "Top"
+                ? new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft}
+                : new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromBottom});
         }
 
         public static void Navigate(Type type, object arg, NavigationTransitionInfo transitionInfo)
