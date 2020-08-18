@@ -52,7 +52,7 @@ namespace Nebula.Pages
         {
             NebulaClient.Session.AddBrowserSearch(SearchBox.Text);
             Medias.Clear();
-            IAsyncEnumerable<IMediaInfo> medias = NebulaClient.Search(query, 0, 1);
+            IAsyncEnumerable<IMediaInfo> medias = NebulaClient.Search(query);
             await foreach (IMediaInfo mediaInfo in medias)
                 NebulaClient.BeginInvoke(() => { Medias.Add(mediaInfo); }); //Todo: BeginInvoke > Invoke
         }

@@ -27,7 +27,8 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
         {
             if (args == null || args.Length < 2)
             {
-                await foreach (Video video in Youtube.Search.GetVideosAsync(query, 0, 1))
+                await foreach (Video video in Youtube.Search.GetVideosAsync(query, 0,
+                    NebulaClient.Settings.General.MediaKeySoundIncDecValue))
                     yield return VideoToMediaInfo(video);
             }
             else if (args[0] is int startPage && args[1] is int pageCount)
@@ -36,7 +37,8 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
                     yield return VideoToMediaInfo(video);
             }
             else
-                throw new ArgumentException("Missing and/or wrong arguments. Supported arguments are null or int(startPage), int(pageCount)");
+                throw new ArgumentException(
+                    "Missing and/or wrong arguments. Supported arguments are null or int(startPage), int(pageCount)");
         }
 
         public async IAsyncEnumerable<IMediaInfo> GetArtistMedias(string query, params object[] args)

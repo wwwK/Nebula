@@ -484,6 +484,24 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Always show header.
+        /// </summary>
+        public static string SettingsAlwaysShowHeader {
+            get {
+                return ResourceManager.GetString("SettingsAlwaysShowHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default sound level.
         /// </summary>
         public static string SettingsDefaultSoundLevel {
@@ -507,6 +525,24 @@ namespace Nebula.Resources {
         public static string SettingsKeyboardMediaSoundIncDecValue {
             get {
                 return ResourceManager.GetString("SettingsKeyboardMediaSoundIncDecValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum number of search pages (be careful, increasing this value too much can reduce performance)..
+        /// </summary>
+        public static string SettingsSearchMaxPages {
+            get {
+                return ResourceManager.GetString("SettingsSearchMaxPages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Mode.
+        /// </summary>
+        public static string SettingsViewMode {
+            get {
+                return ResourceManager.GetString("SettingsViewMode", resourceCulture);
             }
         }
         

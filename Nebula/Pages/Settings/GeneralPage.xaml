@@ -12,6 +12,11 @@
                       Maximum="100" SmallChange="1"
                       LargeChange="10" Value="{Binding DefaultSoundLevel, Mode=TwoWay}"
                       SpinButtonPlacementMode="Inline" />
+        <TextBlock Text="{x:Static resx:nebula.Search}" FontSize="26" />
+        <ui:NumberBox x:Name="SearchMaxPages" Header="{x:Static resx:nebula.SettingsSearchMaxPages}" Minimum="1"
+                      Maximum="10" SmallChange="1"
+                      LargeChange="10" Value="{Binding SearchMaxPages, Mode=TwoWay}"
+                      SpinButtonPlacementMode="Inline" />
         <TextBlock Text="{x:Static resx:nebula.Keyboard}" FontSize="26" />
         <CheckBox Content="{x:Static resx:nebula.SettingsKeyboardMediaEnable}"
                   IsChecked="{Binding MediaKeyEnabled, Mode=TwoWay}" />

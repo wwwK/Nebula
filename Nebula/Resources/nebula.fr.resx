@@ -198,4 +198,16 @@
     <data name="SaveSettings" xml:space="preserve">
         <value>Sauvegarder</value>
     </data>
+    <data name="SettingsViewMode" xml:space="preserve">
+        <value>Affichage</value>
+    </data>
+    <data name="SettingsSearchMaxPages" xml:space="preserve">
+        <value>Nombre maximal de pages de recherche (attention, trop augmenter cette valeur peut réduire les performances).</value>
+    </data>
+    <data name="SettingsAlwaysShowHeader" xml:space="preserve">
+        <value>Toujours afficher l'en-tête</value>
+    </data>
+    <data name="Settings" xml:space="preserve">
+        <value>Paramètres</value>
+    </data>
 </root>

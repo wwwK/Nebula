@@ -5,7 +5,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
+using EasySharp.Misc;
 
 namespace Nebula.Core.Updater
 {
@@ -13,66 +15,82 @@ namespace Nebula.Core.Updater
     {
         public NebulaUpdater()
         {
-#if RELEASE
-            Client.DownloadFileCompleted += OnDownloadFileCompleted;
-            VerifyVersion();
-#endif
+            WebClient.DownloadFileCompleted += OnDownloadFileCompleted;
         }
 
-        private string                               VersionUrl { get; } = "https://pastebin.com/raw/G8uhLrcB";
-        private string                               UpdateExtractorFileName { get; } = "Nebula.UpdateExtractor.exe";
-        private WebClient                            Client { get; } = new WebClient();
-        private Queue<(string Url, string FileName)> QueuedDownloads { get; } = new Queue<(string, string)>();
+        public  WebClient             WebClient               { get; } = new WebClient();
+        public  string                CurrentDownloadedFile   { get; private set; }
+        private Uri                   VersionUri              { get; } = new Uri("https://pastebin.com/raw/G8uhLrcB");
+        private string                UpdateExtractorFileName { get; } = "Nebula.UpdateExtractor.exe";
+        private Queue<UpdateFileInfo> QueuedFiles             { get; } = new Queue<UpdateFileInfo>();
 
-        public async void VerifyVersion()
+        public async Task<UpdateCheckResult> CheckForUpdate()
         {
-            using WebResponse responseAsync = await WebRequest.Create(VersionUrl).GetResponseAsync();
-            Stream responseStream = responseAsync?.GetResponseStream();
-            if (responseStream == null)
-                return;
-            using StreamReader streamReader = new StreamReader(responseStream);
-            string str1 = await streamReader.ReadLineAsync();
-            if (str1 == null || !str1.StartsWith("#") || IsCurrentVersion(str1.Replace("#", "")))
-                return;
-            string empty = string.Empty;
-            string str2;
-            while ((str2 = await streamReader.ReadLineAsync()) != null)
+            await foreach (string line in ReadUpdateFile())
             {
-                if (str2.StartsWith("http") && str2.Contains("|"))
-                {
-                    string[] strArray = str2.Split('|');
-                    if (strArray.Length == 2)
-                        QueuedDownloads.Enqueue((strArray[0], strArray[1]));
-                }
+                if (string.IsNullOrWhiteSpace(line) || !line.StartsWith("#"))
+                    return UpdateCheckResult.Failed;
+                return IsCurrentVersion(line.Replace("#", ""))
+                    ? UpdateCheckResult.UpToDate
+                    : UpdateCheckResult.UpdateAvailable;
             }
 
-            int num = (int) MessageBox.Show(
-                "A Nebula Update is available, the application will restart in order to apply this update.",
-                "Nebula Updater");
-            ProcessDownloads();
+            return UpdateCheckResult.Failed;
         }
 
-        private bool IsCurrentVersion(string version)
+        public async void DownloadUpdate()
         {
-            Version assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version;
-            return assemblyVersion != null && version == assemblyVersion.ToString();
+            await foreach (string line in ReadUpdateFile())
+            {
+                if (!line.StartsWith("http") && !line.Contains("|"))
+                    continue;
+                string[] split = line.Split('|');
+                if (split.Length != 2)
+                    continue;
+                QueuedFiles.Enqueue(new UpdateFileInfo(new Uri(split[0]), split[1]));
+            }
+
+            if (QueuedFiles.Count > 2)
+                ProcessDownloads();
+        }
+
+        private async IAsyncEnumerable<string> ReadUpdateFile()
+        {
+            using WebResponse response = await WebRequest.Create(VersionUri).GetResponseAsync();
+            await using Stream responseStream = response?.GetResponseStream();
+            if (responseStream != null)
+            {
+                using StreamReader streamReader = new StreamReader(responseStream);
+                string line;
+                while ((line = await streamReader.ReadLineAsync()) != null)
+                    yield return line;
+            }
         }
 
         private bool ProcessDownloads()
         {
-            if (QueuedDownloads.Count <= 0)
+            if (QueuedFiles.Count <= 0)
                 return false;
-            (string Url, string FileName) tuple = QueuedDownloads.Dequeue();
-            Client.DownloadFileAsync(new Uri(tuple.Url), tuple.FileName);
+            UpdateFileInfo fileInfo = QueuedFiles.Dequeue();
+            CurrentDownloadedFile = fileInfo.FileName;
+            WebClient.DownloadFileAsync(fileInfo.Uri, fileInfo.FileName);
             return true;
+        }
+
+        private bool IsCurrentVersion(string version)
+        {
+            Version assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            return assemblyVersion != null && version == assemblyVersion.ToString();
         }
 
         private void OnDownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (ProcessDownloads())
                 return;
-            Process.Start(UpdateExtractorFileName, Environment.CurrentDirectory);
+#if RELEASE
+            Process.Start(UpdateExtractorFileName, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
             Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
+#endif
         }
     }
 }

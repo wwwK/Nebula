@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,8 +7,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Shell;
 using ModernWpf.Controls;
 using Nebula.Core;
+using Nebula.Core.Extensions;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Player.Events;
 using Nebula.Core.UI;
@@ -23,7 +26,6 @@ namespace Nebula
         public MainWindow()
         {
             InitializeComponent();
-
             NavView.PaneOpening += (sender, args) => UpdateAppTitleMargin(sender);
             NavView.PaneClosing += (sender, args) => UpdateAppTitleMargin(sender);
             NebulaClient.MediaPlayer.MediaChanged += OnMediaChanged;
@@ -38,6 +40,53 @@ namespace Nebula
         }
 
         private FrameNavigationTracker FrameTracker { get; }
+
+        public void SetViewMode(string displayMode)
+        {
+            SetViewMode(Enum.TryParse(NebulaClient.Settings.Appearance.DisplayMode,
+                out NavigationViewPaneDisplayMode mode)
+                ? mode
+                : NavigationViewPaneDisplayMode.Left);
+        }
+
+        public void SetViewMode(NavigationViewPaneDisplayMode displayMode)
+        {
+            NavView.PaneDisplayMode = displayMode;
+            NavView.IsTitleBarAutoPaddingEnabled = false;
+            if (displayMode == NavigationViewPaneDisplayMode.Top)
+            {
+                AppTitle.Visibility = Visibility.Collapsed;
+                SettingsButton.Visibility = Visibility.Visible;
+                ControlBoxRectangle.Visibility = Visibility.Visible;
+                LibraryHeader.Visibility = Visibility.Collapsed;
+                NavView.IsSettingsVisible = false;
+                NavView.AlwaysShowHeader = false;
+                SearchBox.Width = 250;
+                SetHitTestVisibleInChrome(true, SearchBox, HomeButton, BrowseButton, PlaylistsButton,
+                    RecentlyListenedButton, SettingsButton);
+            }
+            else
+            {
+                AppTitle.Visibility = Visibility.Visible;
+                SettingsButton.Visibility = Visibility.Collapsed;
+                LibraryHeader.Visibility = Visibility.Visible;
+                ControlBoxRectangle.Visibility = Visibility.Collapsed;
+                NavView.IsSettingsVisible = true;
+                NavView.AlwaysShowHeader = true;
+                SearchBox.Width = 200;
+                SetHitTestVisibleInChrome(false, SearchBox, HomeButton, BrowseButton, PlaylistsButton,
+                    RecentlyListenedButton, SettingsButton);
+                UpdateAppTitleMargin(NavView);
+            }
+
+            UpdateMediaInfoWidth();
+        }
+
+        private void SetHitTestVisibleInChrome(bool value, params IInputElement[] elements)
+        {
+            foreach (IInputElement element in elements)
+                WindowChrome.SetIsHitTestVisibleInChrome(element, value);
+        }
 
         private void UpdateAppTitleMargin(NavigationView sender)
         {
@@ -56,6 +105,7 @@ namespace Nebula
             Thickness currMargin = AppTitleBar.Margin;
             AppTitleBar.Margin = new Thickness(currMargin.Left, currMargin.Top,
                 TitleBar.GetSystemOverlayRightInset(this), currMargin.Bottom);
+            SetViewMode(NebulaClient.Settings.Appearance.DisplayMode);
         }
 
         private void OnPaneOpened(NavigationView sender, object obj)
@@ -238,6 +288,11 @@ namespace Nebula
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateMediaInfoWidth();
+        }
+
+        private void OnSettingsClicked(object sender, RoutedEventArgs e)
+        {
+            NebulaClient.Navigate(typeof(SettingsPage));
         }
     }
 }

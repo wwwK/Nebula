@@ -23,9 +23,9 @@ namespace Nebula.Core
     public static class NebulaClient
     {
         private static List<IMediaProvider> MediaProviders { get; } = new List<IMediaProvider>();
-        private static MainWindow           MainWindow     { get; }
+        public static  MainWindow           MainWindow     { get; }
         public static  MediaPlayer          MediaPlayer    { get; }
-        public static  NebulaUpdaterV2      Updater        { get; }
+        public static  NebulaUpdater        Updater        { get; }
         public static  NebulaSession        Session        { get; }
         public static  NebulaSettings       Settings       { get; }
         public static  PlaylistsManager     Playlists      { get; }
@@ -40,7 +40,7 @@ namespace Nebula.Core
             MainWindow = Application.Current.MainWindow as MainWindow;
             Settings = new NebulaSettings(); //Needs to be first 
             MediaPlayer = new MediaPlayer();
-            Updater = new NebulaUpdaterV2();
+            Updater = new NebulaUpdater();
             Playlists = new PlaylistsManager();
             KeyboardHooker = new KeyboardHooker();
             Session = new NebulaSession(); //Needs to be latest
@@ -96,7 +96,10 @@ namespace Nebula.Core
         public static void Navigate(Type type)
         {
             if (type != null && MainWindow.ContentFrame.CurrentSourcePageType != type)
-                MainWindow.ContentFrame.Navigate(type);
+                MainWindow.ContentFrame.Navigate(type, null,
+                    Settings.Appearance.DisplayMode == "Top"
+                        ? new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft}
+                        : new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromBottom});
         }
 
         public static void Navigate(Type type, object arg)

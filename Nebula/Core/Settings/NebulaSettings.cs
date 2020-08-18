@@ -82,11 +82,22 @@ namespace Nebula.Core.Settings
         {
             if (AutoSave)
                 SaveSettings();
-            
-            if (General.MediaKeyEnabled && !NebulaClient.KeyboardHooker.IsHooked)
-                NebulaClient.KeyboardHooker.Hook();
-            else if (!General.MediaKeyEnabled && NebulaClient.KeyboardHooker.IsHooked)
-                NebulaClient.KeyboardHooker.UnHook();
+
+            if (sender == General)
+            {
+                if (General.MediaKeyEnabled && !NebulaClient.KeyboardHooker.IsHooked)
+                    NebulaClient.KeyboardHooker.Hook();
+                else if (!General.MediaKeyEnabled && NebulaClient.KeyboardHooker.IsHooked)
+                    NebulaClient.KeyboardHooker.UnHook();
+            }
+            else if (sender == Appearance)
+            {
+                if (Appearance.DisplayMode != NebulaClient.MainWindow.NavView.DisplayMode.ToString())
+                    NebulaClient.MainWindow.SetViewMode(Appearance.DisplayMode);
+            }
+            else if (sender == Privacy)
+            {
+            }
         }
 
         /*

@@ -23,12 +23,9 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-
         <DataTemplate x:Key="NavigationViewHeaderTemplate">
             <TextBlock Text="{Binding}" Margin="12,32,0,0" />
         </DataTemplate>
-
-
     </Window.Resources>
 
     <Grid>
@@ -46,13 +43,15 @@
                        Style="{StaticResource CaptionTextBlockStyle}" />
         </Grid>
         <ui:NavigationView x:Name="NavView"
-                           AlwaysShowHeader="True"
                            Header="{Binding SelectedItem.Content, RelativeSource={RelativeSource Self}, FallbackValue=' '}"
                            HeaderTemplate="{StaticResource NavigationViewHeaderTemplate}"
                            IsBackButtonVisible="Visible"
                            IsTitleBarAutoPaddingEnabled="False"
                            IsPaneOpen="True"
                            OpenPaneLength="240"
+                           PaneDisplayMode="Left"
+                           IsHitTestVisible="True"
+                           IsSettingsVisible="False"
                            IsBackEnabled="{Binding ElementName=ContentFrame, Path=CanGoBack}"
                            DisplayModeChanged="OnNavViewDisplayModeChanged"
                            ItemInvoked="OnNavViewItemInvoked"
@@ -66,21 +65,24 @@
             </ui:NavigationView.AutoSuggestBox>
 
             <ui:NavigationView.MenuItems>
-                <ui:NavigationViewItem Content="{x:Static resx:nebula.Home}" Tag="{x:Type pages:HomePage}">
+                <ui:NavigationViewItem x:Name="HomeButton" Content="{x:Static resx:nebula.Home}"
+                                       Tag="{x:Type pages:HomePage}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE80F;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Content="{x:Static resx:nebula.Browse}" Tag="{x:Type pages:BrowsePage}">
+                <ui:NavigationViewItem x:Name="BrowseButton" Content="{x:Static resx:nebula.Browse}"
+                                       Tag="{x:Type pages:BrowsePage}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE721F;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItemHeader Content="{x:Static resx:nebula.Library}" />
+                <ui:NavigationViewItemHeader x:Name="LibraryHeader" Content="{x:Static resx:nebula.Library}" />
 
-                <ui:NavigationViewItem Content="{x:Static resx:nebula.Playlists}" Tag="{x:Type pages:PlaylistsPage}">
+                <ui:NavigationViewItem x:Name="PlaylistsButton" Content="{x:Static resx:nebula.Playlists}"
+                                       Tag="{x:Type pages:PlaylistsPage}">
                     <ui:NavigationViewItem.MenuItems>
 
                     </ui:NavigationViewItem.MenuItems>
@@ -89,13 +91,23 @@
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem Content="{x:Static resx:nebula.RecentlyListened}">
+                <ui:NavigationViewItem x:Name="RecentlyListenedButton" Visibility="Collapsed"
+                                       Content="{x:Static resx:nebula.RecentlyListened}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE7F6;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
             </ui:NavigationView.MenuItems>
+
+            <ui:NavigationView.PaneFooter>
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:AppBarButton x:Name="SettingsButton" Icon="Setting" Click="OnSettingsClicked" />
+                    </StackPanel>
+                    <Rectangle x:Name="ControlBoxRectangle" Width="138" />
+                </StackPanel>
+            </ui:NavigationView.PaneFooter>
 
             <Grid>
                 <Grid.RowDefinitions>
@@ -109,8 +121,9 @@
                 </ui:CommandBar>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
                     <Image x:Name="MediaThumbnail" Stretch="Fill" />
-                    <StackPanel x:Name="MediaInfosPanel" Orientation="Vertical" VerticalAlignment="Center" Margin="10 0 0 0">
-                        <TextBlock x:Name="MediaTitle" HorizontalAlignment="Left"/>
+                    <StackPanel x:Name="MediaInfosPanel" Orientation="Vertical" VerticalAlignment="Center"
+                                Margin="10 0 0 0">
+                        <TextBlock x:Name="MediaTitle" HorizontalAlignment="Left" />
                         <TextBlock x:Name="MediaAuthor" HorizontalAlignment="Left" FontSize="12" Foreground="Gray" />
                     </StackPanel>
                 </StackPanel>

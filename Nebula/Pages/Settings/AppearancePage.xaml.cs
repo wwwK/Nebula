@@ -1,4 +1,5 @@
-﻿using ModernWpf.Controls;
+﻿using System;
+using ModernWpf.Controls;
 using Nebula.Core;
 
 namespace Nebula.Pages.Settings
@@ -9,6 +10,8 @@ namespace Nebula.Pages.Settings
         {
             InitializeComponent();
             DataContext = NebulaClient.Settings.Appearance;
+            foreach (NavigationViewPaneDisplayMode value in Enum.GetValues(typeof(NavigationViewPaneDisplayMode)))
+                DisplayModeCmb.Items.Add(value.ToString());
         }
     }
 }
