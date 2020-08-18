@@ -28,7 +28,7 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
             if (args == null || args.Length < 2)
             {
                 await foreach (Video video in Youtube.Search.GetVideosAsync(query, 0,
-                    NebulaClient.Settings.General.MediaKeySoundIncDecValue))
+                    NebulaClient.Settings.General.SearchMaxPages))
                     yield return VideoToMediaInfo(video);
             }
             else if (args[0] is int startPage && args[1] is int pageCount)
