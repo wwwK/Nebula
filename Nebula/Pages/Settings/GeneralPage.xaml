@@ -7,7 +7,7 @@
          xmlns:resx="clr-namespace:Nebula.Resources"
          xmlns:local="clr-namespace:Nebula.Pages.Settings"
          mc:Ignorable="d">
-    <ui:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="15">
+    <ui:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="15" MaxWidth="350">
         <ui:NumberBox x:Name="DefaultSoundVolume" Header="{x:Static resx:nebula.SettingsDefaultSoundLevel}" Minimum="0"
                       Maximum="100" SmallChange="1"
                       LargeChange="10" Value="{Binding DefaultSoundLevel, Mode=TwoWay}"

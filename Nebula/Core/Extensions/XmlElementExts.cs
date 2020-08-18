@@ -1,4 +1,5 @@
-﻿using System.Xml;
+﻿using System;
+using System.Xml;
 
 namespace Nebula.Core.Extensions
 {
@@ -17,6 +18,14 @@ namespace Nebula.Core.Extensions
         public static int GetIntAttribute(this XmlElement element, string attributeName, int defaultValue)
         {
             return int.TryParse(element.GetAttribute(attributeName), out int value) ? value : defaultValue;
+        }
+
+        public static T GetEnumAttribute<T>(this XmlElement element, string attributeName, T defaultValue)
+            where T : struct, IConvertible
+        {
+            return Enum.TryParse(element.GetStringAttribute(attributeName, ""), out T enumValue)
+                ? enumValue
+                : defaultValue;
         }
     }
 }

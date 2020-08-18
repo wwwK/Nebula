@@ -7,9 +7,16 @@
          xmlns:resx="clr-namespace:Nebula.Resources"
          xmlns:local="clr-namespace:Nebula.Pages.Settings"
          mc:Ignorable="d">
-    <ui:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="15">
+    <ui:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="15"
+                         MaxWidth="350">
         <TextBlock />
-        <ComboBox x:Name="DisplayModeCmb" Width="150" ui:ControlHelper.Header="{x:Static resx:nebula.SettingsViewMode}"
+        <ComboBox x:Name="DisplayModeCmb" ui:ControlHelper.Header="{x:Static resx:nebula.SettingsViewMode}"
                   SelectedValue="{Binding DisplayMode, Mode=TwoWay}" />
+        <TextBox HorizontalAlignment="Stretch" ui:ControlHelper.Header="{x:Static resx:nebula.SettingsBackgroundImage}"
+                 Cursor="Hand" Text="{Binding BackgroundImage}" MouseUp="OnBackgroundImageMouseUp"
+                 KeyUp="OnBackgroundImageKeyUp" />
+        <ComboBox x:Name="BackgroundImageCmb"
+                  ui:ControlHelper.Header="{x:Static resx:nebula.SettingsBackgroundImageStretch}"
+                  SelectedValue="{Binding BackgroundImageStretch, Mode=TwoWay}" />
     </ui:SimpleStackPanel>
 </ui:Page>

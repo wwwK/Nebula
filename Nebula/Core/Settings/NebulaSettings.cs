@@ -7,6 +7,7 @@ using System.Xml;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Settings;
+using Nebula.Core.Settings.Extentions;
 using Nebula.Core.Settings.Groups;
 using YoutubeExplode.Playlists;
 
@@ -92,8 +93,10 @@ namespace Nebula.Core.Settings
             }
             else if (sender == Appearance)
             {
-                if (Appearance.DisplayMode != NebulaClient.MainWindow.NavView.DisplayMode.ToString())
-                    NebulaClient.MainWindow.SetViewMode(Appearance.DisplayMode);
+                MainWindow mainWindow = NebulaClient.MainWindow;
+                if (Appearance.DisplayMode != mainWindow.NavView.DisplayMode.ToString())
+                    mainWindow.SetViewMode(Appearance.DisplayMode);
+                mainWindow.BackgroundBrush = Appearance.GetBackgroundImageBrush();
             }
             else if (sender == Privacy)
             {

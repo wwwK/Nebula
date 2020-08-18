@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,6 +14,7 @@ using Nebula.Core;
 using Nebula.Core.Extensions;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Player.Events;
+using Nebula.Core.Settings.Extentions;
 using Nebula.Core.UI;
 using Nebula.Pages;
 
@@ -40,6 +42,18 @@ namespace Nebula
         }
 
         private FrameNavigationTracker FrameTracker { get; }
+
+        public ImageBrush BackgroundBrush
+        {
+            get => ContentFrame.Background as ImageBrush;
+            set
+            {
+                if (value == null)
+                    ContentFrame.Background = new SolidColorBrush(Colors.Black);
+                else
+                    ContentFrame.Background = value;
+            }
+        }
 
         public void SetViewMode(string displayMode)
         {
@@ -106,6 +120,7 @@ namespace Nebula
             AppTitleBar.Margin = new Thickness(currMargin.Left, currMargin.Top,
                 TitleBar.GetSystemOverlayRightInset(this), currMargin.Bottom);
             SetViewMode(NebulaClient.Settings.Appearance.DisplayMode);
+            BackgroundBrush = NebulaClient.Settings.Appearance.GetBackgroundImageBrush();
         }
 
         private void OnPaneOpened(NavigationView sender, object obj)

@@ -210,4 +210,10 @@
     <data name="Settings" xml:space="preserve">
         <value>Paramètres</value>
     </data>
+    <data name="SettingsBackgroundImage" xml:space="preserve">
+        <value>Image d'arrière plan</value>
+    </data>
+    <data name="SettingsBackgroundImageStretch" xml:space="preserve">
+        <value>Étirement d’arrière-plan</value>
+    </data>
 </root>

@@ -511,6 +511,24 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background Image.
+        /// </summary>
+        public static string SettingsBackgroundImage {
+            get {
+                return ResourceManager.GetString("SettingsBackgroundImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background Stretch.
+        /// </summary>
+        public static string SettingsBackgroundImageStretch {
+            get {
+                return ResourceManager.GetString("SettingsBackgroundImageStretch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default sound level.
         /// </summary>
         public static string SettingsDefaultSoundLevel {

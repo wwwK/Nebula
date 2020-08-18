@@ -12,7 +12,7 @@
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <ListView x:Name="MenuListView" Background="#0a0a0a" Margin="24 0 0 0" HorizontalContentAlignment="Center"
+        <ListView x:Name="MenuListView" Background="#0a0a0a" Opacity="50" Margin="24 0 0 0" HorizontalContentAlignment="Center"
                   SelectionChanged="OnSelectionChanged">
             <ListView.Items>
                 <ListViewItem Content="{x:Static resx:nebula.General}" Tag="GENERAL" />

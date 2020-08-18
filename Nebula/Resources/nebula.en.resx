@@ -207,4 +207,10 @@
     <data name="Settings" xml:space="preserve">
         <value>Settings</value>
     </data>
+    <data name="SettingsBackgroundImage" xml:space="preserve">
+        <value>BackgroundImage</value>
+    </data>
+    <data name="SettingsBackgroundImageStretch" xml:space="preserve">
+        <value>Background Stretch</value>
+    </data>
 </root>
