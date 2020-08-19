@@ -65,9 +65,7 @@ namespace Nebula.Pages
         {
             AppBarButton clicked = (AppBarButton) sender;
             if (clicked.DataContext is IMediaInfo mediaInfo)
-            {
                 NebulaClient.MediaPlayer.Open(mediaInfo);
-            }
         }
 
         private void OnAddClick(object sender, RoutedEventArgs e)

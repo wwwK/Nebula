@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace Nebula.Core.Medias
 {
+    /// <summary>
+    /// Provide Media infos to implement by media provider results.
+    /// </summary>
     public interface IMediaInfo
     {
         /// <summary>
@@ -55,6 +58,6 @@ namespace Nebula.Core.Medias
         /// Returns media stream url
         /// </summary>
         /// <returns>Uri</returns>
-        Task<Uri> GetStreamUri();
+        Task<Uri> GetAudioStreamUri();
     }
 }

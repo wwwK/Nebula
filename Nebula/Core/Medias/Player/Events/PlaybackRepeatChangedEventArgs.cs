@@ -8,7 +8,10 @@ namespace Nebula.Core.Medias.Player.Events
         {
             Repeat = repeat;
         }
-        
+
+        /// <summary>
+        /// True if repeat is enabled, false otherwise
+        /// </summary>
         public bool Repeat { get; }
     }
 }

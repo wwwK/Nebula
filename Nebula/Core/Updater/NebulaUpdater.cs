@@ -88,7 +88,7 @@ namespace Nebula.Core.Updater
             if (ProcessDownloads())
                 return;
 #if RELEASE
-            Process.Start(UpdateExtractorFileName, Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            Process.Start(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? Environment.CurrentDirectory, UpdateExtractorFileName));
             Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
 #endif
         }

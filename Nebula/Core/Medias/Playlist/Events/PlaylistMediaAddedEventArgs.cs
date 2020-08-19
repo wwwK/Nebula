@@ -11,8 +11,19 @@ namespace Nebula.Core.Medias.Playlist.Events
             MediaIndex = mediaIndex;
         }
 
+        /// <summary>
+        /// Modified Playlist.
+        /// </summary>
         public IPlaylist  Playlist   { get; }
+        
+        /// <summary>
+        /// New Media.
+        /// </summary>
         public IMediaInfo AddedMedia { get; }
+        
+        /// <summary>
+        /// New Media Insert Index.
+        /// </summary>
         public int        MediaIndex { get; }
     }
 }

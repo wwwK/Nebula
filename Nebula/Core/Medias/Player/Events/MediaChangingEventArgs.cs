@@ -11,12 +11,12 @@ namespace Nebula.Core.Medias.Player.Events
         }
         
         /// <summary>
-        /// Previous media played, this can be null if there was no previous media.
+        /// Previous media <see cref="IMediaInfo"/>. This can be null if there was no previous media.
         /// </summary>
         public IMediaInfo OldMedia { get; }
         
         /// <summary>
-        /// The new media being played, this can't be null
+        /// The new <see cref="IMediaInfo"/> going to be played. This can't be null.
         /// </summary>
         public IMediaInfo NewMedia { get; }
     }

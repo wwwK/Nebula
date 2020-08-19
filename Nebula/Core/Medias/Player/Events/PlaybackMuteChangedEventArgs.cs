@@ -9,6 +9,9 @@ namespace Nebula.Core.Medias.Player.Events
             IsMuted = muted;
         }
 
+        /// <summary>
+        /// True if the sound is muted, false otherwise.
+        /// </summary>
         public bool IsMuted { get; }
     }
 }

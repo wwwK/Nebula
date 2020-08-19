@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
+using Nebula.Core.Extensions;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Core.UI;
 using Nebula.Pages.Dialogs;
@@ -62,7 +63,7 @@ namespace Nebula.Pages
             if (sender is Grid grid && grid.Parent is Grid rootGrid &&
                 rootGrid.Name == "ItemRootPanel" & rootGrid.IsMouseOver)
             {
-                ControlUtils.ApplyBlur(grid, 4, TimeSpan.FromSeconds(0), TimeSpan.Zero);
+                grid.ApplyBlur(4, TimeSpan.FromSeconds(0), TimeSpan.Zero);
                 if (rootGrid.Children[1] is AppBarButton button)
                     button.Visibility = Visibility.Visible;
             }
@@ -73,7 +74,7 @@ namespace Nebula.Pages
             if (sender is Grid grid && grid.Parent is Grid rootGrid &&
                 rootGrid.Name == "ItemRootPanel" && !rootGrid.IsMouseOver)
             {
-                ControlUtils.RemoveBlur(grid, TimeSpan.FromSeconds(0), TimeSpan.Zero);
+                grid.RemoveBlur(TimeSpan.FromSeconds(0), TimeSpan.Zero);
                 if (rootGrid.Children[1] is AppBarButton button)
                     button.Visibility = Visibility.Collapsed;
             }
@@ -82,7 +83,7 @@ namespace Nebula.Pages
         private void OnPlayClicked(object sender, RoutedEventArgs e)
         {
             if (sender is AppBarButton button && button.DataContext is IPlaylist playlist)
-                NebulaClient.MediaPlayer.OpenPlaylist(playlist);
+                NebulaClient.MediaPlayer.OpenPlaylist(playlist, true);
         }
 
         private void OnPlaylistElementMouseDown(object sender, MouseButtonEventArgs e)

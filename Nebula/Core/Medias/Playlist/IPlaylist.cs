@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Media.Imaging;
 using Nebula.Core.Medias.Playlist.Events;
 
 namespace Nebula.Core.Medias.Playlist

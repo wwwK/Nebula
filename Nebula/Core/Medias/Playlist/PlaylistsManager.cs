@@ -59,39 +59,45 @@ namespace Nebula.Core.Medias.Playlist
         {
             foreach (FileInfo fileInfo in PlaylistsDirectory.GetFiles())
             {
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(fileInfo.FullName);
-                if (xmlDocument.DocumentElement == null)
-                    continue;
-                string playListName = xmlDocument.DocumentElement.GetAttribute("Name");
-                string playListDescription = xmlDocument.DocumentElement.GetAttribute("Description");
-                string playListAuthor = xmlDocument.DocumentElement.GetAttribute("Author");
-                string thumbnail = xmlDocument.DocumentElement.GetAttribute("Thumbnail");
-                Uri thumbnailUri;
-                if (thumbnail.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+                try
                 {
-                    if (!Uri.TryCreate(thumbnail, UriKind.RelativeOrAbsolute, out thumbnailUri))
-                        thumbnailUri = new Uri("https://i.imgur.com/Od5XogD.png");
-                }
-                else
-                    thumbnailUri = new Uri(Path.Combine(ThumbnailCacheDirectory.FullName,
-                        xmlDocument.DocumentElement.GetAttribute("Thumbnail")));
-
-                NebulaPlaylist playlist =
-                    new NebulaPlaylist(playListName, playListDescription, playListAuthor,
-                        thumbnailUri) {AutoSave = false};
-                foreach (XmlElement child in xmlDocument.DocumentElement.ChildNodes)
-                {
-                    Type type = Type.GetType(child.GetAttribute("ProviderType"));
-                    if (type == null)
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(fileInfo.FullName);
+                    if (xmlDocument.DocumentElement == null)
                         continue;
-                    object instance = Activator.CreateInstance(type, child);
-                    if (instance is IMediaInfo mediaInfo)
-                        playlist.AddMedia(mediaInfo);
-                }
+                    string playListName = xmlDocument.DocumentElement.GetAttribute("Name");
+                    string playListDescription = xmlDocument.DocumentElement.GetAttribute("Description");
+                    string playListAuthor = xmlDocument.DocumentElement.GetAttribute("Author");
+                    string thumbnail = xmlDocument.DocumentElement.GetAttribute("Thumbnail");
+                    Uri thumbnailUri;
+                    if (thumbnail.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        if (!Uri.TryCreate(thumbnail, UriKind.RelativeOrAbsolute, out thumbnailUri))
+                            thumbnailUri = new Uri("https://i.imgur.com/Od5XogD.png");
+                    }
+                    else
+                        thumbnailUri = new Uri(Path.Combine(ThumbnailCacheDirectory.FullName,
+                            xmlDocument.DocumentElement.GetAttribute("Thumbnail")));
 
-                playlist.AutoSave = true;
-                Playlists.Add(playlist);
+                    NebulaPlaylist playlist =
+                        new NebulaPlaylist(playListName, playListDescription, playListAuthor,
+                            thumbnailUri) {AutoSave = false};
+                    foreach (XmlElement child in xmlDocument.DocumentElement.ChildNodes)
+                    {
+                        Type type = Type.GetType(child.GetAttribute("ProviderType"));
+                        if (type == null)
+                            continue;
+                        object instance = Activator.CreateInstance(type, child);
+                        if (instance is IMediaInfo mediaInfo)
+                            playlist.AddMedia(mediaInfo);
+                    }
+
+                    playlist.AutoSave = true;
+                    Playlists.Add(playlist);
+                }
+                catch
+                {
+                }
             }
         }
 

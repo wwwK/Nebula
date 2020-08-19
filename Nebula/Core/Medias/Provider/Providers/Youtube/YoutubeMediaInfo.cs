@@ -9,10 +9,6 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
 {
     public class YoutubeMediaInfo : IMediaInfo
     {
-        public YoutubeMediaInfo()
-        {
-        }
-
         public YoutubeMediaInfo(string id, string ownerId, string title, string description, string author,
                                 string thumbnail, TimeSpan duration, DateTime uploadDate)
         {
@@ -59,7 +55,7 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
             return artistInfo;
         }
 
-        public async Task<Uri> GetStreamUri()
+        public async Task<Uri> GetAudioStreamUri()
         {
             StreamManifest streamManifest = await NebulaClient
                                                   .GetMediaProvider<YoutubeMediaProvider>().Youtube.Videos.Streams

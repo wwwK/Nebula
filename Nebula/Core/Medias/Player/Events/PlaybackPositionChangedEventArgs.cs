@@ -9,6 +9,9 @@ namespace Nebula.Core.Medias.Player.Events
             Position = position;
         }
 
+        /// <summary>
+        /// Playback Position.
+        /// </summary>
         public TimeSpan Position { get; }
     }
 }

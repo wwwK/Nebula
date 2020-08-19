@@ -9,6 +9,9 @@ namespace Nebula.Core.Medias.Player.Events
             Shuffle = shuffle;
         }
 
+        /// <summary>
+        /// True if shuffle is enabled, false otherwise.
+        /// </summary>
         public bool Shuffle { get; }
     }
 }

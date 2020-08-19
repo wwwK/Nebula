@@ -10,8 +10,14 @@ namespace Nebula.Core.Medias.Player.Events
             NewVolume = newVolume;
         }
 
+        /// <summary>
+        /// Previous volume value.
+        /// </summary>
         public int OldVolume { get; }
 
+        /// <summary>
+        /// New volume value.
+        /// </summary>
         public int NewVolume { get; }
     }
 }

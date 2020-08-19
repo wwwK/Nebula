@@ -132,14 +132,10 @@
                         <ui:AppBarToggleButton x:Name="PlaybackShuffle" Icon="Shuffle"
                                                Label="{x:Static resx:nebula.Shuffle}"
                                                Click="OnPlaybackShuffleClicked" />
-                        <ui:AppBarButton x:Name="PlaybackBack" Icon="Back" Label="{x:Static resx:nebula.Back}" />
-                        <ui:AppBarButton x:Name="PlaybackPlay" Icon="Play" Label="{x:Static resx:nebula.Play}"
-                                         Click="OnPlaybackPlayClicked" />
-                        <ui:AppBarButton x:Name="PlaybackForward" Icon="Forward" Label="{x:Static resx:nebula.Forward}"
-                                         Click="OnPlaybackForwardClicked" />
-                        <ui:AppBarToggleButton x:Name="PlaybackRepeat" Icon="RepeatAll"
-                                               Label="{x:Static resx:nebula.Repeat}"
-                                               Click="OnPlaybackRepeatClicked" />
+                        <ui:AppBarButton x:Name="PlaybackBack" Icon="Back" Label="{x:Static resx:nebula.Back}" Click="OnPlaybackBackwardClicked" />
+                        <ui:AppBarButton x:Name="PlaybackPlay" Icon="Play" Label="{x:Static resx:nebula.Play}" Click="OnPlaybackPlayClicked" />
+                        <ui:AppBarButton x:Name="PlaybackForward" Icon="Forward" Label="{x:Static resx:nebula.Forward}" Click="OnPlaybackForwardClicked" />
+                        <ui:AppBarToggleButton x:Name="PlaybackRepeat" Icon="RepeatAll" Label="{x:Static resx:nebula.Repeat}" Click="OnPlaybackRepeatClicked" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <ui:AppBarToggleButton x:Name="MediaMute" Icon="Volume" Label="{x:Static resx:nebula.Mute}"

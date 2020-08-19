@@ -269,6 +269,7 @@ namespace Nebula
 
         private void OnPlaybackBackwardClicked(object sender, RoutedEventArgs e)
         {
+            NebulaClient.MediaPlayer.Backward(true);
         }
 
         private void OnSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

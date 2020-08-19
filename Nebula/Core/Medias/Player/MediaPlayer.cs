@@ -1,14 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading;
+using System.IO;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
 using CSCore;
 using CSCore.Codecs;
-using CSCore.CoreAudioAPI;
 using CSCore.SoundOut;
-using CSCore.Streams.Effects;
 using Nebula.Core.Events;
 using Nebula.Core.Medias.Player.Events;
 using Nebula.Core.Medias.Playlist;
@@ -26,7 +22,7 @@ namespace Nebula.Core.Medias.Player
 
         public MediaPlayer()
         {
-            NebulaClient.Tick += NebulaClientOnTick;
+            NebulaClient.Tick += OnNebulaClientTick;
             _volume = NebulaClient.Settings.General.DefaultSoundLevel;
         }
 
@@ -108,46 +104,59 @@ namespace Nebula.Core.Medias.Player
         public event EventHandler<MediaChangingEventArgs>          MediaChanging;
         public event EventHandler<MediaChangedEventArgs>           MediaChanged;
 
+        /// <summary>
+        /// Open the specified <see cref="IPlaylist"/>
+        /// </summary>
+        /// <param name="playlist">Playlist to open</param>
+        /// <param name="manualStop">Is this a user manual stop</param>
+        /// <param name="play">Should start playing right after init</param>
         public void OpenPlaylist(IPlaylist playlist, bool manualStop = false, bool play = true)
         {
             if (playlist.MediasCount == 0)
                 return;
-            Queue.Clear();
+            Queue.Enqueue(playlist);
             CurrentPlaylist = playlist;
-            foreach (IMediaInfo mediaInfo in playlist)
-                Queue.Enqueue(mediaInfo);
             Open(Queue.Dequeue(Shuffle), manualStop, play);
         }
 
+        /// <summary>
+        /// Open the specified <see cref="IMediaInfo"/>
+        /// </summary>
+        /// <param name="mediaInfo">Media to open</param>
+        /// <param name="manualStop">Is this a user manual stop</param>
+        /// <param name="play">Should start playing right after init</param>
+        /// <returns></returns>
         public async Task Open(IMediaInfo mediaInfo, bool manualStop = false, bool play = true)
         {
             if (mediaInfo == null)
                 return;
-            _manualStop = manualStop;
             MediaChangingEventArgs mediaChangingEvent = new MediaChangingEventArgs(CurrentMedia, mediaInfo);
             MediaChanging?.Invoke(this, mediaChangingEvent);
             if (mediaChangingEvent.Cancel)
                 return;
             IMediaInfo oldMedia = CurrentMedia;
+            _manualStop = manualStop;
             Stop();
             Cleanup();
-            WaveSource = CodecFactory.Instance.GetCodec(await mediaInfo.GetStreamUri());
-            SoundOut = new WasapiOut();
-            SoundOut.Initialize(WaveSource);
-            SoundOut.Stopped += OnPlaybackStopped;
-            SoundOut.Volume = Math.Min(1.0f, Math.Max(Volume / 100f, 0f));
+            Setup(await mediaInfo.GetAudioStreamUri());
             CurrentMedia = mediaInfo;
-            MediaChanged?.Invoke(this, new MediaChangedEventArgs(oldMedia, mediaInfo));
+            MediaChanged?.Invoke(this, new MediaChangedEventArgs(CurrentPlaylist, oldMedia, mediaInfo));
             if (play)
                 Play();
             _manualStop = false;
         }
 
+        /// <summary>
+        /// Play playback.
+        /// </summary>
         public void Play()
         {
             SoundOut?.Play();
         }
 
+        /// <summary>
+        /// Pause playback.
+        /// </summary>
         public void Pause()
         {
             if (IsPaused)
@@ -157,6 +166,9 @@ namespace Nebula.Core.Medias.Player
             PlaybackPaused?.Invoke(this, new PlaybackPausedEventArgs());
         }
 
+        /// <summary>
+        /// Resume playback.
+        /// </summary>
         public void Resume()
         {
             if (!IsPaused)
@@ -166,21 +178,56 @@ namespace Nebula.Core.Medias.Player
             PlaybackResumed?.Invoke(this, new PlaybackResumedEventArgs());
         }
 
+        /// <summary>
+        /// Play the next queued media.
+        /// </summary>
+        /// <param name="manualStop">Is this a user manual stop</param>
         public void Forward(bool manualStop = false)
         {
             Open(Queue.Dequeue(Shuffle), manualStop);
         }
 
-        public void Stop()
+        /// <summary>
+        /// Play the previous media.
+        /// </summary>
+        /// <param name="manualStop">Is this a user manual stop</param>
+        public void Backward(bool manualStop = false)
         {
-            SoundOut?.Stop();
-            Repeat = false;
+            Open(Queue.RewindDequeue(), manualStop);
         }
 
+        /// <summary>
+        /// Stop playback.
+        /// </summary>
+        public void Stop()
+        {
+            Repeat = false;
+            SoundOut?.Stop();
+        }
+
+        /// <summary>
+        /// Setup playback.
+        /// </summary>
+        /// <param name="uri">Uri to media</param>
+        private void Setup(Uri uri)
+        {
+            if (uri.ToString().StartsWith("file") && !File.Exists(uri.LocalPath))
+                return;
+            WaveSource = CodecFactory.Instance.GetCodec(uri);
+            SoundOut = new WasapiOut();
+            SoundOut.Initialize(WaveSource);
+            SoundOut.Stopped += OnPlaybackStopped;
+            SoundOut.Volume = Math.Min(1.0f, Math.Max(Volume / 100f, 0f));
+        }
+
+        /// <summary>
+        /// Perform playback cleanup.
+        /// </summary>
         private void Cleanup()
         {
             if (SoundOut != null)
             {
+                //SoundOut.Stopped -= OnPlaybackStopped;
                 SoundOut.Dispose();
                 SoundOut = null;
             }
@@ -192,7 +239,7 @@ namespace Nebula.Core.Medias.Player
             }
         }
 
-        private void NebulaClientOnTick(object sender, NebulaAppLoopEventArgs e)
+        private void OnNebulaClientTick(object sender, NebulaAppLoopEventArgs e)
         {
             if (WaveSource != null && _lastPosition != WaveSource.GetPosition())
             {
