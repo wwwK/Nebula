@@ -22,7 +22,7 @@ namespace Nebula.Core.Medias
 
         private void CalculateTotalPages()
         {
-            TotalPages = Count / MaxMediasPerPage;
+            TotalPages = (int) Math.Ceiling((double) Count / MaxMediasPerPage);
             if (TotalPages == 0)
                 TotalPages = 1;
         }
@@ -63,7 +63,8 @@ namespace Nebula.Core.Medias
         public IEnumerable<IMediaInfo> GetMediasFromPage(int page)
         {
             int startIndex = page * MaxMediasPerPage;
-            int endIndex = startIndex + (startIndex + Count < MaxMediasPerPage ? Count : MaxMediasPerPage);
+            int dif = Count - startIndex;
+            int endIndex = startIndex + (dif < MaxMediasPerPage ? dif : MaxMediasPerPage);
             for (int i = startIndex; i != endIndex; i++)
                 yield return this[i];
         }
