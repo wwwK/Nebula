@@ -84,7 +84,7 @@
     <data name="ExportPlaylist" xml:space="preserve">
         <value>Exporter une Playlist</value>
     </data>
-    <data name="ImportPlaylist" xml:space="preserve">
+    <data name="PlaylistImport" xml:space="preserve">
         <value>Importer une Playlist</value>
     </data>
     <data name="FindPlaylist" xml:space="preserve">
@@ -215,5 +215,20 @@
     </data>
     <data name="SettingsBackgroundImageStretch" xml:space="preserve">
         <value>Étirement d’arrière-plan</value>
+    </data>
+    <data name="Import" xml:space="preserve">
+        <value>Importer</value>
+    </data>
+    <data name="PlaylistPathUrl" xml:space="preserve">
+        <value>Chemin/Adresse de la Playlist</value>
+    </data>
+    <data name="FromFile" xml:space="preserve">
+        <value>Depuis un fichier</value>
+    </data>
+    <data name="PlaylistImporting" xml:space="preserve">
+        <value>Votre playlist est en cours d'importation, cela peut prendre plusieurs minutes si votre playlist est grande.</value>
+    </data>
+    <data name="PlaylistImported" xml:space="preserve">
+        <value>La liste de lecture '{0}' a été importée avec succès</value>
     </data>
 </root>

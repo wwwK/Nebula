@@ -313,6 +313,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Depuis un fichier.
+        /// </summary>
+        public static string FromFile {
+            get {
+                return ResourceManager.GetString("FromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Général.
         /// </summary>
         public static string General {
@@ -331,11 +340,11 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Importer une Playlist.
+        ///   Looks up a localized string similar to Importer.
         /// </summary>
-        public static string ImportPlaylist {
+        public static string Import {
             get {
-                return ResourceManager.GetString("ImportPlaylist", resourceCulture);
+                return ResourceManager.GetString("Import", resourceCulture);
             }
         }
         
@@ -408,6 +417,42 @@ namespace Nebula.Resources {
         public static string Play {
             get {
                 return ResourceManager.GetString("Play", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Importer une Playlist.
+        /// </summary>
+        public static string PlaylistImport {
+            get {
+                return ResourceManager.GetString("PlaylistImport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La liste de lecture &apos;{0}&apos; a été importée avec succès.
+        /// </summary>
+        public static string PlaylistImported {
+            get {
+                return ResourceManager.GetString("PlaylistImported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Votre playlist est en cours d&apos;importation, cela peut prendre plusieurs minutes si votre playlist est grande..
+        /// </summary>
+        public static string PlaylistImporting {
+            get {
+                return ResourceManager.GetString("PlaylistImporting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chemin/Adresse de la Playlist.
+        /// </summary>
+        public static string PlaylistPathUrl {
+            get {
+                return ResourceManager.GetString("PlaylistPathUrl", resourceCulture);
             }
         }
         

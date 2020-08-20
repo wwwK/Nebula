@@ -38,7 +38,7 @@ namespace Nebula.Core
         static NebulaClient()
         {
             MainWindow = Application.Current.MainWindow as MainWindow;
-            Settings = new NebulaSettings(); //Needs to be first 
+            Settings = NebulaSettings.LoadSettings(); //Needs to be first 
             MediaPlayer = new MediaPlayer();
             Updater = new NebulaUpdater();
             Playlists = new PlaylistsManager();

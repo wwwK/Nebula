@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Navigation;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
+using Nebula.Core.Settings;
 using Nebula.Pages.Settings;
 using Page = ModernWpf.Controls.Page;
 
@@ -55,9 +56,13 @@ namespace Nebula.Pages
                 NavigateTo(item.Tag.ToString());
         }
 
-        private void OnSaveSettingsClick(object sender, RoutedEventArgs e)
+        private async void OnSaveSettingsClick(object sender, RoutedEventArgs e)
         {
-            NebulaClient.Settings.SaveSettings();
+            if (!(sender is Button button))
+                return;
+            button.IsEnabled = false;
+            await NebulaSettings.SaveSettingsAsync();
+            button.IsEnabled = true;
         }
     }
 }

@@ -6,12 +6,13 @@ namespace Nebula.Core.Medias.Playlist
 {
     public interface IPlaylist : IEnumerable<IMediaInfo>
     {
-        string   Name          { get; set; }
-        string   Description   { get; set; }
-        string   Author        { get; set; }
-        Uri      Thumbnail     { get; set; }
-        int      MediasCount   { get; }
-        TimeSpan TotalDuration { get; }
+        string           Name          { get; set; }
+        string           Description   { get; set; }
+        string           Author        { get; set; }
+        Uri              Thumbnail     { get; set; }
+        MediasCollection Medias        { get; }
+        int              MediasCount   { get; }
+        TimeSpan         TotalDuration { get; }
 
         event EventHandler<PlaylistMediaAddedEventArgs> MediaAdded;
 

@@ -14,7 +14,6 @@ using Nebula.Core;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Pages.Dialogs;
-using YoutubeExplode.Search;
 
 namespace Nebula.Pages
 {
@@ -25,11 +24,41 @@ namespace Nebula.Pages
             InitializeComponent();
 
             DataContext = this;
+            Focus();
         }
 
         public IPlaylist Playlist { get; private set; }
 
         public ObservableCollection<IMediaInfo> Medias { get; } = new ObservableCollection<IMediaInfo>();
+
+        private int CurrentPage { get; set; }
+
+
+        private void PreviousPage()
+        {
+            if (CurrentPage == 0)
+                CurrentPage = Playlist.Medias.TotalPages - 1;
+            else
+                CurrentPage--;
+            RefreshMedias();
+        }
+
+        private void ForwardPage()
+        {
+            if (CurrentPage + 1 == Playlist.Medias.TotalPages)
+                CurrentPage = 0;
+            else
+                CurrentPage++;
+            RefreshMedias();
+        }
+
+        private void RefreshMedias()
+        {
+            CurrentPageText.Text = $"{CurrentPage + 1}/{Playlist.Medias.TotalPages}";
+            Medias.Clear();
+            foreach (IMediaInfo mediaInfo in Playlist.Medias.GetMediasFromPage(CurrentPage))
+                Medias.Add(mediaInfo);
+        }
 
         private void RemoveMedia(IMediaInfo mediaInfo)
         {
@@ -53,8 +82,7 @@ namespace Nebula.Pages
                 ;
                 PlaylistMediaCount.Text =
                     $"{string.Format(NebulaClient.GetLocString("PlaylistTitles"), playlist.MediasCount)} - {string.Format(NebulaClient.GetLocString("PlaylistTotalDuration"), playlist.TotalDuration)}";
-                foreach (IMediaInfo media in playlist)
-                    Medias.Add(media);
+                RefreshMedias();
             }
         }
 
@@ -135,6 +163,22 @@ namespace Nebula.Pages
                         Medias.Add(mediaInfo);
                 }
             }
+        }
+
+        private void OnBackPageClick(object sender, RoutedEventArgs e)
+        {
+            PreviousPage();
+        }
+
+        private void OnForwardPageClick(object sender, RoutedEventArgs e)
+        {
+            ForwardPage();
+        }
+
+        private void OnSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (string.IsNullOrEmpty(SearchBox.Text))
+                RefreshMedias();
         }
     }
 }

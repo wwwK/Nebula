@@ -13,10 +13,20 @@ namespace Nebula.Pages.Dialogs
             InitializeComponent();
             Title = NebulaClient.GetLocString(titleKey);
             MessageBoxText.Text = text;
+            IsPrimaryButtonEnabled = false;
+            IsSecondaryButtonEnabled = false;
             if (!string.IsNullOrWhiteSpace(primaryKey))
+            {
                 PrimaryButtonText = NebulaClient.GetLocString(primaryKey);
+                IsPrimaryButtonEnabled = true;
+            }
+
             if (!string.IsNullOrWhiteSpace(secondaryKey))
+            {
                 SecondaryButtonText = NebulaClient.GetLocString(secondaryKey);
+                IsSecondaryButtonEnabled = true;
+            }
+
             if (!string.IsNullOrWhiteSpace(cancelKey))
                 CloseButtonText = NebulaClient.GetLocString(cancelKey);
         }

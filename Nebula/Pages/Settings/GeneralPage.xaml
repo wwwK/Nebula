@@ -7,22 +7,29 @@
          xmlns:resx="clr-namespace:Nebula.Resources"
          xmlns:local="clr-namespace:Nebula.Pages.Settings"
          mc:Ignorable="d">
-    <ui:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="15" MaxWidth="350">
-        <ui:NumberBox x:Name="DefaultSoundVolume" Header="{x:Static resx:nebula.SettingsDefaultSoundLevel}" Minimum="0"
-                      Maximum="100" SmallChange="1"
-                      LargeChange="10" Value="{Binding DefaultSoundLevel, Mode=TwoWay}"
-                      SpinButtonPlacementMode="Inline" />
-        <TextBlock Text="{x:Static resx:nebula.Search}" FontSize="26" />
-        <ui:NumberBox x:Name="SearchMaxPages" Header="{x:Static resx:nebula.SettingsSearchMaxPages}" Minimum="1"
-                      Maximum="10" SmallChange="1"
-                      LargeChange="10" Value="{Binding SearchMaxPages, Mode=TwoWay}"
-                      SpinButtonPlacementMode="Inline" />
-        <TextBlock Text="{x:Static resx:nebula.Keyboard}" FontSize="26" />
-        <CheckBox Content="{x:Static resx:nebula.SettingsKeyboardMediaEnable}"
-                  IsChecked="{Binding MediaKeyEnabled, Mode=TwoWay}" />
-        <ui:NumberBox Header="{x:Static resx:nebula.SettingsKeyboardMediaSoundIncDecValue}" Minimum="1"
-                      Maximum="100" SmallChange="1"
-                      LargeChange="10" Value="{Binding MediaKeySoundIncDecValue, Mode=TwoWay}"
-                      SpinButtonPlacementMode="Inline" />
-    </ui:SimpleStackPanel>
+    <ScrollViewer  Height="{Binding ActualHeight}">
+        <ui:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="15" MaxWidth="350">
+            <ui:NumberBox x:Name="DefaultSoundVolume" Header="{x:Static resx:nebula.SettingsDefaultSoundLevel}" Minimum="0"
+                          Maximum="100" SmallChange="1"
+                          LargeChange="10" Value="{Binding DefaultSoundLevel, Mode=TwoWay}"
+                          SpinButtonPlacementMode="Inline" />
+            <TextBlock Text="{x:Static resx:nebula.Search}" FontSize="26" />
+            <ui:NumberBox Header="{x:Static resx:nebula.SettingsSearchMaxPages}" Minimum="1"
+                          Maximum="10" SmallChange="1"
+                          LargeChange="10" Value="{Binding SearchMaxPages, Mode=TwoWay}"
+                          SpinButtonPlacementMode="Inline" />
+            <TextBlock Text="{x:Static resx:nebula.Playlists}" FontSize="26" />
+            <ui:NumberBox Header="{x:Static resx:nebula.SettingsSearchMaxPages}" Minimum="1"
+                          Maximum="100" SmallChange="1"
+                          LargeChange="10" Value="{Binding PlaylistMaxMediasPerPage, Mode=TwoWay}"
+                          SpinButtonPlacementMode="Inline" />
+            <TextBlock Text="{x:Static resx:nebula.Keyboard}" FontSize="26" />
+            <CheckBox Content="{x:Static resx:nebula.SettingsKeyboardMediaEnable}"
+                      IsChecked="{Binding MediaKeyEnabled, Mode=TwoWay}" />
+            <ui:NumberBox Header="{x:Static resx:nebula.SettingsKeyboardMediaSoundIncDecValue}" Minimum="1"
+                          Maximum="100" SmallChange="1"
+                          LargeChange="10" Value="{Binding MediaKeySoundIncDecValue, Mode=TwoWay}"
+                          SpinButtonPlacementMode="Inline" />
+        </ui:SimpleStackPanel>
+    </ScrollViewer>
 </ui:Page>

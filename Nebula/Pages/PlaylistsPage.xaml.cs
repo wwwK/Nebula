@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,6 +12,7 @@ using ModernWpf.Media.Animation;
 using Nebula.Core;
 using Nebula.Core.Extensions;
 using Nebula.Core.Medias.Playlist;
+using Nebula.Core.Medias.Provider.Providers.Youtube;
 using Nebula.Core.UI;
 using Nebula.Pages.Dialogs;
 using Page = ModernWpf.Controls.Page;
@@ -48,6 +50,34 @@ namespace Nebula.Pages
                         ? null
                         : new Uri(dialog.PlaylistThumbnail.Text));
                 NebulaClient.Playlists.AddPlaylist(playlist);
+                RefreshPlaylists();
+            }
+        }
+
+        private async void OnImportPlaylistClicked(object sender, RoutedEventArgs e)
+        {
+            PlaylistImportDialog dialog = new PlaylistImportDialog();
+            ContentDialogResult result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                string playlistPath = dialog.PlaylistPath.Text;
+                if (string.IsNullOrWhiteSpace(playlistPath))
+                    return;
+                await NebulaMessageBox.ShowOk("PlaylistImport", "PlaylistImporting");
+                IPlaylist playlist;
+                if (playlistPath.Contains("http") && playlistPath.Contains("youtube"))
+                {
+                    playlist = await NebulaClient.GetMediaProvider<YoutubeMediaProvider>().GetPlaylist(playlistPath);
+                    NebulaClient.Playlists.AddPlaylist(playlist);
+                    NebulaClient.Playlists.SavePlaylist(playlist);
+                }
+                else
+                {
+                    playlist = NebulaClient.Playlists.LoadPlaylist(new FileInfo(playlistPath));
+                    NebulaClient.Playlists.SavePlaylist(playlist);
+                }
+
+                await NebulaMessageBox.ShowOk("PlaylistImport", "PlaylistImported", playlist.Name);
                 RefreshPlaylists();
             }
         }

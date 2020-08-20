@@ -10,15 +10,6 @@ namespace Nebula.Core.Settings
         /// </summary>
         string GroupName { get; }
 
-        /// <summary>
-        /// Save Settings
-        /// </summary>
-        /// <param name="document">Document</param>
-        /// <returns>XmlElement</returns>
-        void Save(XmlElement element);
-
-        void Load(XmlElement element);
-
         event EventHandler SettingsChanged;
     }
 }

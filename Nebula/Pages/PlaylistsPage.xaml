@@ -16,7 +16,7 @@
     <StackPanel Orientation="Vertical">
         <ui:CommandBar x:Name="CommandBar" VerticalAlignment="Top" VerticalContentAlignment="Center">
             <ui:AppBarButton Label="{x:Static resx:nebula.CreatePlaylist}" Click="OnCreatePlaylistClicked" />
-            <ui:AppBarButton Label="{x:Static resx:nebula.ImportPlaylist}" />
+            <ui:AppBarButton Label="{x:Static resx:nebula.PlaylistImport}" Click="OnImportPlaylistClicked" />
             <ui:AppBarButton Label="{x:Static resx:nebula.ExportPlaylist}" />
             <ui:CommandBar.Content>
                 <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.FindPlaylist}"

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Windows.Media;
-using System.Xml;
-using Nebula.Core.Extensions;
 
 namespace Nebula.Core.Settings.Groups
 {
@@ -48,19 +45,5 @@ namespace Nebula.Core.Settings.Groups
         }
 
         public event EventHandler SettingsChanged;
-
-        public void Save(XmlElement element)
-        {
-            element.SetAttribute(nameof(DisplayMode), DisplayMode);
-            element.SetAttribute(nameof(BackgroundImage), BackgroundImage);
-            element.SetAttribute(nameof(BackgroundImageStretch), BackgroundImageStretch);
-        }
-
-        public void Load(XmlElement element)
-        {
-            DisplayMode = element.GetStringAttribute(nameof(DisplayMode), "Left");
-            BackgroundImage = element.GetStringAttribute(nameof(BackgroundImage), "");
-            BackgroundImageStretch = element.GetStringAttribute(nameof(BackgroundImageStretch), "UniformToFill");
-        }
     }
 }

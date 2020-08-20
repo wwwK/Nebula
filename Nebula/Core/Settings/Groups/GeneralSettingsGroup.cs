@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Xml;
 using EasySharp.Reflection;
 using EasySharp.Reflection.Fast;
@@ -8,10 +9,11 @@ namespace Nebula.Core.Settings.Groups
 {
     public class GeneralSettingsGroup : ISettingsGroup
     {
-        private int  _searchMaxPages           = 1;
-        private int  _mediaKeySoundIncDecValue = 5;
-        private int  _defaultSoundLevel        = 50;
-        private bool _mediaKeyEnabled          = true;
+        private int  _searchMaxPages            = 1;
+        private int  _mediaKeySoundIncDecValue  = 5;
+        private int  _defaultSoundLevel         = 50;
+        private int  _playlistMaxMediasPerPages = 25;
+        private bool _mediaKeyEnabled           = true;
 
         public GeneralSettingsGroup()
         {
@@ -59,22 +61,16 @@ namespace Nebula.Core.Settings.Groups
             }
         }
 
+        public int PlaylistMaxMediasPerPage
+        {
+            get => _playlistMaxMediasPerPages;
+            set
+            {
+                _playlistMaxMediasPerPages = value;
+                SettingsChanged?.Invoke(this, new EventArgs());
+            }
+        }
+
         public event EventHandler SettingsChanged;
-
-        public void Save(XmlElement element)
-        {
-            element.SetAttribute(nameof(DefaultSoundLevel), DefaultSoundLevel.ToString());
-            element.SetAttribute(nameof(SearchMaxPages), SearchMaxPages.ToString());
-            element.SetAttribute(nameof(MediaKeyEnabled), MediaKeyEnabled.ToString());
-            element.SetAttribute(nameof(MediaKeySoundIncDecValue), MediaKeySoundIncDecValue.ToString());
-        }
-
-        public void Load(XmlElement element)
-        {
-            DefaultSoundLevel = element.GetIntAttribute(nameof(DefaultSoundLevel), 50);
-            SearchMaxPages = element.GetIntAttribute(nameof(SearchMaxPages), 1);
-            MediaKeyEnabled = element.GetBoolAttribute(nameof(MediaKeyEnabled), true);
-            MediaKeySoundIncDecValue = element.GetIntAttribute(nameof(MediaKeySoundIncDecValue), 5);
-        }
     }
 }

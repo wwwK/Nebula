@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Nebula.Core.Medias.Playlist.Events;
+using Nebula.Core.Settings;
 
 namespace Nebula.Core.Medias.Playlist
 {
@@ -16,7 +17,7 @@ namespace Nebula.Core.Medias.Playlist
         public PlaylistsManager()
         {
             PlaylistsDirectory =
-                new DirectoryInfo(Path.Combine(NebulaClient.Settings.SettingsDirectory.FullName, PlaylistsFolderName));
+                new DirectoryInfo(Path.Combine(NebulaSettings.SettingsDirectory.FullName, PlaylistsFolderName));
             ThumbnailCacheDirectory =
                 new DirectoryInfo(Path.Combine(PlaylistsDirectory.FullName, PlaylistsThumbnailCacheFolderName));
             PlaylistsDirectory.Create();
@@ -58,47 +59,55 @@ namespace Nebula.Core.Medias.Playlist
         private void LoadPlaylists()
         {
             foreach (FileInfo fileInfo in PlaylistsDirectory.GetFiles())
+                LoadPlaylist(fileInfo);
+        }
+
+        public IPlaylist LoadPlaylist(FileInfo fileInfo)
+        {
+            try
             {
-                try
+                if (!fileInfo.Exists)
+                    return null;
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(fileInfo.FullName);
+                if (xmlDocument.DocumentElement == null)
+                    return null;
+                string playListName = xmlDocument.DocumentElement.GetAttribute("Name");
+                string playListDescription = xmlDocument.DocumentElement.GetAttribute("Description");
+                string playListAuthor = xmlDocument.DocumentElement.GetAttribute("Author");
+                string thumbnail = xmlDocument.DocumentElement.GetAttribute("Thumbnail");
+                Uri thumbnailUri;
+                if (thumbnail.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    XmlDocument xmlDocument = new XmlDocument();
-                    xmlDocument.Load(fileInfo.FullName);
-                    if (xmlDocument.DocumentElement == null)
+                    if (!Uri.TryCreate(thumbnail, UriKind.RelativeOrAbsolute, out thumbnailUri))
+                        thumbnailUri = new Uri("https://i.imgur.com/Od5XogD.png");
+                }
+                else
+                    thumbnailUri = new Uri(Path.Combine(ThumbnailCacheDirectory.FullName,
+                        xmlDocument.DocumentElement.GetAttribute("Thumbnail")));
+
+                NebulaPlaylist playlist =
+                    new NebulaPlaylist(playListName, playListDescription, playListAuthor,
+                        thumbnailUri) {AutoSave = false};
+                foreach (XmlElement child in xmlDocument.DocumentElement.ChildNodes)
+                {
+                    Type type = Type.GetType(child.GetAttribute("ProviderType"));
+                    if (type == null)
                         continue;
-                    string playListName = xmlDocument.DocumentElement.GetAttribute("Name");
-                    string playListDescription = xmlDocument.DocumentElement.GetAttribute("Description");
-                    string playListAuthor = xmlDocument.DocumentElement.GetAttribute("Author");
-                    string thumbnail = xmlDocument.DocumentElement.GetAttribute("Thumbnail");
-                    Uri thumbnailUri;
-                    if (thumbnail.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        if (!Uri.TryCreate(thumbnail, UriKind.RelativeOrAbsolute, out thumbnailUri))
-                            thumbnailUri = new Uri("https://i.imgur.com/Od5XogD.png");
-                    }
-                    else
-                        thumbnailUri = new Uri(Path.Combine(ThumbnailCacheDirectory.FullName,
-                            xmlDocument.DocumentElement.GetAttribute("Thumbnail")));
-
-                    NebulaPlaylist playlist =
-                        new NebulaPlaylist(playListName, playListDescription, playListAuthor,
-                            thumbnailUri) {AutoSave = false};
-                    foreach (XmlElement child in xmlDocument.DocumentElement.ChildNodes)
-                    {
-                        Type type = Type.GetType(child.GetAttribute("ProviderType"));
-                        if (type == null)
-                            continue;
-                        object instance = Activator.CreateInstance(type, child);
-                        if (instance is IMediaInfo mediaInfo)
-                            playlist.AddMedia(mediaInfo);
-                    }
-
-                    playlist.AutoSave = true;
-                    Playlists.Add(playlist);
+                    object instance = Activator.CreateInstance(type, child);
+                    if (instance is IMediaInfo mediaInfo)
+                        playlist.AddMedia(mediaInfo);
                 }
-                catch
-                {
-                }
+
+                playlist.AutoSave = true;
+                Playlists.Add(playlist);
+                return playlist;
             }
+            catch
+            {
+            }
+
+            return null;
         }
 
         public void SavePlaylist(IPlaylist playlist)

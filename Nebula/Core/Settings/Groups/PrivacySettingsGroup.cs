@@ -8,15 +8,5 @@ namespace Nebula.Core.Settings.Groups
         public string GroupName { get; } = "Privacy";
 
         public event EventHandler SettingsChanged;
-
-        public void Save(XmlElement element)
-        {
-
-        }
-        
-        public void Load(XmlElement element)
-        {
-            
-        }
     }
 }

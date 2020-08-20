@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Nebula.Core.Medias.Playlist;
 using YoutubeExplode;
 using YoutubeExplode.Channels;
+using YoutubeExplode.Playlists;
 using YoutubeExplode.Videos;
 
 namespace Nebula.Core.Medias.Provider.Providers.Youtube
@@ -56,6 +58,19 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
         {
             Channel channel = await Youtube.Channels.GetAsync(new ChannelId(query));
             return new YoutubeArtistInfo(channel.Id, channel.Title, channel.Url, channel.LogoUrl);
+        }
+
+        public async Task<IPlaylist> GetPlaylist(string query, params object[] args)
+        {
+            YoutubeExplode.Playlists.Playlist playlist = await Youtube.Playlists.GetAsync(query.Trim());
+            string thumbnail = playlist.Thumbnails?.MediumResUrl;
+            NebulaPlaylist nebulaPlaylist = new NebulaPlaylist(playlist.Title, playlist.Description, playlist.Author, thumbnail == null ? null : new Uri(thumbnail));
+            nebulaPlaylist.AutoSave = false;
+            await foreach (Video video in Youtube.Playlists.GetVideosAsync(playlist.Id))
+                nebulaPlaylist.AddMedia(VideoToMediaInfo(video));
+            nebulaPlaylist.AutoSave = true;
+            NebulaClient.Playlists.SavePlaylist(nebulaPlaylist);
+            return nebulaPlaylist;
         }
     }
 }

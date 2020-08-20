@@ -25,23 +25,24 @@ namespace Nebula.Core.Medias.Playlist
         public bool     AutoSave      { get; set; } = true;
         public Uri      Thumbnail     { get; set; }
         public TimeSpan TotalDuration { get; private set; } = TimeSpan.Zero;
-        public int      MediasCount   => MediaList.Count;
+        public int      MediasCount   => Medias.Count;
 
         public event EventHandler<PlaylistMediaAddedEventArgs> MediaAdded;
 
-        private List<IMediaInfo> MediaList { get; } = new List<IMediaInfo>();
+        public MediasCollection Medias { get; } = new MediasCollection();
+        
 
         public bool Contains(IMediaInfo mediaInfo)
         {
-            return MediaList.Any(media => media.Id == mediaInfo.Id);
+            return Medias.Any(media => media.Id == mediaInfo.Id);
         }
 
         public void AddMedia(IMediaInfo mediaInfo, int insertIndex = -1)
         {
             if (insertIndex >= 0)
-                MediaList.Insert(insertIndex, mediaInfo);
+                Medias.Insert(insertIndex, mediaInfo);
             else
-                MediaList.Add(mediaInfo);
+                Medias.Add(mediaInfo);
             UpdateTotalDuration();
             if (AutoSave)
                 Save();
@@ -50,7 +51,7 @@ namespace Nebula.Core.Medias.Playlist
 
         public void AddMedias(IMediaInfo[] medias)
         {
-            MediaList.AddRange(medias);
+            Medias.AddRange(medias);
             UpdateTotalDuration();
             if (AutoSave)
                 Save();
@@ -58,9 +59,9 @@ namespace Nebula.Core.Medias.Playlist
 
         public void RemoveMedia(IMediaInfo mediaInfo)
         {
-            if (!MediaList.Contains(mediaInfo))
+            if (!Medias.Contains(mediaInfo))
                 return;
-            MediaList.Remove(mediaInfo);
+            Medias.Remove(mediaInfo);
             UpdateTotalDuration();
             if (AutoSave)
                 Save();
@@ -75,7 +76,7 @@ namespace Nebula.Core.Medias.Playlist
         {
             if (index < 0 || index > MediasCount - 1)
                 throw new ArgumentOutOfRangeException(nameof(index));
-            return MediaList[index];
+            return Medias[index];
         }
 
         private void Save()
@@ -90,13 +91,13 @@ namespace Nebula.Core.Medias.Playlist
 
         public IEnumerator<IMediaInfo> GetEnumerator()
         {
-            return MediaList.GetEnumerator();
+            return Medias.GetEnumerator();
         }
 
         private void UpdateTotalDuration()
         {
             TotalDuration = TimeSpan.Zero;
-            foreach (IMediaInfo mediaInfo in MediaList)
+            foreach (IMediaInfo mediaInfo in Medias)
                 TotalDuration += mediaInfo.Duration;
         }
 

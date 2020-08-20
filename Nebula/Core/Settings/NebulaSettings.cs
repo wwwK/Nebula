@@ -1,88 +1,40 @@
 ﻿using System;
-using System.Buffers.Text;
-using System.Collections.Generic;
 using System.IO;
-using System.Windows.Media.Imaging;
-using System.Xml;
-using Nebula.Core.Medias;
-using Nebula.Core.Medias.Playlist;
-using Nebula.Core.Settings;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using Nebula.Core.Settings.Extentions;
 using Nebula.Core.Settings.Groups;
-using YoutubeExplode.Playlists;
 
 namespace Nebula.Core.Settings
 {
     public class NebulaSettings
     {
-        private const string SettingsFolderName = "Nebula";
-        private const string SettingsFileName   = "NebulaSettings.xml";
+        private const string SettingsFileName = "NebulaSettings.json";
+
+        public static readonly DirectoryInfo SettingsDirectory =
+            new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nebula"));
 
         public NebulaSettings()
         {
-            SettingsDirectory =
-                new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    SettingsFolderName));
-            SettingsFileInfo = new FileInfo(Path.Combine(SettingsDirectory.FullName, SettingsFileName));
-            LoadSettings();
+        }
+
+        [JsonIgnore] public bool                    AutoSave   { get; set; } = false;
+        public              GeneralSettingsGroup    General    { get; set; } = new GeneralSettingsGroup();
+        public              PrivacySettingsGroup    Privacy    { get; set; } = new PrivacySettingsGroup();
+        public              AppearanceSettingsGroup Appearance { get; set; } = new AppearanceSettingsGroup();
+
+        public void OnSettingsLoaded()
+        {
             General.SettingsChanged += OnSettingsChanged;
             Privacy.SettingsChanged += OnSettingsChanged;
             Appearance.SettingsChanged += OnSettingsChanged;
         }
 
-        public DirectoryInfo           SettingsDirectory { get; }
-        public FileInfo                SettingsFileInfo  { get; }
-        public GeneralSettingsGroup    General           { get; }      = new GeneralSettingsGroup();
-        public PrivacySettingsGroup    Privacy           { get; }      = new PrivacySettingsGroup();
-        public AppearanceSettingsGroup Appearance        { get; }      = new AppearanceSettingsGroup();
-        public bool                    AutoSave          { get; set; } = false;
-
-        private void LoadSettings()
-        {
-            SettingsDirectory.Create();
-            if (!File.Exists(SettingsFileInfo.FullName))
-                SaveSettings();
-            else
-            {
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(SettingsFileInfo.FullName);
-                foreach (XmlElement element in xmlDocument.DocumentElement.ChildNodes)
-                {
-                    if (element.Name == General.GroupName)
-                        General.Load(element);
-                    else if (element.Name == Privacy.GroupName)
-                        Privacy.Load(element);
-                    else if (element.Name == Appearance.GroupName)
-                        Appearance.Load(element);
-                }
-            }
-        }
-
-        public void SaveSettings()
-        {
-            XmlDocument xmlDocument = new XmlDocument();
-            XmlElement rootElement = xmlDocument.CreateElement(nameof(NebulaSettings));
-            xmlDocument.AppendChild(rootElement);
-
-            XmlElement generalElement = xmlDocument.CreateElement(General.GroupName);
-            XmlElement privacyElement = xmlDocument.CreateElement(Privacy.GroupName);
-            XmlElement appearanceElement = xmlDocument.CreateElement(Appearance.GroupName);
-
-            General.Save(generalElement);
-            Privacy.Save(privacyElement);
-            Appearance.Save(appearanceElement);
-
-            rootElement.AppendChild(generalElement);
-            rootElement.AppendChild(privacyElement);
-            rootElement.AppendChild(appearanceElement);
-
-            xmlDocument.Save(SettingsFileInfo.FullName);
-        }
-
         private void OnSettingsChanged(object sender, EventArgs e)
         {
             if (AutoSave)
-                SaveSettings();
+                SaveSettingsAsync();
 
             if (sender == General)
             {
@@ -103,24 +55,38 @@ namespace Nebula.Core.Settings
             }
         }
 
-        /*
-
-        private string ToBase64(BitmapImage bitmapImage)
+        /// <summary>
+        /// Load Settings from file
+        /// </summary>
+        /// <returns><see cref="NebulaSettings"/></returns>
+        public static NebulaSettings LoadSettings()
         {
-            BitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
-            using MemoryStream memStream = new MemoryStream();
-            encoder.Save(memStream);
-            return Convert.ToBase64String(memStream.ToArray());
+            string file = Path.Combine(SettingsDirectory.FullName, SettingsFileName);
+            if (!File.Exists(file))
+                Task.Run(async () => await SaveSettingsAsync(new NebulaSettings())).Wait();
+            NebulaSettings settings = JsonSerializer.Deserialize<NebulaSettings>(File.ReadAllText(Path.Combine(SettingsDirectory.FullName, SettingsFileName)),
+                new JsonSerializerOptions
+                {
+                    IgnoreNullValues = true,
+                    WriteIndented = true,
+                    IgnoreReadOnlyProperties = true
+                });
+            settings.OnSettingsLoaded();
+            return settings;
         }
 
-        private BitmapImage FromBase64(string base64)
+        /// <summary>
+        /// Save <see cref="NebulaSettings"/> to file
+        /// </summary>
+        public static async Task SaveSettingsAsync(NebulaSettings settings = null)
         {
-            byte[] byteBuffer = Convert.FromBase64String(base64);
-            MemoryStream memoryStream = new MemoryStream(byteBuffer) {Position = 0};
-            BitmapImage bitmapImage = new BitmapImage {StreamSource = memoryStream};
-            memoryStream.Close();
-            return bitmapImage;
-        } */
+            await using FileStream fs = File.OpenWrite(Path.Combine(SettingsDirectory.FullName, SettingsFileName));
+            await JsonSerializer.SerializeAsync(fs, settings ?? NebulaClient.Settings, new JsonSerializerOptions
+            {
+                IgnoreNullValues = true,
+                WriteIndented = true,
+                IgnoreReadOnlyProperties = true
+            });
+        }
     }
 }
