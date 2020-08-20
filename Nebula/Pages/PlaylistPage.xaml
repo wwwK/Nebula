@@ -18,8 +18,10 @@
         <StackPanel x:Name="PlaylistInfoPanel"
                     VerticalAlignment="Top" HorizontalAlignment="Left"
                     Orientation="Horizontal" Margin="5 5 0 0">
-            <Image x:Name="PlaylistLogo" VerticalAlignment="Center" HorizontalAlignment="Center"
-                   Stretch="UniformToFill" Width="150" Height="150" />
+            <Grid Width="150" Height="150">
+                <Image x:Name="PlaylistLogo"
+                       Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center"  />
+            </Grid>
             <StackPanel Orientation="Vertical" Margin="10 0 0 0">
                 <TextBlock x:Name="PlaylistTitle" FontSize="24" />
                 <TextBlock x:Name="PlaylistDescription" FontSize="16" />
