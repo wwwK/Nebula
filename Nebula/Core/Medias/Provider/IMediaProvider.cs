@@ -12,6 +12,16 @@ namespace Nebula.Core.Medias.Provider
         public string Url { get; }
 
         /// <summary>
+        /// Media Provider Name
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Media Provider Color
+        /// </summary>
+        public string NameColorEx { get; }
+
+        /// <summary>
         /// Search medias
         /// </summary>
         /// <param name="query">Media Query, usually keywords</param>

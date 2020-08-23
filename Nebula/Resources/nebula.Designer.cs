@@ -340,6 +340,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Welcome {0}.
+        /// </summary>
+        public static string HomeWelcome {
+            get {
+                return ResourceManager.GetString("HomeWelcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import.
         /// </summary>
         public static string Import {
@@ -363,6 +372,15 @@ namespace Nebula.Resources {
         public static string Library {
             get {
                 return ResourceManager.GetString("Library", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Listening Session.
+        /// </summary>
+        public static string ListeningSession {
+            get {
+                return ResourceManager.GetString("ListeningSession", resourceCulture);
             }
         }
         
@@ -489,6 +507,15 @@ namespace Nebula.Resources {
         public static string Privacy {
             get {
                 return ResourceManager.GetString("Privacy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string Profile {
+            get {
+                return ResourceManager.GetString("Profile", resourceCulture);
             }
         }
         
@@ -696,6 +723,15 @@ namespace Nebula.Resources {
         public static string UpdateCheckUpToDateMsg {
             get {
                 return ResourceManager.GetString("UpdateCheckUpToDateMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string Username {
+            get {
+                return ResourceManager.GetString("Username", resourceCulture);
             }
         }
     }

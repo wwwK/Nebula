@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Nebula.Core.Medias.Provider;
 
 namespace Nebula.Core.Medias
 {
@@ -59,5 +60,11 @@ namespace Nebula.Core.Medias
         /// </summary>
         /// <returns>Uri</returns>
         Task<Uri> GetAudioStreamUri();
+
+        /// <summary>
+        /// Media Provider
+        /// </summary>
+        /// <returns>Media Provider</returns>
+        IMediaProvider GetMediaProvider();
     }
 }

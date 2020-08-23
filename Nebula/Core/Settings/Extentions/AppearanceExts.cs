@@ -15,23 +15,24 @@ namespace Nebula.Core.Settings.Extentions
                 : new Uri(settingsGroup.BackgroundImage);
         }
 
-        public static ImageBrush GetBackgroundImageBrush(this AppearanceSettingsGroup settingsGroup)
+        public static ImageSource GetBackgroundImageSource(this AppearanceSettingsGroup settingsGroup)
         {
             try
             {
                 Uri uri = settingsGroup.GetBackgroundImageUri();
                 if (uri == null || uri.ToString().StartsWith("file") && !File.Exists(settingsGroup.BackgroundImage))
                     return null;
-                ImageBrush imageBrush = new ImageBrush(new BitmapImage(uri));
-                imageBrush.Stretch = Enum.TryParse(settingsGroup.BackgroundImageStretch, out Stretch stretch)
-                    ? stretch
-                    : Stretch.UniformToFill;
-                return imageBrush;
+                return new BitmapImage(uri);
             }
             catch (Exception e)
             {
                 return null;
             }
+        }
+
+        public static Stretch GetBackgroundImageStretch(this AppearanceSettingsGroup settingsGroup)
+        {
+            return Enum.TryParse(settingsGroup.BackgroundImageStretch, out Stretch stretch) ? stretch : Stretch.UniformToFill;
         }
     }
 }

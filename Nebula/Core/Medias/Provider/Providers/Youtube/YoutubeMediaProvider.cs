@@ -15,7 +15,9 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
         {
         }
 
-        public string Url { get; } = "https://www.youtube.com/";
+        public string Url         { get; } = "https://www.youtube.com/";
+        public string Name        { get; } = "Youtube";
+        public string NameColorEx { get; } = "#ff0000";
 
         public YoutubeClient Youtube { get; } = new YoutubeClient();
 

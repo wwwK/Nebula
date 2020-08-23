@@ -15,8 +15,8 @@ namespace Nebula.Core.Medias.Player
 
         public  bool             IsEmpty       => Queue.Count == 0;
         public  int              Count         => Queue.Count;
-        private List<IMediaInfo> Queue         { get; } = new List<IMediaInfo>();
-        private List<IMediaInfo> RecentDequeue { get; } = new List<IMediaInfo>();
+        private MediasCollection Queue         { get; } = new MediasCollection();
+        private MediasCollection RecentDequeue { get; } = new MediasCollection();
 
         /// <summary>
         /// Enqueue the specified <see cref="IPlaylist"/>
@@ -100,6 +100,15 @@ namespace Nebula.Core.Medias.Player
             RecentDequeue.Remove(mediaInfo);
             //Enqueue(dequeueInfo.MediaInfo, dequeueInfo.Index);
             return mediaInfo;
+        }
+
+        /// <summary>
+        /// Get a new Queue manager
+        /// </summary>
+        /// <returns>Queue Manager</returns>
+        public MediasCollectionManager GetQueueManager()
+        {
+            return new MediasCollectionManager(Queue);
         }
 
         public IEnumerator<IMediaInfo> GetEnumerator()

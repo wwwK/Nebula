@@ -62,5 +62,10 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
                                                   .GetManifestAsync(new VideoId(Id));
             return new Uri(streamManifest.GetAudioOnly().WithHighestBitrate().Url);
         }
+
+        public IMediaProvider GetMediaProvider()
+        {
+            return NebulaClient.GetMediaProvider<YoutubeMediaProvider>();
+        }
     }
 }

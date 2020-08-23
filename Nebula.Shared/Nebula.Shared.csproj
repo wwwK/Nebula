@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>C:\Users\doria\Documents\Developpement\Rider\Nebula\Release\Shared\</OutputPath>
+      <DebugType>portable</DebugType>
+    </PropertyGroup>
+
+</Project>

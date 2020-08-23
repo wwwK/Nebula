@@ -17,6 +17,8 @@ using Nebula.Core.Settings;
 using Nebula.Core.Updater;
 using Nebula.Pages;
 using Nebula.Pages.Dialogs;
+using Nebula.UI;
+using Nebula.UI.Pages;
 
 namespace Nebula.Core
 {
@@ -114,6 +116,11 @@ namespace Nebula.Core
             MainWindow.ContentFrame.Navigate(type, arg, transitionInfo);
         }
 
+        public static Page GetCurrentPage()
+        {
+            return MainWindow.ContentFrame.Content as Page;
+        }
+
         public static async Task CheckForUpdate(bool silentIfUpToDate)
         {
             UpdateCheckResult checkResult = await Updater.CheckForUpdate();
@@ -167,9 +174,11 @@ namespace Nebula.Core
             }
         }
 
-        public static string GetLocString(string key)
+        public static string GetLocString(string key, params object[] format)
         {
-            return Nebula.Resources.nebula.ResourceManager.GetString(key);
+            if (format == null || format.Length == 0)
+                return Resources.nebula.ResourceManager.GetString(key);
+            return string.Format(Resources.nebula.ResourceManager.GetString(key) ?? $"UNKNOWN_KEY({key})", format);
         }
 
         public static void Invoke(Action action)

@@ -231,4 +231,16 @@
     <data name="PlaylistImported" xml:space="preserve">
         <value>The playlist '{0}' has been successfully imported</value>
     </data>
+    <data name="HomeWelcome" xml:space="preserve">
+        <value>Welcome {0}</value>
+    </data>
+    <data name="Profile" xml:space="preserve">
+        <value>Profile</value>
+    </data>
+    <data name="Username" xml:space="preserve">
+        <value>Username</value>
+    </data>
+    <data name="ListeningSession" xml:space="preserve">
+        <value>Listening Session</value>
+    </data>
 </root>

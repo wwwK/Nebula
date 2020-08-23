@@ -12,11 +12,9 @@ namespace Nebula.Core.Medias
         {
             MaxMediasPerPage = maxMediasPerPage == -1 ? NebulaClient.Settings.General.PlaylistMaxMediasPerPage : maxMediasPerPage;
         }
-
-        public int  CurrentPage      { get; private set; } = 0;
+        
         public int  TotalPages       { get; private set; }
         public int  MaxMediasPerPage { get; }
-        public bool InfiniteCycle    { get; set; } = true;
 
         public event EventHandler<MediaCollectionPageChangedEventArgs> PageChanged;
 
@@ -25,39 +23,6 @@ namespace Nebula.Core.Medias
             TotalPages = (int) Math.Ceiling((double) Count / MaxMediasPerPage);
             if (TotalPages == 0)
                 TotalPages = 1;
-        }
-
-        public void NextPage()
-        {
-            int oldPage = CurrentPage;
-            if (CurrentPage == TotalPages)
-            {
-                if (!InfiniteCycle)
-                    return;
-                CurrentPage = 0;
-            }
-            else
-                CurrentPage++;
-
-            if (oldPage != CurrentPage)
-                PageChanged?.Invoke(this, new MediaCollectionPageChangedEventArgs(CurrentPage, TotalPages));
-        }
-
-
-        public void PreviousPage()
-        {
-            int oldPage = CurrentPage;
-            if (CurrentPage == 0)
-            {
-                if (!InfiniteCycle)
-                    return;
-                CurrentPage = TotalPages;
-            }
-            else
-                CurrentPage--;
-
-            if (oldPage != CurrentPage)
-                PageChanged?.Invoke(this, new MediaCollectionPageChangedEventArgs(CurrentPage, TotalPages));
         }
 
         public IEnumerable<IMediaInfo> GetMediasFromPage(int page)

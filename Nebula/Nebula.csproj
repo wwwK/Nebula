@@ -5,18 +5,19 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
-        <AssemblyVersion>1.0.12.0</AssemblyVersion>
-        <FileVersion>1.0.12.0</FileVersion>
+        <AssemblyVersion>1.0.13.0</AssemblyVersion>
+        <FileVersion>1.0.13.0</FileVersion>
         <ApplicationIcon>Resources/nebula_icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <DebugType>none</DebugType>
-      <OutputPath>C:\Users\doria\Documents\Developpement\Rider\Nebula\NebulaReleaseBuild</OutputPath>
+      <OutputPath>C:\Users\doria\Documents\Developpement\Rider\Nebula\Release\Client</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="CSCore" Version="1.2.1.2" />
+      <PackageReference Include="LiteNetLib" Version="0.9.3.2" />
       <PackageReference Include="Microsoft.AppCenter" Version="3.4.0" />
       <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.0" />
       <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.0" />
@@ -25,42 +26,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Page Update="Pages\HomePage.xaml">
-        <Generator></Generator>
-      </Page>
-      <Page Update="Pages\BrowsePage.xaml">
-        <Generator></Generator>
-      </Page>
-      <Page Update="Pages\ArtistPage.xaml">
-        <Generator></Generator>
-      </Page>
-      <Page Update="Pages\PlaylistPage.xaml">
-        <Generator></Generator>
-      </Page>
-      <Page Update="Pages\PlaylistsPage.xaml">
-        <Generator></Generator>
-      </Page>
       <Page Update="Pages\Dialogs\PlaylistEditDialog.xaml">
         <Generator></Generator>
       </Page>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Pages\HomePage.xaml.cs">
-        <DependentUpon>HomePage.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="Pages\BrowsePage.xaml.cs">
-        <DependentUpon>BrowsePage.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="Pages\ArtistPage.xaml.cs">
-        <DependentUpon>ArtistPage.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="Pages\PlaylistPage.xaml.cs">
-        <DependentUpon>PlaylistPage.xaml</DependentUpon>
-      </Compile>
-      <Compile Update="Pages\PlaylistsPage.xaml.cs">
-        <DependentUpon>PlaylistsPage.xaml</DependentUpon>
-      </Compile>
       <Compile Update="Pages\Dialogs\PlaylistEditDialog.xaml.cs">
         <DependentUpon>CreatePlaylistDialog.xaml</DependentUpon>
       </Compile>
@@ -84,16 +55,14 @@
     <ItemGroup>
       <Folder Include="Core\Discord" />
       <Folder Include="Core\Medias\Player\Filters" />
-      <Folder Include="Windows" />
+      <Folder Include="Core\Utils" />
+      <Folder Include="UI\Windows" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="nebula_icon.png" />
       <None Remove="nebula_icon.ico" />
       <None Remove="default_playlist_thumbnail.jpg" />
-      <Resource Include="Resources\nebula_icon.ico">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
       <None Remove="Resources\default_playlist_thumbnail.png" />
     </ItemGroup>
 
@@ -116,6 +85,16 @@
       <Reference Include="EasySharp.Windows, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\..\EasySharp\EasySharp.Windows\bin\Release\netcoreapp3.1\EasySharp.Windows.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Resources\nebula_icon.ico">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Nebula.Shared\Nebula.Shared.csproj" />
     </ItemGroup>
 
 </Project>

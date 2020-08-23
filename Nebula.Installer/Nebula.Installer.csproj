@@ -8,6 +8,10 @@
         <ApplicationIcon>nebula_icon.ico</ApplicationIcon>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <OutputPath>C:\Users\doria\Documents\Developpement\Rider\Nebula\Release\Installer\</OutputPath>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="ModernWpfUI" Version="0.9.1" />
     </ItemGroup>

@@ -6,6 +6,7 @@ using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Nebula.Core;
+using Nebula.UI;
 
 namespace Nebula
 {
@@ -39,9 +40,8 @@ namespace Nebula
 
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
-            
+
 #if RELEASE
-            
             AppCenter.Start("df3a859e-110a-43b2-892d-71f4650c9c70", typeof(Analytics), typeof(Crashes));
 #endif
         }

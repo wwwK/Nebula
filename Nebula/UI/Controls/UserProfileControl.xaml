@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="Nebula.UI.Controls.UserProfileControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Nebula.UI.Controls"
+             mc:Ignorable="d">
+    <Grid x:Name="RootGrid" Width="250" Height="150">
+        <TextBlock Text="USERNAME" />
+    </Grid>
+</UserControl>

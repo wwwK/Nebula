@@ -3,8 +3,12 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using Nebula.Core.Settings.Extentions;
 using Nebula.Core.Settings.Groups;
+using Nebula.UI;
+
+#pragma warning disable 4014
 
 namespace Nebula.Core.Settings
 {
@@ -19,16 +23,18 @@ namespace Nebula.Core.Settings
         {
         }
 
-        [JsonIgnore] public bool                    AutoSave   { get; set; } = false;
-        public              GeneralSettingsGroup    General    { get; set; } = new GeneralSettingsGroup();
-        public              PrivacySettingsGroup    Privacy    { get; set; } = new PrivacySettingsGroup();
-        public              AppearanceSettingsGroup Appearance { get; set; } = new AppearanceSettingsGroup();
+        [JsonIgnore] public bool                    AutoSave    { get; set; } = false;
+        public              GeneralSettingsGroup    General     { get; set; } = new GeneralSettingsGroup();
+        public              PrivacySettingsGroup    Privacy     { get; set; } = new PrivacySettingsGroup();
+        public              AppearanceSettingsGroup Appearance  { get; set; } = new AppearanceSettingsGroup();
+        public              UserProfileSettings     UserProfile { get; set; } = new UserProfileSettings();
 
         public void OnSettingsLoaded()
         {
             General.SettingsChanged += OnSettingsChanged;
             Privacy.SettingsChanged += OnSettingsChanged;
             Appearance.SettingsChanged += OnSettingsChanged;
+            UserProfile.SettingsChanged += OnSettingsChanged;
         }
 
         private void OnSettingsChanged(object sender, EventArgs e)
@@ -48,9 +54,14 @@ namespace Nebula.Core.Settings
                 MainWindow mainWindow = NebulaClient.MainWindow;
                 if (Appearance.DisplayMode != mainWindow.NavView.DisplayMode.ToString())
                     mainWindow.SetViewMode(Appearance.DisplayMode);
-                mainWindow.BackgroundBrush = Appearance.GetBackgroundImageBrush();
+                mainWindow.BackgroundWallpaper = Appearance.GetBackgroundImageSource();
+                if (Appearance.GetBackgroundImageStretch() != mainWindow.ImageBackground.Stretch)
+                    mainWindow.ImageBackground.Stretch = Appearance.GetBackgroundImageStretch();
             }
             else if (sender == Privacy)
+            {
+            }
+            else if (sender == UserProfile)
             {
             }
         }
@@ -80,7 +91,10 @@ namespace Nebula.Core.Settings
         /// </summary>
         public static async Task SaveSettingsAsync(NebulaSettings settings = null)
         {
-            await using FileStream fs = File.OpenWrite(Path.Combine(SettingsDirectory.FullName, SettingsFileName));
+            string file = Path.Combine(SettingsDirectory.FullName, SettingsFileName);
+            if(File.Exists(file))
+                File.Delete(file);
+            await using FileStream fs = File.OpenWrite(file);
             await JsonSerializer.SerializeAsync(fs, settings ?? NebulaClient.Settings, new JsonSerializerOptions
             {
                 IgnoreNullValues = true,

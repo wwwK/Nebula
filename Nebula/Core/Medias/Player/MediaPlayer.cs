@@ -116,7 +116,7 @@ namespace Nebula.Core.Medias.Player
                 return;
             Queue.Enqueue(playlist);
             CurrentPlaylist = playlist;
-            Open(Queue.Dequeue(Shuffle), manualStop, play);
+            OpenMedia(Queue.Dequeue(Shuffle), manualStop, play);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Nebula.Core.Medias.Player
         /// <param name="manualStop">Is this a user manual stop</param>
         /// <param name="play">Should start playing right after init</param>
         /// <returns></returns>
-        public async Task Open(IMediaInfo mediaInfo, bool manualStop = false, bool play = true)
+        public async Task OpenMedia(IMediaInfo mediaInfo, bool manualStop = false, bool play = true)
         {
             if (mediaInfo == null)
                 return;
@@ -184,7 +184,7 @@ namespace Nebula.Core.Medias.Player
         /// <param name="manualStop">Is this a user manual stop</param>
         public void Forward(bool manualStop = false)
         {
-            Open(Queue.Dequeue(Shuffle), manualStop);
+            OpenMedia(Queue.Dequeue(Shuffle), manualStop);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace Nebula.Core.Medias.Player
         /// <param name="manualStop">Is this a user manual stop</param>
         public void Backward(bool manualStop = false)
         {
-            Open(Queue.RewindDequeue(), manualStop);
+            OpenMedia(Queue.RewindDequeue(), manualStop);
         }
 
         /// <summary>

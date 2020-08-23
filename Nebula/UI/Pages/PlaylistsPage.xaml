@@ -1,0 +1,80 @@
+﻿<ui:Page x:Class="Nebula.UI.Pages.PlaylistsPage"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+         xmlns:local="clr-namespace:Nebula.Pages"
+         xmlns:ui="http://schemas.modernwpf.com/2019"
+         xmlns:media="clr-namespace:Nebula.Core.Medias.Playlist"
+         xmlns:resx="clr-namespace:Nebula.Resources"
+         mc:Ignorable="d"
+         Title="PlaylistsPage" SizeChanged="OnSizeChanged">
+    <Page.Resources>
+        <ui:UniformGridLayout x:Key="UniformGridLayout" MinItemHeight="250" MinItemWidth="200" MinRowSpacing="8"
+                              MinColumnSpacing="24" />
+    </Page.Resources>
+    <StackPanel Orientation="Vertical">
+        <ui:CommandBar x:Name="CommandBar" VerticalAlignment="Top" VerticalContentAlignment="Center">
+            <ui:AppBarButton Label="{x:Static resx:nebula.CreatePlaylist}" Click="OnCreatePlaylistClicked" />
+            <ui:AppBarButton Label="{x:Static resx:nebula.PlaylistImport}" Click="OnImportPlaylistClicked" />
+            <ui:AppBarButton Label="{x:Static resx:nebula.ExportPlaylist}" />
+            <ui:CommandBar.Content>
+                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.FindPlaylist}"
+                                   QueryIcon="Find"
+                                   Margin="24 0 0 0"
+                                   Width="400" />
+            </ui:CommandBar.Content>
+        </ui:CommandBar>
+        <ScrollViewer x:Name="ScrollViewer" Margin="24 0 0 0">
+            <ScrollViewer.Style>
+                <Style TargetType="ScrollViewer" BasedOn="{StaticResource {x:Type ScrollViewer}}">
+                    <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+                    <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Source={StaticResource UniformGridLayout}, Path=Orientation}"
+                                     Value="Vertical">
+                            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
+                            <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ScrollViewer.Style>
+            <ui:ItemsRepeater x:Name="PlaylistsElements" Layout="{StaticResource UniformGridLayout}"
+                              ItemsSource="{Binding Playlists}" Margin="0 5 0 0">
+                <ui:ItemsRepeater.ItemTemplate>
+                    <DataTemplate DataType="media:IPlaylist">
+                        <Grid x:Name="ItemRootPanel">
+                            <Grid x:Name="ItemContainerPanel" MouseEnter="OnPanelMouseEnter"
+                                  MouseLeave="OnPanelMouseLeave"
+                                  Background="#323232" Cursor="Hand" MouseUp="OnPlaylistElementMouseDown">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="100" />
+                                </Grid.RowDefinitions>
+                                <Image Grid.Row="0" Source="{Binding Thumbnail}" Stretch="UniformToFill"
+                                       VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                <StackPanel Grid.Row="1"
+                                            Orientation="Vertical"
+                                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                            Background="#222222">
+                                    <TextBlock Margin="5 0 0 0" Text="{Binding Name}" />
+                                    <TextBlock Margin="5 0 0 0" Text="{Binding Description}" />
+                                    <TextBlock Margin="5 0 0 0"
+                                               Text="{Binding Author, StringFormat={x:Static resx:nebula.By}}" />
+                                    <TextBlock Margin="5 0 0 0"
+                                               Text="{Binding Path=MediasCount, StringFormat={x:Static resx:nebula.PlaylistTitles}}" />
+                                    <TextBlock Margin="5 0 0 0"
+                                               Text="{Binding TotalDuration, StringFormat={x:Static resx:nebula.PlaylistTotalDuration}}" />
+                                </StackPanel>
+                            </Grid>
+                            <ui:AppBarButton HorizontalAlignment="Center" VerticalAlignment="Center" Icon="Play"
+                                             Label="{x:Static resx:nebula.Play}" Background="#222222" Opacity="0.5"
+                                             Visibility="Collapsed"
+                                             Click="OnPlayClicked" />
+                        </Grid>
+                    </DataTemplate>
+                </ui:ItemsRepeater.ItemTemplate>
+            </ui:ItemsRepeater>
+        </ScrollViewer>
+    </StackPanel>
+</ui:Page>
