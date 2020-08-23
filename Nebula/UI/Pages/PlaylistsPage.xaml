@@ -3,29 +3,27 @@
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-         xmlns:local="clr-namespace:Nebula.Pages"
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:media="clr-namespace:Nebula.Core.Medias.Playlist"
          xmlns:resx="clr-namespace:Nebula.Resources"
-         mc:Ignorable="d"
-         Title="PlaylistsPage" SizeChanged="OnSizeChanged">
+         xmlns:controls="clr-namespace:Nebula.UI.Controls"
+         mc:Ignorable="d">
     <Page.Resources>
         <ui:UniformGridLayout x:Key="UniformGridLayout" MinItemHeight="250" MinItemWidth="200" MinRowSpacing="8"
                               MinColumnSpacing="24" />
     </Page.Resources>
-    <StackPanel Orientation="Vertical">
-        <ui:CommandBar x:Name="CommandBar" VerticalAlignment="Top" VerticalContentAlignment="Center">
+    <controls:SimpleGrid Rows="50,*">
+        <!--- Top Bar -->
+        <ui:CommandBar VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Row="0">
             <ui:AppBarButton Label="{x:Static resx:nebula.CreatePlaylist}" Click="OnCreatePlaylistClicked" />
             <ui:AppBarButton Label="{x:Static resx:nebula.PlaylistImport}" Click="OnImportPlaylistClicked" />
             <ui:AppBarButton Label="{x:Static resx:nebula.ExportPlaylist}" />
             <ui:CommandBar.Content>
-                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.FindPlaylist}"
-                                   QueryIcon="Find"
-                                   Margin="24 0 0 0"
-                                   Width="400" />
+                <ui:AutoSuggestBox PlaceholderText="{x:Static resx:nebula.FindPlaylist}" QueryIcon="Find" Margin="40 0 0 0" Width="400" />
             </ui:CommandBar.Content>
         </ui:CommandBar>
-        <ScrollViewer x:Name="ScrollViewer" Margin="24 0 0 0">
+        <!--- Playlists -->
+        <ScrollViewer Grid.Row="1">
             <ScrollViewer.Style>
                 <Style TargetType="ScrollViewer" BasedOn="{StaticResource {x:Type ScrollViewer}}">
                     <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
@@ -40,17 +38,12 @@
                 </Style>
             </ScrollViewer.Style>
             <ui:ItemsRepeater x:Name="PlaylistsElements" Layout="{StaticResource UniformGridLayout}"
-                              ItemsSource="{Binding Playlists}" Margin="0 5 0 0">
+                              ItemsSource="{Binding Playlists}" Margin="40 5 0 0">
                 <ui:ItemsRepeater.ItemTemplate>
                     <DataTemplate DataType="media:IPlaylist">
                         <Grid x:Name="ItemRootPanel">
-                            <Grid x:Name="ItemContainerPanel" MouseEnter="OnPanelMouseEnter"
-                                  MouseLeave="OnPanelMouseLeave"
-                                  Background="#323232" Cursor="Hand" MouseUp="OnPlaylistElementMouseDown">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="100" />
-                                </Grid.RowDefinitions>
+                            <controls:SimpleGrid Rows="*,100" x:Name="ItemContainerPanel" Background="#323232" Cursor="Hand"
+                                                 MouseEnter="OnPanelMouseEnter" MouseLeave="OnPanelMouseLeave" MouseUp="OnPlaylistElementMouseDown">
                                 <Image Grid.Row="0" Source="{Binding Thumbnail}" Stretch="UniformToFill"
                                        VerticalAlignment="Center" HorizontalAlignment="Center" />
                                 <StackPanel Grid.Row="1"
@@ -66,7 +59,7 @@
                                     <TextBlock Margin="5 0 0 0"
                                                Text="{Binding TotalDuration, StringFormat={x:Static resx:nebula.PlaylistTotalDuration}}" />
                                 </StackPanel>
-                            </Grid>
+                            </controls:SimpleGrid>
                             <ui:AppBarButton HorizontalAlignment="Center" VerticalAlignment="Center" Icon="Play"
                                              Label="{x:Static resx:nebula.Play}" Background="#222222" Opacity="0.5"
                                              Visibility="Collapsed"
@@ -76,5 +69,5 @@
                 </ui:ItemsRepeater.ItemTemplate>
             </ui:ItemsRepeater>
         </ScrollViewer>
-    </StackPanel>
+    </controls:SimpleGrid>
 </ui:Page>

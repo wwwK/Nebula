@@ -5,14 +5,11 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:resx="clr-namespace:Nebula.Resources"
+         xmlns:controls="clr-namespace:Nebula.UI.Controls"
          mc:Ignorable="d">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+    <controls:SimpleGrid Columns="40,200,*">
         <!--- Settings list -->
-        <ListView x:Name="MenuListView" Background="#0a0a0a" Opacity="50" Margin="24 0 0 0" HorizontalContentAlignment="Center"
+        <ListView x:Name="MenuListView" Background="#0a0a0a" Opacity="50" HorizontalContentAlignment="Center" Grid.Column="1"
                   SelectionChanged="OnSelectionChanged">
             <ListView.Items>
                 <ListViewItem Content="{x:Static resx:nebula.General}" Tag="GENERAL" />
@@ -23,11 +20,11 @@
             </ListView.Items>
         </ListView>
         <!--- Settings content -->
-        <Button Grid.Column="0" Content="{x:Static resx:nebula.SaveSettings}" Margin="24 0 0 0" Background="Green"
+        <Button Grid.Column="1" Content="{x:Static resx:nebula.SaveSettings}"  Background="Green"
                 HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Click="OnSaveSettingsClick" />
-        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="15 0 0 0">
-            <TextBlock x:Name="Header" FontSize="24" />
-            <ui:Frame x:Name="SettingsNavFrame" />
-        </StackPanel>
-    </Grid>
+        <controls:SimpleGrid Rows="Auto,*" Grid.Column="2" Margin="15 0 0 0">
+            <TextBlock x:Name="Header" FontSize="24" Grid.Row="0" />
+            <ui:Frame x:Name="SettingsNavFrame" Grid.Row="1" />
+        </controls:SimpleGrid>
+    </controls:SimpleGrid>
 </ui:Page>

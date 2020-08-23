@@ -5,10 +5,10 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:resx="clr-namespace:Nebula.Resources"
-         xmlns:local="clr-namespace:Nebula.UI.Pages.Settings"
          mc:Ignorable="d">
-    <ScrollViewer  Height="{Binding ActualHeight}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <ui:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="15" MinWidth="350" MaxWidth="350">
+            <TextBlock />
             <ui:NumberBox x:Name="DefaultSoundVolume" Header="{x:Static resx:nebula.SettingsDefaultSoundLevel}" Minimum="0"
                           Maximum="100" SmallChange="1"
                           LargeChange="10" Value="{Binding DefaultSoundLevel, Mode=TwoWay}"
@@ -19,7 +19,7 @@
                           LargeChange="10" Value="{Binding SearchMaxPages, Mode=TwoWay}"
                           SpinButtonPlacementMode="Inline" />
             <TextBlock Text="{x:Static resx:nebula.Playlists}" FontSize="26" />
-            <ui:NumberBox Header="{x:Static resx:nebula.SettingsSearchMaxPages}" Minimum="1"
+            <ui:NumberBox Header="{x:Static resx:nebula.SettingsMaxElementsPerPage}" Minimum="1"
                           Maximum="100" SmallChange="1"
                           LargeChange="10" Value="{Binding PlaylistMaxMediasPerPage, Mode=TwoWay}"
                           SpinButtonPlacementMode="Inline" />

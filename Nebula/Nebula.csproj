@@ -5,9 +5,9 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
-        <AssemblyVersion>1.0.13.0</AssemblyVersion>
-        <FileVersion>1.0.13.0</FileVersion>
-        <ApplicationIcon>Resources/nebula_icon.ico</ApplicationIcon>
+        <AssemblyVersion>1.0.14.0</AssemblyVersion>
+        <FileVersion>1.0.14.0</FileVersion>
+        <ApplicationIcon>Resources/nebula_app_icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -88,13 +88,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Resource Include="Resources\nebula_icon.ico">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
+      <ProjectReference Include="..\Nebula.Shared\Nebula.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Nebula.Shared\Nebula.Shared.csproj" />
+      <None Remove="Resources\nebula_app_icon.ico" />
+      <Resource Include="Resources\nebula_app_icon.ico" />
     </ItemGroup>
 
 </Project>

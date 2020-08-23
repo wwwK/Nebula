@@ -16,8 +16,6 @@ namespace Nebula.UI.Pages.Settings
         {
             InitializeComponent();
             DataContext = NebulaClient.Settings.Appearance;
-            foreach (NavigationViewPaneDisplayMode value in Enum.GetValues(typeof(NavigationViewPaneDisplayMode)))
-                DisplayModeCmb.Items.Add(value.ToString());
             foreach (Stretch value in Enum.GetValues(typeof(Stretch)))
                 BackgroundImageCmb.Items.Add(value.ToString());
         }

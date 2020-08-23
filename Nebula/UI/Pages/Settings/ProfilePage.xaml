@@ -9,6 +9,7 @@
          mc:Ignorable="d">
     <ScrollViewer Height="{Binding ActualHeight}">
         <ui:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="15" MinWidth="350" MaxWidth="350">
+            <TextBlock />
             <TextBox ui:ControlHelper.Header="{x:Static resx:nebula.Username}" Text="{Binding Username, Mode=TwoWay}" />
         </ui:SimpleStackPanel>
     </ScrollViewer>

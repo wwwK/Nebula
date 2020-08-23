@@ -98,22 +98,34 @@ namespace Nebula.Core
         public static void Navigate(Type type)
         {
             if (type != null && MainWindow.ContentFrame.CurrentSourcePageType != type)
-                MainWindow.ContentFrame.Navigate(type, null,
-                    Settings.Appearance.DisplayMode == "Top"
-                        ? new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft}
-                        : new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromBottom});
+                MainWindow.ContentFrame.Navigate(type, null, GetNavigationAnimation(type));
         }
 
         public static void Navigate(Type type, object arg)
         {
-            MainWindow.ContentFrame.Navigate(type, arg, Settings.Appearance.DisplayMode == "Top"
-                ? new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft}
-                : new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromBottom});
+            MainWindow.ContentFrame.Navigate(type, arg, GetNavigationAnimation(type));
         }
 
         public static void Navigate(Type type, object arg, NavigationTransitionInfo transitionInfo)
         {
             MainWindow.ContentFrame.Navigate(type, arg, transitionInfo);
+        }
+
+        private static NavigationTransitionInfo GetNavigationAnimation(Type type)
+        {
+            Type currentPageType = MainWindow.ContentFrame.CurrentSourcePageType;
+            List<Type> types = new List<Type> //Todo: this should be cached
+            {
+                typeof(HomePage),
+                typeof(BrowsePage),
+                typeof(PlaylistsPage),        
+                typeof(SettingsPage)
+            };
+            int curIndex = types.IndexOf(currentPageType);
+            int newIndex = types.IndexOf(type);
+            return newIndex < curIndex
+                ? new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromRight}
+                : new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft};
         }
 
         public static Page GetCurrentPage()

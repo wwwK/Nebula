@@ -106,9 +106,9 @@ namespace Nebula.Core.Medias.Player
         /// Get a new Queue manager
         /// </summary>
         /// <returns>Queue Manager</returns>
-        public MediasCollectionManager GetQueueManager()
+        public MediasCollectionPages GetPages()
         {
-            return new MediasCollectionManager(Queue);
+            return new MediasCollectionPages(Queue);
         }
 
         public IEnumerator<IMediaInfo> GetEnumerator()

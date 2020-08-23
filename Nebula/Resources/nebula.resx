@@ -198,14 +198,8 @@
     <data name="SaveSettings" xml:space="preserve">
         <value>Save Settings</value>
     </data>
-    <data name="SettingsViewMode" xml:space="preserve">
-        <value>View Mode</value>
-    </data>
     <data name="SettingsSearchMaxPages" xml:space="preserve">
         <value>Maximum number of search pages (be careful, increasing this value too much can reduce performance).</value>
-    </data>
-    <data name="SettingsAlwaysShowHeader" xml:space="preserve">
-        <value>Always show header</value>
     </data>
     <data name="Settings" xml:space="preserve">
         <value>Settings</value>
@@ -242,5 +236,8 @@
     </data>
     <data name="ListeningSession" xml:space="preserve">
         <value>Listening Session</value>
+    </data>
+    <data name="SettingsMaxElementsPerPage" xml:space="preserve">
+        <value>Maximum elements per page</value>
     </data>
 </root>

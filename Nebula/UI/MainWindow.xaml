@@ -5,7 +5,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.modernwpf.com/2019"
-        xmlns:local="clr-namespace:Nebula"
         xmlns:pages="clr-namespace:Nebula.UI.Pages"
         xmlns:resx="clr-namespace:Nebula.Resources"
         xmlns:controls="clr-namespace:Nebula.UI.Controls"
@@ -13,60 +12,26 @@
         Title="Nebula"
         Width="1360"
         Height="760"
-        MinWidth="500"
+        MinWidth="350"
         MinHeight="500"
         WindowStartupLocation="CenterScreen"
-        Icon="/Resources/nebula_icon.ico"
+        Icon="/Resources/nebula_app_icon.ico"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:ThemeManager.RequestedTheme="Dark"
         ui:TitleBar.ExtendViewIntoTitleBar="True"
-        Loaded="OnWindowLoaded" SizeChanged="OnSizeChanged">
-
-    <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <DataTemplate x:Key="NavigationViewHeaderTemplate">
-            <TextBlock Text="{Binding}" Margin="12,32,0,0" />
-        </DataTemplate>
-    </Window.Resources>
-
+        Loaded="OnWindowLoaded">
     <Grid>
-        <!--- Title bar -->
-        <Grid x:Name="AppTitleBar"
-              VerticalAlignment="Top"
-              Height="{Binding ElementName=NavView, Path=CompactPaneLength}"
-              Visibility="{Binding ElementName=Window, Path=(ui:TitleBar.ExtendViewIntoTitleBar), Converter={StaticResource BooleanToVisibilityConverter}}"
-              Canvas.ZIndex="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto"
-                                  MinWidth="{Binding ElementName=Window, Path=(ui:TitleBar.SystemOverlayRightInset)}" />
-            </Grid.ColumnDefinitions>
-            <TextBlock x:Name="AppTitle" Text="{Binding ElementName=Window, Path=Title}" VerticalAlignment="Center"
-                       Style="{StaticResource CaptionTextBlockStyle}" />
-        </Grid>
         <!--- Navigation View -->
-        <ui:NavigationView x:Name="NavView"
-                           Header="{Binding SelectedItem.Content, RelativeSource={RelativeSource Self}, FallbackValue=' '}"
-                           HeaderTemplate="{StaticResource NavigationViewHeaderTemplate}"
-                           IsBackButtonVisible="Visible"
-                           IsTitleBarAutoPaddingEnabled="False"
-                           IsPaneOpen="True"
-                           OpenPaneLength="240"
-                           PaneDisplayMode="Left"
-                           IsHitTestVisible="True"
-                           IsSettingsVisible="False"
-                           IsBackEnabled="{Binding ElementName=ContentFrame, Path=CanGoBack}"
-                           DisplayModeChanged="OnNavViewDisplayModeChanged"
-                           ItemInvoked="OnNavViewItemInvoked"
-                           BackRequested="OnNavViewBackRequested"
-                           PaneOpened="OnPaneOpened"
-                           PaneClosed="OnPaneClosed">
+        <ui:NavigationView IsBackButtonVisible="Collapsed" AlwaysShowHeader="True" IsTitleBarAutoPaddingEnabled="False" PaneDisplayMode="Top" PaneTitle="Nebula"
+                           IsSettingsVisible="False" IsBackEnabled="{Binding ElementName=ContentFrame, Path=CanGoBack}"
+                           ItemInvoked="OnNavViewItemInvoked">
 
             <ui:NavigationView.AutoSuggestBox>
-                <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.Search}" QueryIcon="Find"
+                <ui:AutoSuggestBox x:Name="SearchBox" Width="300" PlaceholderText="{x:Static resx:nebula.Search}" QueryIcon="Find"
                                    KeyUp="OnSearchBoxKeyUp" TextChanged="OnSearchBoxTextChanged" />
             </ui:NavigationView.AutoSuggestBox>
 
+            <!--- Navigation Pages -->
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem x:Name="HomeButton" Content="{x:Static resx:nebula.Home}"
                                        Tag="{x:Type pages:HomePage}">
@@ -75,14 +40,14 @@
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
+                <ui:NavigationViewItemSeparator />
+
                 <ui:NavigationViewItem x:Name="BrowseButton" Content="{x:Static resx:nebula.Browse}"
                                        Tag="{x:Type pages:BrowsePage}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE721F;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-
-                <ui:NavigationViewItemHeader x:Name="LibraryHeader" Content="{x:Static resx:nebula.Library}" />
 
                 <ui:NavigationViewItem x:Name="PlaylistsButton" Content="{x:Static resx:nebula.Playlists}"
                                        Tag="{x:Type pages:PlaylistsPage}">
@@ -103,28 +68,29 @@
 
             </ui:NavigationView.MenuItems>
 
+            <!--- Navigation Logo -->
+            <ui:NavigationView.PaneHeader>
+                <Image Source="/Resources/nebula_app_icon.ico" />
+            </ui:NavigationView.PaneHeader>
+
+            <!--- Navigation Settings -->
             <ui:NavigationView.PaneFooter>
                 <StackPanel Orientation="Horizontal">
-                    <StackPanel Orientation="Horizontal">
-                        <ui:AppBarButton x:Name="SettingsButton" Icon="Setting" Click="OnSettingsClicked" />
-                    </StackPanel>
-                    <Rectangle x:Name="ControlBoxRectangle" Width="138" />
+                    <ui:AppBarButton x:Name="SettingsButton" Icon="Setting" Click="OnSettingsClicked" />
+                    <!--- Rectangle to avoid the settings button behind Min/Max/Close buttons -->
+                    <Rectangle Width="138" />
                 </StackPanel>
             </ui:NavigationView.PaneFooter>
 
             <!--- Window Content -->
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+            <controls:SimpleGrid Rows="*,Auto">
                 <!--- Window Background -->
                 <Image Grid.Row="0" x:Name="ImageBackground" Stretch="UniformToFill" />
                 <!--- Pages Frame -->
                 <ui:Frame Grid.Row="0" x:Name="ContentFrame" />
                 <!--- Media Player Controller -->
                 <controls:MediaPlayerControl Grid.Row="1" Height="70" />
-            </Grid>
+            </controls:SimpleGrid>
         </ui:NavigationView>
     </Grid>
 </Window>

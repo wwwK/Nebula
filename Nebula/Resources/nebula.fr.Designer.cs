@@ -574,15 +574,6 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Toujours afficher l&apos;en-tête.
-        /// </summary>
-        public static string SettingsAlwaysShowHeader {
-            get {
-                return ResourceManager.GetString("SettingsAlwaysShowHeader", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Image d&apos;arrière plan.
         /// </summary>
         public static string SettingsBackgroundImage {
@@ -628,20 +619,20 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nombre maximum d&apos;élements par page.
+        /// </summary>
+        public static string SettingsMaxElementsPerPage {
+            get {
+                return ResourceManager.GetString("SettingsMaxElementsPerPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nombre maximal de pages de recherche (attention, trop augmenter cette valeur peut réduire les performances)..
         /// </summary>
         public static string SettingsSearchMaxPages {
             get {
                 return ResourceManager.GetString("SettingsSearchMaxPages", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Affichage.
-        /// </summary>
-        public static string SettingsViewMode {
-            get {
-                return ResourceManager.GetString("SettingsViewMode", resourceCulture);
             }
         }
         

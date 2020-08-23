@@ -4,7 +4,6 @@ namespace Nebula.Core.Settings.Groups
 {
     public class AppearanceSettingsGroup : ISettingsGroup
     {
-        private string _displayMode            = "Top";
         private string _backgroundImage        = "";
         private string _backgroundImageStretch = "UniformToFill";
 
@@ -13,16 +12,6 @@ namespace Nebula.Core.Settings.Groups
         }
 
         public string GroupName { get; } = "Appearance";
-
-        public string DisplayMode
-        {
-            get => _displayMode;
-            set
-            {
-                _displayMode = value;
-                SettingsChanged?.Invoke(this, new EventArgs());
-            }
-        }
 
         public string BackgroundImage
         {

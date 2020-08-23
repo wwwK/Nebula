@@ -3,46 +3,42 @@
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-         xmlns:local="clr-namespace:Nebula.Pages"
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:medias="clr-namespace:Nebula.Core.Medias"
          xmlns:resx="clr-namespace:Nebula.Resources"
          xmlns:controls="clr-namespace:Nebula.UI.Controls"
-         mc:Ignorable="d" SizeChanged="OnSizeChanged">
+         mc:Ignorable="d">
     <Page.Resources>
         <ui:StackLayout x:Key="VerticalStackLayout" Orientation="Vertical" Spacing="5" />
     </Page.Resources>
-    <Grid>
-        <StackPanel Orientation="Vertical">
-            <StackPanel x:Name="UserPanel" Orientation="Vertical" Background="#272727" Opacity="0.8" Width="350" Height="150" VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="15 15 0 0">
-                <TextBlock x:Name="Username" FontSize="27" Margin="10 5  0 0" />
-            </StackPanel>
-            <controls:SimpleGrid Rows="Auto,*" Background="#272727" Opacity="0.8" Width="350" Height="450" VerticalAlignment="Top" HorizontalAlignment="Left"
-                                 Margin="15 15 0 0">
-                <StackPanel Orientation="Vertical" Grid.Row="0">
-                    <TextBlock Text="{x:Static resx:nebula.ListeningSession}" HorizontalAlignment="Center" FontSize="27" />
-                    <TextBlock x:Name="TitlesDuration" HorizontalAlignment="Center" FontSize="18" />
-                    <Grid>
-                        <ui:AppBarButton Icon="Back" LabelPosition="Collapsed" HorizontalAlignment="Left" Click="OnBackClick" />
-                        <TextBlock x:Name="PagesCount" Text="1/1" HorizontalAlignment="Center" FontSize="27" />
-                        <ui:AppBarButton Icon="Forward" LabelPosition="Collapsed" HorizontalAlignment="Right" Click="OnForwardClick" />
-                    </Grid>
-                </StackPanel>
-                <ScrollViewer x:Name="ScrollViewer" VerticalAlignment="Bottom" Grid.Row="1">
-                    <ui:ItemsRepeater Layout="{StaticResource VerticalStackLayout}"
-                                      ItemsSource="{Binding Medias}">
-                        <ui:ItemsRepeater.ItemTemplate>
-                            <DataTemplate DataType="medias:IMediaInfo">
-                                <StackPanel Orientation="Horizontal" Background="#181818">
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding Title}" Margin="5 0 0 0" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ui:ItemsRepeater.ItemTemplate>
-                    </ui:ItemsRepeater>
-                </ScrollViewer>
-            </controls:SimpleGrid>
+    <controls:SimpleGrid Columns="15,350,*" Rows="15,150,15,*,15">
+        <StackPanel Orientation="Vertical" Background="#272727" Opacity="0.8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                    Grid.Row="1" Grid.Column="1">
+            <TextBlock x:Name="Username" FontSize="27" Margin="10 5  0 0" />
         </StackPanel>
-    </Grid>
+        <controls:SimpleGrid Rows="Auto,*" Background="#272727" Opacity="0.8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                             Grid.Row="3" Grid.Column="1">
+            <StackPanel Orientation="Vertical" Grid.Row="0">
+                <TextBlock Text="{x:Static resx:nebula.ListeningSession}" HorizontalAlignment="Center" FontSize="27" />
+                <TextBlock x:Name="TitlesDuration" HorizontalAlignment="Center" FontSize="18" />
+                <Grid>
+                    <ui:AppBarButton Icon="Back" LabelPosition="Collapsed" HorizontalAlignment="Left" Click="OnBackClick" />
+                    <TextBlock x:Name="PagesCount" Text="1/1" HorizontalAlignment="Center" FontSize="27" />
+                    <ui:AppBarButton Icon="Forward" LabelPosition="Collapsed" HorizontalAlignment="Right" Click="OnForwardClick" />
+                </Grid>
+            </StackPanel>
+            <ScrollViewer Grid.Row="1">
+                <ui:ItemsRepeater Layout="{StaticResource VerticalStackLayout}"
+                                  ItemsSource="{Binding Medias}">
+                    <ui:ItemsRepeater.ItemTemplate>
+                        <DataTemplate DataType="medias:IMediaInfo">
+                            <StackPanel Orientation="Horizontal" Background="#181818">
+                                <TextBlock VerticalAlignment="Center" Text="{Binding Title}" Margin="5 0 0 0" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ui:ItemsRepeater.ItemTemplate>
+                </ui:ItemsRepeater>
+            </ScrollViewer>
+        </controls:SimpleGrid>
+    </controls:SimpleGrid>
 </ui:Page>

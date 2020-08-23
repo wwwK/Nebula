@@ -82,32 +82,22 @@ namespace Nebula.UI.Pages
             }
         }
 
-        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            ScrollViewer.Width = ActualWidth;
-            ScrollViewer.Height = ActualHeight - CommandBar.ActualHeight;
-        }
-
         private void OnPanelMouseEnter(object sender, MouseEventArgs e)
         {
-            if (sender is Grid grid && grid.Parent is Grid rootGrid &&
-                rootGrid.Name == "ItemRootPanel" & rootGrid.IsMouseOver)
-            {
-                grid.ApplyBlur(4, TimeSpan.FromSeconds(0), TimeSpan.Zero);
-                if (rootGrid.Children[1] is AppBarButton button)
-                    button.Visibility = Visibility.Visible;
-            }
+            if (!(sender is Grid grid) || !(grid.Parent is Grid rootGrid) || !(rootGrid.Name == "ItemRootPanel" & rootGrid.IsMouseOver))
+                return;
+            grid.ApplyBlur(4, TimeSpan.FromSeconds(0), TimeSpan.Zero);
+            if (rootGrid.Children[1] is AppBarButton button)
+                button.Visibility = Visibility.Visible;
         }
 
         private void OnPanelMouseLeave(object sender, MouseEventArgs e)
         {
-            if (sender is Grid grid && grid.Parent is Grid rootGrid &&
-                rootGrid.Name == "ItemRootPanel" && !rootGrid.IsMouseOver)
-            {
-                grid.RemoveBlur(TimeSpan.FromSeconds(0), TimeSpan.Zero);
-                if (rootGrid.Children[1] is AppBarButton button)
-                    button.Visibility = Visibility.Collapsed;
-            }
+            if (!(sender is Grid grid) || !(grid.Parent is Grid rootGrid) || rootGrid.Name != "ItemRootPanel" || rootGrid.IsMouseOver)
+                return;
+            grid.RemoveBlur(TimeSpan.FromSeconds(0), TimeSpan.Zero);
+            if (rootGrid.Children[1] is AppBarButton button)
+                button.Visibility = Visibility.Collapsed;
         }
 
         private void OnPlayClicked(object sender, RoutedEventArgs e)

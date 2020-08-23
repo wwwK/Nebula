@@ -10,8 +10,6 @@
     <ui:SimpleStackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="15"
                          MinWidth="350" MaxWidth="350">
         <TextBlock />
-        <ComboBox x:Name="DisplayModeCmb" ui:ControlHelper.Header="{x:Static resx:nebula.SettingsViewMode}"
-                  SelectedValue="{Binding DisplayMode, Mode=TwoWay}" />
         <TextBox HorizontalAlignment="Stretch" ui:ControlHelper.Header="{x:Static resx:nebula.SettingsBackgroundImage}"
                  Cursor="Hand" Text="{Binding BackgroundImage}" MouseUp="OnBackgroundImageMouseUp"
                  KeyUp="OnBackgroundImageKeyUp" />

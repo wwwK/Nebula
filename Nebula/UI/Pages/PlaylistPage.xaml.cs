@@ -7,6 +7,7 @@ using System.Windows.Navigation;
 using ModernWpf.Controls;
 using Nebula.Core;
 using Nebula.Core.Medias;
+using Nebula.Core.Medias.Events;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Pages.Dialogs;
 
@@ -24,36 +25,7 @@ namespace Nebula.UI.Pages
 
         public IPlaylist Playlist { get; private set; }
 
-        public ObservableCollection<IMediaInfo> Medias { get; } = new ObservableCollection<IMediaInfo>();
-
-        private int CurrentPage { get; set; }
-
-
-        private void PreviousPage()
-        {
-            if (CurrentPage == 0)
-                CurrentPage = Playlist.Medias.TotalPages - 1;
-            else
-                CurrentPage--;
-            RefreshMedias();
-        }
-
-        private void ForwardPage()
-        {
-            if (CurrentPage + 1 == Playlist.Medias.TotalPages)
-                CurrentPage = 0;
-            else
-                CurrentPage++;
-            RefreshMedias();
-        }
-
-        private void RefreshMedias()
-        {
-            CurrentPageText.Text = $"{CurrentPage + 1}/{Playlist.Medias.TotalPages}";
-            Medias.Clear();
-            foreach (IMediaInfo mediaInfo in Playlist.Medias.GetMediasFromPage(CurrentPage))
-                Medias.Add(mediaInfo);
-        }
+        public MediasCollectionPages Medias { get; private set; }
 
         private void RemoveMedia(IMediaInfo mediaInfo)
         {
@@ -67,26 +39,30 @@ namespace Nebula.UI.Pages
         {
             base.OnNavigatedTo(e);
 
-            if (e.ExtraData is IPlaylist playlist)
-            {
-                Playlist = playlist;
-                PlaylistLogo.Source = new BitmapImage(playlist.Thumbnail);
-                PlaylistTitle.Text = playlist.Name;
-                PlaylistDescription.Text = playlist.Description;
-                PlaylistAuthor.Text = string.Format(NebulaClient.GetLocString("By"), playlist.Author);
-                ;
-                PlaylistMediaCount.Text =
-                    $"{string.Format(NebulaClient.GetLocString("PlaylistTitles"), playlist.MediasCount)} - {string.Format(NebulaClient.GetLocString("PlaylistTotalDuration"), playlist.TotalDuration)}";
-                RefreshMedias();
-            }
+            if (!(e.ExtraData is IPlaylist playlist))
+                return;
+            Playlist = playlist;
+            PlaylistLogo.Source = new BitmapImage(playlist.Thumbnail);
+            PlaylistTitle.Text = playlist.Name;
+            PlaylistDescription.Text = playlist.Description;
+            PlaylistAuthor.Text = string.Format(NebulaClient.GetLocString("By"), playlist.Author);
+            ;
+            PlaylistMediaCount.Text =
+                $"{string.Format(NebulaClient.GetLocString("PlaylistTitles"), playlist.MediasCount)} - {string.Format(NebulaClient.GetLocString("PlaylistTotalDuration"), playlist.TotalDuration)}";
+            Medias = new MediasCollectionPages(playlist.Medias);
+            Medias.PageChanged += OnPageChanged;
+            CurrentPageText.Text = $"{Medias.CurrentPage + 1}/{Playlist.Medias.TotalPages}";
         }
 
-        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            ScrollViewer.Width = ActualWidth - 7;
-            ScrollViewer.Height = (ActualHeight - PlaylistInfoPanel.ActualHeight) - 10;
-            PlaylistCommandBar.Margin = new Thickness(150 + 15,
-                155 - (PlaylistCommandBar.ActualHeight), 0, 0);
+            base.OnNavigatedFrom(e);
+            Medias.PageChanged -= OnPageChanged;
+        }
+
+        private void OnPageChanged(object sender, MediaCollectionPageChangedEventArgs e)
+        {
+            CurrentPageText.Text = $"{Medias.CurrentPage + 1}/{Playlist.Medias.TotalPages}";
         }
 
         private async void OnPlayClick(object sender, RoutedEventArgs e)
@@ -137,43 +113,38 @@ namespace Nebula.UI.Pages
 
         private void OnSearchBoxKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key != Key.Enter)
+                return;
+            if (string.IsNullOrWhiteSpace(SearchBox.Text))
             {
-                if (string.IsNullOrWhiteSpace(SearchBox.Text))
-                {
-                    if (Medias.Count != Playlist.MediasCount)
-                    {
-                        Medias.Clear();
-                        foreach (IMediaInfo mediaInfo in Playlist)
-                            Medias.Add(mediaInfo);
-                    }
-
+                if (Medias.Count == Playlist.MediasCount)
                     return;
-                }
+                Medias.UpdateMedias();
+                return;
+            }
 
-                Medias.Clear();
-                foreach (IMediaInfo mediaInfo in Playlist)
-                {
-                    if (mediaInfo.Title.ToLower().Contains(SearchBox.Text.ToLower()))
-                        Medias.Add(mediaInfo);
-                }
+            Medias.Clear();
+            foreach (IMediaInfo mediaInfo in Playlist)
+            {
+                if (mediaInfo.Title.ToLower().Contains(SearchBox.Text.ToLower()))
+                    Medias.Add(mediaInfo);
             }
         }
 
         private void OnBackPageClick(object sender, RoutedEventArgs e)
         {
-            PreviousPage();
+            Medias.PreviousPage();
         }
 
         private void OnForwardPageClick(object sender, RoutedEventArgs e)
         {
-            ForwardPage();
+            Medias.NextPage();
         }
 
         private void OnSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (string.IsNullOrEmpty(SearchBox.Text))
-                RefreshMedias();
+                Medias.UpdateMedias();
         }
     }
 }

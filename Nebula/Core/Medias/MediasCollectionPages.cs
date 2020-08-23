@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using Nebula.Core.Medias.Events;
 
 namespace Nebula.Core.Medias
 {
-    public class MediasCollectionManager
+    public class MediasCollectionPages : ObservableCollection<IMediaInfo>
     {
-        public MediasCollectionManager(MediasCollection collection)
+        public MediasCollectionPages(MediasCollection collection)
         {
             Medias = collection ?? throw new ArgumentNullException(nameof(collection));
+            UpdateMedias();
         }
 
         public MediasCollection Medias        { get; }
@@ -32,6 +34,7 @@ namespace Nebula.Core.Medias
             else
                 CurrentPage++;
 
+            UpdateMedias();
             if (oldPage != CurrentPage)
                 PageChanged?.Invoke(this, new MediaCollectionPageChangedEventArgs(CurrentPage, TotalPages));
         }
@@ -51,10 +54,20 @@ namespace Nebula.Core.Medias
             else
                 CurrentPage--;
 
+            UpdateMedias();
             if (oldPage != CurrentPage)
                 PageChanged?.Invoke(this, new MediaCollectionPageChangedEventArgs(CurrentPage, TotalPages));
         }
 
         public IEnumerable<IMediaInfo> GetMediasFromPage(int page) => Medias.GetMediasFromPage(page);
+
+        public void UpdateMedias()
+        {
+            if (Medias.Count == 0)
+                return;
+            Clear();
+            foreach (IMediaInfo mediaInfo in GetMediasFromPage(CurrentPage))
+                Add(mediaInfo);
+        }
     }
 }

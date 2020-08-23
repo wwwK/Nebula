@@ -1,4 +1,5 @@
-﻿using System.Windows.Navigation;
+﻿using System.Windows;
+using System.Windows.Navigation;
 using ModernWpf.Controls;
 using Nebula.Core;
 using Nebula.Core.Settings.Groups;

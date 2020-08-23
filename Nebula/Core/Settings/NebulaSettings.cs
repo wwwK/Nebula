@@ -52,11 +52,8 @@ namespace Nebula.Core.Settings
             else if (sender == Appearance)
             {
                 MainWindow mainWindow = NebulaClient.MainWindow;
-                if (Appearance.DisplayMode != mainWindow.NavView.DisplayMode.ToString())
-                    mainWindow.SetViewMode(Appearance.DisplayMode);
                 mainWindow.BackgroundWallpaper = Appearance.GetBackgroundImageSource();
-                if (Appearance.GetBackgroundImageStretch() != mainWindow.ImageBackground.Stretch)
-                    mainWindow.ImageBackground.Stretch = Appearance.GetBackgroundImageStretch();
+                mainWindow.ImageBackground.Stretch = Appearance.GetBackgroundImageStretch();
             }
             else if (sender == Privacy)
             {
@@ -92,7 +89,7 @@ namespace Nebula.Core.Settings
         public static async Task SaveSettingsAsync(NebulaSettings settings = null)
         {
             string file = Path.Combine(SettingsDirectory.FullName, SettingsFileName);
-            if(File.Exists(file))
+            if (File.Exists(file))
                 File.Delete(file);
             await using FileStream fs = File.OpenWrite(file);
             await JsonSerializer.SerializeAsync(fs, settings ?? NebulaClient.Settings, new JsonSerializerOptions

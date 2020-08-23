@@ -26,7 +26,6 @@ namespace Nebula.UI.Pages
         {
             InitializeComponent();
             DataContext = this;
-            SizeChanged += OnSizeChanged;
         }
 
         private IMediaInfo                       CurrentRightClick { get; set; }
@@ -44,13 +43,7 @@ namespace Nebula.UI.Pages
             }
         }
 
-        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            ScrollViewer.Width = ActualWidth;
-            ScrollViewer.Height = ActualHeight - CommandBar.ActualHeight;
-        }
-
-        private async void Search(string query)
+        public async void Search(string query)
         {
             NebulaClient.Session.AddBrowserSearch(SearchBox.Text);
             Medias.Clear();
@@ -61,11 +54,10 @@ namespace Nebula.UI.Pages
 
         private void OnSearchBoxKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                Search(SearchBox.Text);
-                SearchBox.IsSuggestionListOpen = false;
-            }
+            if (e.Key != Key.Enter)
+                return;
+            Search(SearchBox.Text);
+            SearchBox.IsSuggestionListOpen = false;
         }
 
         private async void OnMediaItemAuthorMouseUp(object sender, MouseButtonEventArgs e)
@@ -99,65 +91,68 @@ namespace Nebula.UI.Pages
 
         private void OnSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
-                sender.ItemsSource = NebulaClient.Session.GetSearchHistory();
-            else if (args.Reason == AutoSuggestionBoxTextChangeReason.SuggestionChosen)
-                Search(SearchBox.Text);
+            switch (args.Reason)
+            {
+                case AutoSuggestionBoxTextChangeReason.UserInput:
+                    sender.ItemsSource = NebulaClient.Session.GetSearchHistory();
+                    break;
+                case AutoSuggestionBoxTextChangeReason.SuggestionChosen:
+                    Search(SearchBox.Text);
+                    break;
+            }
         }
 
         private void OnAddToPlaylistSubmenuOpened(object sender, RoutedEventArgs e)
         {
-            if (sender is MenuItem item)
+            if (!(sender is MenuItem item))
+                return;
+            if (item.Items.Count > 2)
             {
-                if (item.Items.Count > 2)
-                {
-                    for (int i = item.Items.Count - 1; i > 1; i--)
-                        item.Items.RemoveAt(i);
-                }
-
-                foreach (IPlaylist playlist in NebulaClient.Playlists.GetPlaylists())
-                    item.Items.Add(new MenuItem {Header = playlist.Name, Tag = playlist});
+                for (int i = item.Items.Count - 1; i > 1; i--)
+                    item.Items.RemoveAt(i);
             }
+
+            foreach (IPlaylist playlist in NebulaClient.Playlists.GetPlaylists())
+                item.Items.Add(new MenuItem {Header = playlist.Name, Tag = playlist});
         }
 
         private async void OnAddToPlaylistClick(object sender, RoutedEventArgs e)
         {
-            if (e.OriginalSource is MenuItem item)
+            if (!(e.OriginalSource is MenuItem item))
+                return;
+            switch (item.Tag)
             {
-                switch (item.Tag)
+                case IPlaylist playlist:
                 {
-                    case IPlaylist playlist:
+                    if (playlist.Contains(CurrentRightClick))
                     {
-                        if (playlist.Contains(CurrentRightClick))
-                        {
-                            ContentDialogResult result = await NebulaMessageBox.ShowYesNo("MediaAlreadyExists",
-                                "MediaAlreadyExistsMsg",
-                                CurrentRightClick.Title);
-                            if (result == ContentDialogResult.Primary)
-                                playlist.AddMedia(CurrentRightClick);
-                        }
-                        else
-                            playlist.AddMedia(CurrentRightClick);
-                    }
-                        break;
-                    case "CREATE_PLAYLIST":
-                    {
-                        PlaylistEditDialog dialog = new PlaylistEditDialog(PlaylistEditDialogAction.CreatePlaylist);
-                        ContentDialogResult result = await dialog.ShowAsync(ContentDialogPlacement.Popup);
+                        ContentDialogResult result = await NebulaMessageBox.ShowYesNo("MediaAlreadyExists",
+                            "MediaAlreadyExistsMsg",
+                            CurrentRightClick.Title);
                         if (result == ContentDialogResult.Primary)
-                        {
-                            NebulaPlaylist playlist = new NebulaPlaylist(dialog.PlaylistName.Text,
-                                dialog.PlaylistDescription.Text,
-                                dialog.PlaylistAuthor.Text,
-                                string.IsNullOrWhiteSpace(dialog.PlaylistThumbnail.Text)
-                                    ? null
-                                    : new Uri(dialog.PlaylistThumbnail.Text));
                             playlist.AddMedia(CurrentRightClick);
-                            NebulaClient.Playlists.AddPlaylist(playlist);
-                        }
                     }
-                        break;
+                    else
+                        playlist.AddMedia(CurrentRightClick);
                 }
+                    break;
+                case "CREATE_PLAYLIST":
+                {
+                    PlaylistEditDialog dialog = new PlaylistEditDialog(PlaylistEditDialogAction.CreatePlaylist);
+                    ContentDialogResult result = await dialog.ShowAsync(ContentDialogPlacement.Popup);
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        NebulaPlaylist playlist = new NebulaPlaylist(dialog.PlaylistName.Text,
+                            dialog.PlaylistDescription.Text,
+                            dialog.PlaylistAuthor.Text,
+                            string.IsNullOrWhiteSpace(dialog.PlaylistThumbnail.Text)
+                                ? null
+                                : new Uri(dialog.PlaylistThumbnail.Text));
+                        playlist.AddMedia(CurrentRightClick);
+                        NebulaClient.Playlists.AddPlaylist(playlist);
+                    }
+                }
+                    break;
             }
         }
     }
