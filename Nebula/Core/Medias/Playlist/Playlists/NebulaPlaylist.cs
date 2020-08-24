@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nebula.Core.Medias.Playlist.Events;
 
-namespace Nebula.Core.Medias.Playlist
+namespace Nebula.Core.Medias.Playlist.Playlists
 {
     public class NebulaPlaylist : IPlaylist
     {
@@ -19,18 +19,17 @@ namespace Nebula.Core.Medias.Playlist
                 AddMedias(medias.ToArray());
         }
 
-        public string   Name          { get; set; }
-        public string   Description   { get; set; }
-        public string   Author        { get; set; }
-        public bool     AutoSave      { get; set; } = true;
-        public Uri      Thumbnail     { get; set; }
-        public TimeSpan TotalDuration { get; private set; } = TimeSpan.Zero;
-        public int      MediasCount   => Medias.Count;
+        public string           Name          { get; set; }
+        public string           Description   { get; set; }
+        public string           Author        { get; set; }
+        public bool             AutoSave      { get; set; } = true;
+        public Uri              Thumbnail     { get; set; }
+        public object           Tag           { get; set; }
+        public MediasCollection Medias        { get; } = new MediasCollection();
+        public TimeSpan         TotalDuration => Medias.TotalDuration;
+        public int              MediasCount   => Medias.Count;
 
         public event EventHandler<PlaylistMediaAddedEventArgs> MediaAdded;
-
-        public MediasCollection Medias { get; } = new MediasCollection();
-        
 
         public bool Contains(IMediaInfo mediaInfo)
         {
@@ -43,7 +42,6 @@ namespace Nebula.Core.Medias.Playlist
                 Medias.Insert(insertIndex, mediaInfo);
             else
                 Medias.Add(mediaInfo);
-            UpdateTotalDuration();
             if (AutoSave)
                 Save();
             MediaAdded?.Invoke(this, new PlaylistMediaAddedEventArgs(this, mediaInfo, insertIndex));
@@ -52,7 +50,6 @@ namespace Nebula.Core.Medias.Playlist
         public void AddMedias(IMediaInfo[] medias)
         {
             Medias.AddRange(medias);
-            UpdateTotalDuration();
             if (AutoSave)
                 Save();
         }
@@ -62,14 +59,15 @@ namespace Nebula.Core.Medias.Playlist
             if (!Medias.Contains(mediaInfo))
                 return;
             Medias.Remove(mediaInfo);
-            UpdateTotalDuration();
             if (AutoSave)
                 Save();
         }
 
         public void RemoveMedias(params IMediaInfo[] medias) //Todo: bad way of doing that
         {
-            throw new NotImplementedException();
+            Medias.RemoveRange(medias);
+            if (AutoSave)
+                Save();
         }
 
         public IMediaInfo GetMedia(int index)
@@ -92,13 +90,6 @@ namespace Nebula.Core.Medias.Playlist
         public IEnumerator<IMediaInfo> GetEnumerator()
         {
             return Medias.GetEnumerator();
-        }
-
-        private void UpdateTotalDuration()
-        {
-            TotalDuration = TimeSpan.Zero;
-            foreach (IMediaInfo mediaInfo in Medias)
-                TotalDuration += mediaInfo.Duration;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

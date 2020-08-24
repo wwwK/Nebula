@@ -12,17 +12,21 @@ namespace Nebula.Core.Medias
         {
             MaxMediasPerPage = maxMediasPerPage == -1 ? NebulaClient.Settings.General.PlaylistMaxMediasPerPage : maxMediasPerPage;
         }
-        
-        public int  TotalPages       { get; private set; }
-        public int  MaxMediasPerPage { get; }
+
+        public int      TotalPages       { get; private set; }
+        public int      MaxMediasPerPage { get; }
+        public TimeSpan TotalDuration    { get; private set; }
 
         public event EventHandler<MediaCollectionPageChangedEventArgs> PageChanged;
 
-        private void CalculateTotalPages()
+        private void Update()
         {
             TotalPages = (int) Math.Ceiling((double) Count / MaxMediasPerPage);
             if (TotalPages == 0)
                 TotalPages = 1;
+            TotalDuration = TimeSpan.Zero;
+            foreach (IMediaInfo mediaInfo in this)
+                TotalDuration += mediaInfo.Duration;
         }
 
         public IEnumerable<IMediaInfo> GetMediasFromPage(int page)
@@ -60,7 +64,7 @@ namespace Nebula.Core.Medias
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             base.OnCollectionChanged(e);
-            CalculateTotalPages();
+            Update();
         }
     }
 }

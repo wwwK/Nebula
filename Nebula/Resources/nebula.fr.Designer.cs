@@ -466,6 +466,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Écouter cette Playlist.
+        /// </summary>
+        public static string PlaylistListenThis {
+            get {
+                return ResourceManager.GetString("PlaylistListenThis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chemin/Adresse de la Playlist.
         /// </summary>
         public static string PlaylistPathUrl {

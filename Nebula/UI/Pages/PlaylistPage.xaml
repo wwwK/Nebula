@@ -14,7 +14,8 @@
     </Page.Resources>
 
     <controls:SimpleGrid Rows="5,Auto,5,*" Columns="5,150,*">
-        <StackPanel x:Name="PlaylistInfoPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Grid.Row="1" Grid.Column="1"
+        <!--- Playlist Informations panel -->
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Grid.Row="1" Grid.Column="1"
                     Grid.ColumnSpan="2">
             <Grid Width="150" Height="150">
                 <Image x:Name="PlaylistLogo"
@@ -27,7 +28,9 @@
                 <TextBlock x:Name="PlaylistMediaCount" FontSize="16" />
             </StackPanel>
         </StackPanel>
-        <ui:CommandBar x:Name="PlaylistCommandBar" VerticalAlignment="Bottom" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="2" Margin="10 0 0 0">
+        <!--- Command bar -->
+        <ui:CommandBar VerticalAlignment="Bottom" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="2" Margin="10 0 0 0">
+            <ui:AppBarButton x:Name="PlayThis" IsEnabled="False" Label="{x:Static resx:nebula.PlaylistListenThis}" Click="OnListenPlaylistClick" />
             <ui:AppBarButton Label="{x:Static resx:nebula.EditPlaylist}" Click="OnEditPlaylistClick" />
             <ui:AppBarButton Label="{x:Static resx:nebula.DeletePlaylist}" Click="OnDeletePlaylistClick" />
             <ui:CommandBar.Content>
@@ -44,6 +47,7 @@
                 </StackPanel>
             </ui:CommandBar.Content>
         </ui:CommandBar>
+        <!--- Playlist elements -->
         <ScrollViewer Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2">
             <ui:ItemsRepeater Layout="{StaticResource VerticalStackLayout}"
                               ItemsSource="{Binding Medias}">

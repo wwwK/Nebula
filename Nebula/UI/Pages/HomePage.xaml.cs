@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Navigation;
 using Nebula.Core;
 using Nebula.Core.Medias;
@@ -24,7 +23,7 @@ namespace Nebula.UI.Pages
             Medias = NebulaClient.MediaPlayer.Queue.GetPages();
             Medias.PageChanged += OnPageChanged;
             Username.Text = NebulaClient.GetLocString("HomeWelcome", NebulaClient.Settings.UserProfile.Username);
-            TitlesDuration.Text = Medias.Medias.Count > 0 ? $"{NebulaClient.GetLocString("PlaylistTitles", Medias.Medias.Count)}" : "";
+            TitlesDuration.Text = Medias.Collection.Count > 0 ? $"{NebulaClient.GetLocString("PlaylistTitles", Medias.Collection.Count)}" : "";
             PagesCount.Text = Medias.TotalPages != 0 ? $"{Medias.CurrentPage + 1}/{Medias.TotalPages}" : "1/1";
         }
 

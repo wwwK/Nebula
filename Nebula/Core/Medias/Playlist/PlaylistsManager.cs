@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Nebula.Core.Medias.Playlist.Events;
+using Nebula.Core.Medias.Playlist.Playlists;
 using Nebula.Core.Settings;
 
 namespace Nebula.Core.Medias.Playlist

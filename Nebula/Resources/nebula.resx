@@ -240,4 +240,7 @@
     <data name="SettingsMaxElementsPerPage" xml:space="preserve">
         <value>Maximum elements per page</value>
     </data>
+    <data name="PlaylistListenThis" xml:space="preserve">
+        <value>Listen this Playlist</value>
+    </data>
 </root>

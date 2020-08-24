@@ -4,16 +4,13 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Effects;
-using System.Windows.Media.Imaging;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
 using Nebula.Core.Extensions;
 using Nebula.Core.Medias.Playlist;
+using Nebula.Core.Medias.Playlist.Playlists;
 using Nebula.Core.Medias.Provider.Providers.Youtube;
-using Nebula.Core.UI;
 using Nebula.Pages.Dialogs;
 using Page = ModernWpf.Controls.Page;
 

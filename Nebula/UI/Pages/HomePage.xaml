@@ -12,10 +12,12 @@
         <ui:StackLayout x:Key="VerticalStackLayout" Orientation="Vertical" Spacing="5" />
     </Page.Resources>
     <controls:SimpleGrid Columns="15,350,*" Rows="15,150,15,*,15">
+        <!--- User profile Panel -->
         <StackPanel Orientation="Vertical" Background="#272727" Opacity="0.8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                     Grid.Row="1" Grid.Column="1">
             <TextBlock x:Name="Username" FontSize="27" Margin="10 5  0 0" />
         </StackPanel>
+        <!--- Listening Session Panel -->
         <controls:SimpleGrid Rows="Auto,*" Background="#272727" Opacity="0.8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                              Grid.Row="3" Grid.Column="1">
             <StackPanel Orientation="Vertical" Grid.Row="0">

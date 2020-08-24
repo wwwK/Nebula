@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nebula.Core.Medias.Playlist;
+using Nebula.Core.Medias.Playlist.Playlists;
 using YoutubeExplode;
 using YoutubeExplode.Channels;
 using YoutubeExplode.Playlists;

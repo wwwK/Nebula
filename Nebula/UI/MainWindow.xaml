@@ -12,7 +12,7 @@
         Title="Nebula"
         Width="1360"
         Height="760"
-        MinWidth="350"
+        MinWidth="950"
         MinHeight="500"
         WindowStartupLocation="CenterScreen"
         Icon="/Resources/nebula_app_icon.ico"

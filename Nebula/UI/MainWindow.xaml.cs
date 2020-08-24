@@ -20,12 +20,20 @@ namespace Nebula.UI
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Gets or Sets the background image
+        /// </summary>
         public ImageSource BackgroundWallpaper
         {
             get => ImageBackground.Source;
             set => ImageBackground.Source = value;
         }
 
+        /// <summary>
+        /// Enable or Disable the ability to interact with the specified elements if they are behind the window title bar.
+        /// </summary>
+        /// <param name="value">Enable or Disable interaction</param>
+        /// <param name="elements">Elements</param>
         private void SetHitTestVisibleInChrome(bool value, params IInputElement[] elements)
         {
             foreach (IInputElement element in elements)
@@ -43,9 +51,7 @@ namespace Nebula.UI
         private void OnNavViewItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             if (args.IsSettingsInvoked)
-            {
                 NebulaClient.Navigate(typeof(SettingsPage));
-            }
             else if (args.InvokedItemContainer is NavigationViewItem navItem)
                 NebulaClient.Navigate(navItem.Tag as Type);
         }
@@ -60,11 +66,10 @@ namespace Nebula.UI
 
         private void OnSearchBoxKeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                NebulaClient.Navigate(typeof(BrowsePage), SearchBox.Text);
-                SearchBox.IsSuggestionListOpen = false;
-            }
+            if (e.Key != Key.Enter)
+                return;
+            NebulaClient.Navigate(typeof(BrowsePage), SearchBox.Text);
+            SearchBox.IsSuggestionListOpen = false;
         }
 
         private void OnSettingsClicked(object sender, RoutedEventArgs e)

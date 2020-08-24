@@ -15,6 +15,8 @@ namespace Nebula.UI.Pages
 {
     public partial class PlaylistPage : Page
     {
+        private bool _isLoaded = false;
+
         public PlaylistPage()
         {
             InitializeComponent();
@@ -27,6 +29,16 @@ namespace Nebula.UI.Pages
 
         public MediasCollectionPages Medias { get; private set; }
 
+        private bool IsFullyLoaded
+        {
+            get => _isLoaded;
+            set
+            {
+                _isLoaded = value;
+                PlayThis.IsEnabled = value;
+            }
+        }
+
         private void RemoveMedia(IMediaInfo mediaInfo)
         {
             Playlist.RemoveMedia(mediaInfo);
@@ -35,7 +47,15 @@ namespace Nebula.UI.Pages
             Medias.Remove(mediaInfo);
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private void UpdateMedias()
+        {
+            Medias.UpdateMedias();
+            PlaylistMediaCount.Text =
+                $"{string.Format(NebulaClient.GetLocString("PlaylistTitles"), Medias.Collection.Count)} - {string.Format(NebulaClient.GetLocString("PlaylistTotalDuration"), Medias.Collection.TotalDuration)}";
+            CurrentPageText.Text = $"{Medias.CurrentPage + 1}/{Playlist.Medias.TotalPages}";
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -46,12 +66,28 @@ namespace Nebula.UI.Pages
             PlaylistTitle.Text = playlist.Name;
             PlaylistDescription.Text = playlist.Description;
             PlaylistAuthor.Text = string.Format(NebulaClient.GetLocString("By"), playlist.Author);
-            ;
-            PlaylistMediaCount.Text =
-                $"{string.Format(NebulaClient.GetLocString("PlaylistTitles"), playlist.MediasCount)} - {string.Format(NebulaClient.GetLocString("PlaylistTotalDuration"), playlist.TotalDuration)}";
             Medias = new MediasCollectionPages(playlist.Medias);
             Medias.PageChanged += OnPageChanged;
-            CurrentPageText.Text = $"{Medias.CurrentPage + 1}/{Playlist.Medias.TotalPages}";
+            UpdateMedias();
+            if (playlist.Tag is IArtistInfo artistInfo)
+            {
+                PlaylistAuthor.Text = string.Empty;
+                int count = 0;
+                await foreach (IMediaInfo mediaInfo in artistInfo.GetMedias())
+                {
+                    playlist.AddMedia(mediaInfo);
+                    count++;
+                    if (count >= NebulaClient.Settings.General.PlaylistMaxMediasPerPage)
+                    {
+                        UpdateMedias();
+                        count = 0;
+                    }
+                }
+
+                UpdateMedias();
+            }
+
+            IsFullyLoaded = true;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -63,6 +99,11 @@ namespace Nebula.UI.Pages
         private void OnPageChanged(object sender, MediaCollectionPageChangedEventArgs e)
         {
             CurrentPageText.Text = $"{Medias.CurrentPage + 1}/{Playlist.Medias.TotalPages}";
+        }
+
+        private void OnListenPlaylistClick(object sender, RoutedEventArgs e)
+        {
+            NebulaClient.MediaPlayer.OpenPlaylist(Playlist, true);
         }
 
         private async void OnPlayClick(object sender, RoutedEventArgs e)

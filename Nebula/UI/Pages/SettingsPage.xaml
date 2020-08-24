@@ -19,9 +19,10 @@
                 <ListViewItem Content="{x:Static resx:nebula.About}" Tag="ABOUT" />
             </ListView.Items>
         </ListView>
-        <!--- Settings content -->
-        <Button Grid.Column="1" Content="{x:Static resx:nebula.SaveSettings}"  Background="Green"
+        <!--- Save settings button -->
+        <Button Grid.Column="1" Content="{x:Static resx:nebula.SaveSettings}" Background="Green"
                 HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Click="OnSaveSettingsClick" />
+        <!--- Settings Content -->
         <controls:SimpleGrid Rows="Auto,*" Grid.Column="2" Margin="15 0 0 0">
             <TextBlock x:Name="Header" FontSize="24" Grid.Row="0" />
             <ui:Frame x:Name="SettingsNavFrame" Grid.Row="1" />

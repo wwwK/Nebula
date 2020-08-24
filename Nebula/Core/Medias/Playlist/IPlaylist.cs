@@ -10,6 +10,7 @@ namespace Nebula.Core.Medias.Playlist
         string           Description   { get; set; }
         string           Author        { get; set; }
         Uri              Thumbnail     { get; set; }
+        object           Tag           { get; set; }
         MediasCollection Medias        { get; }
         int              MediasCount   { get; }
         TimeSpan         TotalDuration { get; }
