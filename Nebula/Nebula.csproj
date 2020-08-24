@@ -29,6 +29,7 @@
       <Page Update="Pages\Dialogs\PlaylistEditDialog.xaml">
         <Generator></Generator>
       </Page>
+      <Page Remove="obj\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -50,6 +51,7 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>nebula.resx</DependentUpon>
       </Compile>
+      <Compile Remove="obj\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -64,6 +66,7 @@
       <None Remove="nebula_icon.ico" />
       <None Remove="default_playlist_thumbnail.jpg" />
       <None Remove="Resources\default_playlist_thumbnail.png" />
+      <None Remove="obj\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -76,6 +79,7 @@
       <EmbeddedResource Update="Resources\nebula.resx">
         <Generator>PublicResXFileCodeGenerator</Generator>
       </EmbeddedResource>
+      <EmbeddedResource Remove="obj\**" />
     </ItemGroup>
 
     <ItemGroup>

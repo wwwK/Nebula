@@ -10,4 +10,16 @@
       <OutputPath>C:\Users\doria\Documents\Developpement\Rider\Nebula\NebulaUEReleaseBuild</OutputPath>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="obj\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="obj\**" />
+    </ItemGroup>
+
 </Project>
