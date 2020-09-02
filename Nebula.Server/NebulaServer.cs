@@ -36,7 +36,8 @@ namespace Nebula.Server
         private static void Main(string[] args)
         {
             WriteLine("Starting Server...", ConsoleColor.Yellow);
-            Server.Start(9080);
+            //Server.Start(9080);
+            Server.Start(IPAddress.Any, IPAddress.IPv6Any, 9080);
             WriteLine($"Server started ! Listening on port {Server.LocalPort}", ConsoleColor.Green);
             ReadLine();
         }

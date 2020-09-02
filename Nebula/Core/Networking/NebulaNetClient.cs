@@ -22,7 +22,7 @@ namespace Nebula.Core.Networking
 
         private NetManager            Client          { get; }
         private EventBasedNetListener ClientListener  { get; }
-        public NetPacketProcessor    PacketProcessor { get; }
+        public  NetPacketProcessor    PacketProcessor { get; }
         private NetPeer               ServerPeer      { get; set; }
         public  bool                  IsConnected     => ServerPeer != null;
 
@@ -55,7 +55,6 @@ namespace Nebula.Core.Networking
                 Name = NebulaClient.Settings.UserProfile.Username,
                 ThumbnailUrl = ""
             });
-            MessageBox.Show("Connected");
         }
 
         private void OnPeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
