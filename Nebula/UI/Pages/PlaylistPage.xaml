@@ -5,7 +5,6 @@
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:media="clr-namespace:Nebula.Core.Medias"
-         xmlns:local="clr-namespace:Nebula.Pages"
          xmlns:resx="clr-namespace:Nebula.Resources"
          xmlns:controls="clr-namespace:Nebula.UI.Controls"
          mc:Ignorable="d">

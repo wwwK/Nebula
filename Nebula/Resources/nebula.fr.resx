@@ -253,6 +253,6 @@
         <value>Serveur</value>
     </data>
     <data name="SharedSession" xml:space="preserve">
-        <value>Séssion Partagée</value>
+        <value>Session Partagée</value>
     </data>
 </root>

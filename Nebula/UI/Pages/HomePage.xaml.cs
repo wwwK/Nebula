@@ -1,13 +1,8 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Navigation;
-using ModernWpf.Controls;
 using Nebula.Core;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Events;
-using Nebula.Core.UI.Content;
-using Nebula.Core.UI.Content.Attributes;
-using Nebula.Pages.Dialogs;
 using Page = ModernWpf.Controls.Page;
 
 namespace Nebula.UI.Pages

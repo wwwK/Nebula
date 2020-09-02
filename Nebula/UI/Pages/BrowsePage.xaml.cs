@@ -12,7 +12,6 @@ using Nebula.Core.Dialogs;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Playlist.Playlists;
-using Nebula.Pages.Dialogs;
 using Page = ModernWpf.Controls.Page;
 
 namespace Nebula.UI.Pages

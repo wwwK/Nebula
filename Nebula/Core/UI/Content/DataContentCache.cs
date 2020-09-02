@@ -90,9 +90,13 @@ namespace Nebula.Core.UI.Content
                     bindableElement.Tag = dataProperty.Tag;
                     if (!string.IsNullOrWhiteSpace(dataProperty.ToolTipKey))
                         bindableElement.ToolTip = NebulaClient.GetLocString(dataProperty.ToolTipKey);
-                    ControlHelper.SetHeader((Control) bindableElement, NebulaClient.GetLocString(dataProperty.HeaderKey));
-                    ControlHelper.SetPlaceholderText((Control) bindableElement, NebulaClient.GetLocString(dataProperty.PlaceholderKey));
-                    ControlHelper.SetDescription((Control) bindableElement, NebulaClient.GetLocString(dataProperty.DescriptionKey));
+                    if (bindableElement is Control control)
+                    {
+                        ControlHelper.SetHeader(control, NebulaClient.GetLocString(dataProperty.HeaderKey));
+                        ControlHelper.SetPlaceholderText(control, NebulaClient.GetLocString(dataProperty.PlaceholderKey));
+                        ControlHelper.SetDescription(control, NebulaClient.GetLocString(dataProperty.DescriptionKey));
+                    }
+
                     dependencyProperty =
                         bindableElement.GetType().GetField(dataProperty.DependencyProperty, FieldBindingFlags)?.GetValue(bindableElement) as DependencyProperty;
                 }
@@ -101,9 +105,13 @@ namespace Nebula.Core.UI.Content
                     frameworkElement.Tag = dataProperty.Tag;
                     if (!string.IsNullOrWhiteSpace(dataProperty.ToolTipKey))
                         frameworkElement.ToolTip = NebulaClient.GetLocString(dataProperty.ToolTipKey);
-                    ControlHelper.SetHeader((Control) frameworkElement, NebulaClient.GetLocString(dataProperty.HeaderKey));
-                    ControlHelper.SetPlaceholderText((Control) frameworkElement, NebulaClient.GetLocString(dataProperty.PlaceholderKey));
-                    ControlHelper.SetDescription((Control) frameworkElement, NebulaClient.GetLocString(dataProperty.DescriptionKey));
+                    if (frameworkElement is Control control)
+                    {
+                        ControlHelper.SetHeader(control, NebulaClient.GetLocString(dataProperty.HeaderKey));
+                        ControlHelper.SetPlaceholderText(control, NebulaClient.GetLocString(dataProperty.PlaceholderKey));
+                        ControlHelper.SetDescription(control, NebulaClient.GetLocString(dataProperty.DescriptionKey));
+                    }
+
                     dependencyProperty =
                         frameworkElement.GetType().GetField(dataProperty.DependencyProperty, FieldBindingFlags)?.GetValue(frameworkElement) as DependencyProperty;
                 }

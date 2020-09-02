@@ -1,15 +1,9 @@
 ﻿using System.Net;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using EasySharp.Misc;
 using EasySharp.Units;
-using ModernWpf.Controls;
 using Nebula.Core;
-using Nebula.Core.Updater;
-using Nebula.Pages.Dialogs;
 using Page = ModernWpf.Controls.Page;
 
 namespace Nebula.UI.Pages.Settings

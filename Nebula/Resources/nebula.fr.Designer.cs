@@ -673,7 +673,7 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Séssion Partagée.
+        ///   Looks up a localized string similar to Session Partagée.
         /// </summary>
         public static string SharedSession {
             get {

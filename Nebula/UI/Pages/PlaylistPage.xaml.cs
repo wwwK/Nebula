@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using ModernWpf.Controls;
 using Nebula.Core;
+using Nebula.Core.Dialogs;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Events;
 using Nebula.Core.Medias.Playlist;
-using Nebula.Pages.Dialogs;
 using PlaylistEditDialog = Nebula.Core.Dialogs.PlaylistEditDialog;
 
 namespace Nebula.UI.Pages

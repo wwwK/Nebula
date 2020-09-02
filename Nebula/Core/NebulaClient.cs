@@ -7,6 +7,7 @@ using EasySharp.Windows.Hookers;
 using EasySharp.Windows.Hookers.Keyboard;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
+using Nebula.Core.Dialogs;
 using Nebula.Core.Events;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Player;
@@ -16,8 +17,6 @@ using Nebula.Core.Medias.Provider.Providers.Youtube;
 using Nebula.Core.Networking;
 using Nebula.Core.Settings;
 using Nebula.Core.Updater;
-using Nebula.Pages;
-using Nebula.Pages.Dialogs;
 using Nebula.UI;
 using Nebula.UI.Pages;
 

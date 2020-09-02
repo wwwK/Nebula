@@ -59,10 +59,17 @@
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem x:Name="RecentlyListenedButton" Visibility="Collapsed"
+                <ui:NavigationViewItem x:Name="SharedSession" Visibility="Collapsed"
                                        Content="{x:Static resx:nebula.RecentlyListened}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE7F6;" />
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+
+                <ui:NavigationViewItem x:Name="RecentlyListenedButton" Content="{x:Static resx:nebula.SharedSession}" 
+                                       Tag="{x:Type pages:SharedSessionsPage}">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:FontIcon Glyph="&#xE716;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 

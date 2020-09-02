@@ -10,7 +10,7 @@ namespace Nebula.Core.Dialogs
 {
     public class PlaylistCreationDialog : DialogDataContent
     {
-        private static readonly DataContentCache Cache = DataContentCache.BuildCache(typeof(PlaylistCreationDialog));
+        private static readonly DataContentCache Cache = DataContentCache.BuildCache<PlaylistCreationDialog>();
 
         public PlaylistCreationDialog()
         {

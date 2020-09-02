@@ -3,14 +3,13 @@ using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Provider.Providers.Youtube;
 using Nebula.Core.UI.Content;
 using Nebula.Core.UI.Content.Attributes;
-using Nebula.Pages.Dialogs;
 using Nebula.UI.Controls;
 
 namespace Nebula.Core.Dialogs
 {
     public class PlaylistImportDialog : DialogDataContent
     {
-        private static readonly DataContentCache Cache = DataContentCache.BuildCache(typeof(PlaylistImportDialog));
+        private static readonly DataContentCache Cache = DataContentCache.BuildCache<PlaylistImportDialog>();
 
         public PlaylistImportDialog()
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,9 +9,6 @@ using Nebula.Core;
 using Nebula.Core.Dialogs;
 using Nebula.Core.Extensions;
 using Nebula.Core.Medias.Playlist;
-using Nebula.Core.Medias.Playlist.Playlists;
-using Nebula.Core.Medias.Provider.Providers.Youtube;
-using Nebula.Pages.Dialogs;
 using Page = ModernWpf.Controls.Page;
 using PlaylistImportDialog = Nebula.Core.Dialogs.PlaylistImportDialog;
 
