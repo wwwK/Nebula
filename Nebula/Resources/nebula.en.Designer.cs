@@ -565,6 +565,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Server.
+        /// </summary>
+        public static string Server {
+            get {
+                return ResourceManager.GetString("Server", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string Settings {
@@ -633,6 +642,33 @@ namespace Nebula.Resources {
         public static string SettingsSearchMaxPages {
             get {
                 return ResourceManager.GetString("SettingsSearchMaxPages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server IP.
+        /// </summary>
+        public static string SettingsServerIp {
+            get {
+                return ResourceManager.GetString("SettingsServerIp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Port.
+        /// </summary>
+        public static string SettingsServerPort {
+            get {
+                return ResourceManager.GetString("SettingsServerPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shared Session.
+        /// </summary>
+        public static string SharedSession {
+            get {
+                return ResourceManager.GetString("SharedSession", resourceCulture);
             }
         }
         

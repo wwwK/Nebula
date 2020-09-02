@@ -7,12 +7,14 @@ using System.Windows.Input;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
+using Nebula.Core.Dialogs;
 using Nebula.Core.Extensions;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Playlist.Playlists;
 using Nebula.Core.Medias.Provider.Providers.Youtube;
 using Nebula.Pages.Dialogs;
 using Page = ModernWpf.Controls.Page;
+using PlaylistImportDialog = Nebula.Core.Dialogs.PlaylistImportDialog;
 
 namespace Nebula.UI.Pages
 {
@@ -37,46 +39,14 @@ namespace Nebula.UI.Pages
 
         private async void OnCreatePlaylistClicked(object sender, RoutedEventArgs e)
         {
-            PlaylistEditDialog dialog = new PlaylistEditDialog(PlaylistEditDialogAction.CreatePlaylist);
-            ContentDialogResult result = await dialog.ShowAsync(ContentDialogPlacement.Popup);
-            if (result == ContentDialogResult.Primary)
-            {
-                NebulaPlaylist playlist = new NebulaPlaylist(dialog.PlaylistName.Text, dialog.PlaylistDescription.Text,
-                    dialog.PlaylistAuthor.Text,
-                    string.IsNullOrWhiteSpace(dialog.PlaylistThumbnail.Text)
-                        ? null
-                        : new Uri(dialog.PlaylistThumbnail.Text));
-                NebulaClient.Playlists.AddPlaylist(playlist);
-                RefreshPlaylists();
-            }
+            await new PlaylistCreationDialog().ShowDialogAsync();
+            RefreshPlaylists();
         }
 
         private async void OnImportPlaylistClicked(object sender, RoutedEventArgs e)
         {
-            PlaylistImportDialog dialog = new PlaylistImportDialog();
-            ContentDialogResult result = await dialog.ShowAsync();
-            if (result == ContentDialogResult.Primary)
-            {
-                string playlistPath = dialog.PlaylistPath.Text;
-                if (string.IsNullOrWhiteSpace(playlistPath))
-                    return;
-                await NebulaMessageBox.ShowOk("PlaylistImport", "PlaylistImporting");
-                IPlaylist playlist;
-                if (playlistPath.Contains("http") && playlistPath.Contains("youtube"))
-                {
-                    playlist = await NebulaClient.GetMediaProvider<YoutubeMediaProvider>().GetPlaylist(playlistPath);
-                    NebulaClient.Playlists.AddPlaylist(playlist);
-                    NebulaClient.Playlists.SavePlaylist(playlist);
-                }
-                else
-                {
-                    playlist = NebulaClient.Playlists.LoadPlaylist(new FileInfo(playlistPath));
-                    NebulaClient.Playlists.SavePlaylist(playlist);
-                }
-
-                await NebulaMessageBox.ShowOk("PlaylistImport", "PlaylistImported", playlist.Name);
-                RefreshPlaylists();
-            }
+            await new PlaylistImportDialog().ShowDialogAsync();
+            RefreshPlaylists();
         }
 
         private void OnPanelMouseEnter(object sender, MouseEventArgs e)

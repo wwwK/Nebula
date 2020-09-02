@@ -13,6 +13,7 @@ using Nebula.Core.Medias.Player;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Provider;
 using Nebula.Core.Medias.Provider.Providers.Youtube;
+using Nebula.Core.Networking;
 using Nebula.Core.Settings;
 using Nebula.Core.Updater;
 using Nebula.Pages;
@@ -30,6 +31,7 @@ namespace Nebula.Core
         public static  NebulaUpdater        Updater        { get; }
         public static  NebulaSession        Session        { get; }
         public static  NebulaSettings       Settings       { get; }
+        public static  NebulaNetClient      Network        { get; }
         public static  PlaylistsManager     Playlists      { get; }
         public static  KeyboardHooker       KeyboardHooker { get; }
 
@@ -45,6 +47,7 @@ namespace Nebula.Core
             Updater = new NebulaUpdater();
             Playlists = new PlaylistsManager();
             KeyboardHooker = new KeyboardHooker();
+            Network = new NebulaNetClient();
             Session = new NebulaSession(); //Needs to be latest
 
             MediaProviders.Add(new YoutubeMediaProvider());
@@ -84,11 +87,11 @@ namespace Nebula.Core
                     MediaPlayer.IsMuted = !MediaPlayer.IsMuted;
                     e.Handled = true;
                     break;
-                case EVirtualKeys.VOLUME_UP:
+                case EVirtualKeys.VOLUME_UP when MediaPlayer.Volume < 100:
                     MediaPlayer.Volume += Settings.General.MediaKeySoundIncDecValue;
                     e.Handled = true;
                     break;
-                case EVirtualKeys.VOLUME_DOWN:
+                case EVirtualKeys.VOLUME_DOWN when MediaPlayer.Volume > 0:
                     MediaPlayer.Volume -= Settings.General.MediaKeySoundIncDecValue;
                     e.Handled = true;
                     break;
@@ -118,7 +121,7 @@ namespace Nebula.Core
             {
                 typeof(HomePage),
                 typeof(BrowsePage),
-                typeof(PlaylistsPage),        
+                typeof(PlaylistsPage),
                 typeof(SettingsPage)
             };
             int curIndex = types.IndexOf(currentPageType);
@@ -189,7 +192,7 @@ namespace Nebula.Core
         public static string GetLocString(string key, params object[] format)
         {
             if (format == null || format.Length == 0)
-                return Resources.nebula.ResourceManager.GetString(key);
+                return Resources.nebula.ResourceManager.GetString(key) ?? string.Empty;
             return string.Format(Resources.nebula.ResourceManager.GetString(key) ?? $"UNKNOWN_KEY({key})", format);
         }
 
@@ -202,7 +205,6 @@ namespace Nebula.Core
         {
             Application.Current.Dispatcher.BeginInvoke(action);
         }
-
 
         private static async void AppTick(CancellationToken token, int delay)
         {

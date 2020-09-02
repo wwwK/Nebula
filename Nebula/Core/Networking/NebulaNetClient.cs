@@ -2,17 +2,20 @@
 
 namespace Nebula.Core.Networking
 {
-    public class NebulaNetWorker
+    public class NebulaNetClient
     {
-        public NebulaNetWorker()
+        public NebulaNetClient()
         {
             ClientListener = new EventBasedNetListener();
             Client = new NetManager(ClientListener){UnsyncedEvents = true};
-            
-            Client.Start();
         }
 
         public NetManager            Client         { get; }
         public EventBasedNetListener ClientListener { get; }
+
+        public void Connect()
+        {
+
+        }
     }
 }

@@ -30,6 +30,12 @@
                           Maximum="100" SmallChange="1"
                           LargeChange="10" Value="{Binding MediaKeySoundIncDecValue, Mode=TwoWay}"
                           SpinButtonPlacementMode="Inline" />
+            <TextBlock Text="{x:Static resx:nebula.Server}" FontSize="26" />
+            <TextBox ui:ControlHelper.Header="{x:Static resx:nebula.SettingsServerIp}" Text="{Binding ServerIp, Mode=TwoWay}" />
+            <ui:NumberBox Header="{x:Static resx:nebula.SettingsServerPort}" Minimum="1000"
+                          Maximum="99999" SmallChange="1"
+                          LargeChange="10" Value="{Binding ServerPort, Mode=TwoWay}"
+                          SpinButtonPlacementMode="Hidden" />
         </ui:SimpleStackPanel>
     </ScrollViewer>
 </ui:Page>

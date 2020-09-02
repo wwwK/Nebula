@@ -243,4 +243,16 @@
     <data name="PlaylistListenThis" xml:space="preserve">
         <value>Écouter cette Playlist</value>
     </data>
+    <data name="SettingsServerIp" xml:space="preserve">
+        <value>IP du Serveur</value>
+    </data>
+    <data name="SettingsServerPort" xml:space="preserve">
+        <value>Port du Serveur</value>
+    </data>
+    <data name="Server" xml:space="preserve">
+        <value>Serveur</value>
+    </data>
+    <data name="SharedSession" xml:space="preserve">
+        <value>Séssion Partagée</value>
+    </data>
 </root>

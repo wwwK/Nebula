@@ -202,6 +202,7 @@ namespace Nebula.Core.Medias.Player
         public void Stop()
         {
             Repeat = false;
+            Queue.Clear();
             SoundOut?.Stop();
         }
 

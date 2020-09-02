@@ -2,9 +2,9 @@
 
 namespace Nebula.Shared
 {
-    public class NebulaUser
+    public interface IUser
     {
-        Guid   Guid         { get; }
+        int    Id           { get; }
         string Name         { get; }
         string ThumbnailUrl { get; }
     }

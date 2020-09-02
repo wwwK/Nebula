@@ -10,6 +10,7 @@ using Nebula.Core.Medias;
 using Nebula.Core.Medias.Events;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Pages.Dialogs;
+using PlaylistEditDialog = Nebula.Core.Dialogs.PlaylistEditDialog;
 
 namespace Nebula.UI.Pages
 {
@@ -133,23 +134,7 @@ namespace Nebula.UI.Pages
 
         private async void OnEditPlaylistClick(object sender, RoutedEventArgs e)
         {
-            PlaylistEditDialog dialog = new PlaylistEditDialog(PlaylistEditDialogAction.EditPlaylist, Playlist);
-            ContentDialogResult result = await dialog.ShowAsync();
-            if (result == ContentDialogResult.Primary)
-            {
-                string oldname = Playlist.Name;
-                Playlist.Name = dialog.PlaylistName.Text;
-                Playlist.Description = dialog.PlaylistDescription.Text;
-                Playlist.Author = dialog.PlaylistAuthor.Text;
-                Playlist.Thumbnail = string.IsNullOrWhiteSpace(dialog.PlaylistThumbnail.Text)
-                    ? null
-                    : new Uri(dialog.PlaylistThumbnail.Text);
-                if (oldname != Playlist.Name)
-                    NebulaClient.Playlists.RenamePlaylist(oldname, Playlist);
-                else
-                    NebulaClient.Playlists.SavePlaylist(Playlist);
-                NebulaClient.Navigate(typeof(PlaylistPage), Playlist);
-            }
+            await new PlaylistEditDialog(Playlist).ShowDialogAsync();
         }
 
         private void OnSearchBoxKeyUp(object sender, KeyEventArgs e)

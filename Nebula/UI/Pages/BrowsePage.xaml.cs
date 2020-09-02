@@ -8,6 +8,7 @@ using System.Windows.Navigation;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
+using Nebula.Core.Dialogs;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Playlist.Playlists;
@@ -131,19 +132,10 @@ namespace Nebula.UI.Pages
                     break;
                 case "CREATE_PLAYLIST":
                 {
-                    PlaylistEditDialog dialog = new PlaylistEditDialog(PlaylistEditDialogAction.CreatePlaylist);
-                    ContentDialogResult result = await dialog.ShowAsync(ContentDialogPlacement.Popup);
+                    PlaylistCreationDialog dialog = new PlaylistCreationDialog();
+                    ContentDialogResult result = await dialog.ShowDialogAsync();
                     if (result == ContentDialogResult.Primary)
-                    {
-                        NebulaPlaylist playlist = new NebulaPlaylist(dialog.PlaylistName.Text,
-                            dialog.PlaylistDescription.Text,
-                            dialog.PlaylistAuthor.Text,
-                            string.IsNullOrWhiteSpace(dialog.PlaylistThumbnail.Text)
-                                ? null
-                                : new Uri(dialog.PlaylistThumbnail.Text));
-                        playlist.AddMedia(CurrentRightClick);
-                        NebulaClient.Playlists.AddPlaylist(playlist);
-                    }
+                        dialog.CreatedPlaylist?.AddMedia(CurrentRightClick);
                 }
                     break;
             }

@@ -240,4 +240,16 @@
     <data name="PlaylistListenThis" xml:space="preserve">
         <value>Listen this Playlist</value>
     </data>
+    <data name="SettingsServerIp" xml:space="preserve">
+        <value>Server IP</value>
+    </data>
+    <data name="SettingsServerPort" xml:space="preserve">
+        <value>Server Port</value>
+    </data>
+    <data name="Server" xml:space="preserve">
+        <value>Server</value>
+    </data>
+    <data name="SharedSession" xml:space="preserve">
+        <value>Shared Session</value>
+    </data>
 </root>

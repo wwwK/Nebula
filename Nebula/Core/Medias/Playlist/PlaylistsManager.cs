@@ -115,6 +115,7 @@ namespace Nebula.Core.Medias.Playlist
         {
             XmlDocument xmlDocument = new XmlDocument();
             XmlElement rootElement = xmlDocument.CreateElement(nameof(NebulaPlaylist));
+            playlist.Name = ReplaceInvalidChars(playlist.Name);
             rootElement.SetAttribute("Name", playlist.Name);
             rootElement.SetAttribute("Description", playlist.Description);
             rootElement.SetAttribute("Author", playlist.Author);
@@ -148,7 +149,7 @@ namespace Nebula.Core.Medias.Playlist
                 rootElement.AppendChild(mediaElement);
             }
 
-            xmlDocument.Save(Path.Combine(PlaylistsDirectory.FullName, playlist.Name + ".playlist"));
+            xmlDocument.Save(Path.Combine(PlaylistsDirectory.FullName, $"{playlist.Name}.playlist"));
         }
 
         public void DeletePlaylist(IPlaylist playlist)
@@ -156,6 +157,11 @@ namespace Nebula.Core.Medias.Playlist
             string filePath = $"{Path.Combine(PlaylistsDirectory.FullName, playlist.Name)}.playlist";
             if (File.Exists(filePath))
                 File.Delete(filePath);
+        }
+
+        public string ReplaceInvalidChars(string filename)
+        {
+            return string.Join("", filename.Split(Path.GetInvalidFileNameChars()));
         }
 
         public void RenamePlaylist(string oldName, IPlaylist playlist)
