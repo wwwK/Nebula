@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using LiteNetLib;
+using Nebula.Server.Extensions;
 using Nebula.Shared;
 
-namespace Nebula.Server
+namespace Nebula.Server.Users
 {
     public class NebulaUser : IUser
     {
         public NebulaUser(NetPeer peer, string name = "", string thumbnailUrl = "")
         {
             Peer = peer;
-            Id = peer.Id;
+            Id = peer?.Id ?? -1;
             Name = name;
             ThumbnailUrl = thumbnailUrl;
         }
@@ -17,6 +18,7 @@ namespace Nebula.Server
         private Dictionary<string, object> Tags         { get; } = new Dictionary<string, object>();
         public  NetPeer                    Peer         { get; }
         public  int                        Id           { get; }
+        public  int                        BadPackets   { get; set; }
         public  string                     Name         { get; set; }
         public  string                     ThumbnailUrl { get; set; }
 

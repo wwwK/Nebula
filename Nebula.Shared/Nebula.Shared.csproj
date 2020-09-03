@@ -21,4 +21,8 @@
       <None Remove="obj\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="LiteNetLib" Version="0.9.3.2" />
+    </ItemGroup>
+
 </Project>

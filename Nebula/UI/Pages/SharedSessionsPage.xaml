@@ -10,18 +10,19 @@
          mc:Ignorable="d">
     <controls:SimpleGrid Rows="40,*">
         <ui:CommandBar VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Row="0">
-            <ui:AppBarButton Label="Refresh" Click="OnRefreshClick" />
+            <ui:AppBarButton Label="{x:Static resx:nebula.SharedSessionRefreshList}" Click="OnRefreshClick" />
+            <ui:AppBarButton Label="{x:Static resx:nebula.SharedSessionCreateRoom}" Click="OnCreateRoomClick" />
             <ui:CommandBar.Content>
                 <ui:AutoSuggestBox x:Name="SearchBox" PlaceholderText="{x:Static resx:nebula.Search}" QueryIcon="Find" Margin="40 0 0 0" Width="400" />
             </ui:CommandBar.Content>
         </ui:CommandBar>
-        <ListView x:Name="ListView" Grid.Row="1">
+        <ListView x:Name="ListView" Grid.Row="1" MouseDoubleClick="OnMouseDoubleClick">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn DisplayMemberBinding="{Binding Name }" Header="Room Name" Width="450" />
-                    <GridViewColumn DisplayMemberBinding="{Binding UsersCount }" Header="Users" Width="150" />
-                    <GridViewColumn DisplayMemberBinding="{Binding MaxUsers  }" Header="Max Users" Width="150" />
-                    <GridViewColumn DisplayMemberBinding="{Binding PasswordProtected  }" Header="Password Protected" Width="150" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Name }" Header="{x:Static resx:nebula.SharedSessionRoomName}" Width="450" />
+                    <GridViewColumn DisplayMemberBinding="{Binding UsersCount }" Header="{x:Static resx:nebula.Users}" Width="250" />
+                    <GridViewColumn DisplayMemberBinding="{Binding MaxUsers  }" Header="{x:Static resx:nebula.SharedSessionRoomSize}" Width="250" />
+                    <GridViewColumn DisplayMemberBinding="{Binding PasswordProtected  }" Header="{x:Static resx:nebula.SharedSessionPasswordRequired}" Width="250" />
                 </GridView>
             </ListView.View>
         </ListView>

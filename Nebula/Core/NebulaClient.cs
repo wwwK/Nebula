@@ -29,6 +29,7 @@ namespace Nebula.Core
         public static  MediaPlayer          MediaPlayer    { get; }
         public static  NebulaUpdater        Updater        { get; }
         public static  NebulaSession        Session        { get; }
+        public static  NebulaSharedSession  SharedSession  { get; private set; }
         public static  NebulaSettings       Settings       { get; }
         public static  NebulaNetClient      Network        { get; }
         public static  PlaylistsManager     Playlists      { get; }
@@ -193,6 +194,11 @@ namespace Nebula.Core
             if (format == null || format.Length == 0)
                 return Resources.nebula.ResourceManager.GetString(key) ?? string.Empty;
             return string.Format(Resources.nebula.ResourceManager.GetString(key) ?? $"UNKNOWN_KEY({key})", format);
+        }
+
+        public static void SetSharedSession(NebulaSharedSession session)
+        {
+            SharedSession = session;
         }
 
         public static void Invoke(Action action)

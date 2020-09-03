@@ -682,6 +682,87 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Impossible de rejoindre le salon.
+        /// </summary>
+        public static string SharedSessionCantJoin {
+            get {
+                return ResourceManager.GetString("SharedSessionCantJoin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Créer un salon.
+        /// </summary>
+        public static string SharedSessionCreateRoom {
+            get {
+                return ResourceManager.GetString("SharedSessionCreateRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rejoindre le salon.
+        /// </summary>
+        public static string SharedSessionJoin {
+            get {
+                return ResourceManager.GetString("SharedSessionJoin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mot de passe requis.
+        /// </summary>
+        public static string SharedSessionPasswordRequired {
+            get {
+                return ResourceManager.GetString("SharedSessionPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rafraichir la liste des salons.
+        /// </summary>
+        public static string SharedSessionRefreshList {
+            get {
+                return ResourceManager.GetString("SharedSessionRefreshList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nom du salon.
+        /// </summary>
+        public static string SharedSessionRoomName {
+            get {
+                return ResourceManager.GetString("SharedSessionRoomName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mot de passe du salon.
+        /// </summary>
+        public static string SharedSessionRoomPassword {
+            get {
+                return ResourceManager.GetString("SharedSessionRoomPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Taille du salon.
+        /// </summary>
+        public static string SharedSessionRoomSize {
+            get {
+                return ResourceManager.GetString("SharedSessionRoomSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mot de passe du salon incorrect.
+        /// </summary>
+        public static string SharedSessionWrongPassword {
+            get {
+                return ResourceManager.GetString("SharedSessionWrongPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Aléatoire.
         /// </summary>
         public static string Shuffle {
@@ -768,6 +849,15 @@ namespace Nebula.Resources {
         public static string Username {
             get {
                 return ResourceManager.GetString("Username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Utilisateurs.
+        /// </summary>
+        public static string Users {
+            get {
+                return ResourceManager.GetString("Users", resourceCulture);
             }
         }
     }

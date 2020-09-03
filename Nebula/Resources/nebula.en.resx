@@ -202,7 +202,7 @@
         <value>Settings</value>
     </data>
     <data name="SettingsBackgroundImage" xml:space="preserve">
-        <value>BackgroundImage</value>
+        <value>Background Image</value>
     </data>
     <data name="SettingsBackgroundImageStretch" xml:space="preserve">
         <value>Background Stretch</value>
@@ -251,5 +251,35 @@
     </data>
     <data name="SharedSession" xml:space="preserve">
         <value>Shared Session</value>
+    </data>
+    <data name="SharedSessionRoomName" xml:space="preserve">
+        <value>Room Name</value>
+    </data>
+    <data name="SharedSessionRoomPassword" xml:space="preserve">
+        <value>Room Password</value>
+    </data>
+    <data name="SharedSessionRoomSize" xml:space="preserve">
+        <value>Room size</value>
+    </data>
+    <data name="SharedSessionCreateRoom" xml:space="preserve">
+        <value>Create Room</value>
+    </data>
+    <data name="SharedSessionRefreshList" xml:space="preserve">
+        <value>Refresh Rooms List</value>
+    </data>
+    <data name="Users" xml:space="preserve">
+        <value>Users</value>
+    </data>
+    <data name="SharedSessionPasswordRequired" xml:space="preserve">
+        <value>Password Required</value>
+    </data>
+    <data name="SharedSessionWrongPassword" xml:space="preserve">
+        <value>Room's password incorrect</value>
+    </data>
+    <data name="SharedSessionCantJoin" xml:space="preserve">
+        <value>Failed to join room</value>
+    </data>
+    <data name="SharedSessionJoin" xml:space="preserve">
+        <value>Join Room</value>
     </data>
 </root>

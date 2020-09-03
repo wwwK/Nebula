@@ -1,4 +1,5 @@
 ﻿using System;
+using Nebula.Shared.Packets;
 
 namespace Nebula.Shared
 {

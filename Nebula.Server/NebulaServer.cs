@@ -4,7 +4,10 @@ using System.Net;
 using System.Net.Sockets;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Nebula.Server.Commands;
+using Nebula.Server.Extensions;
 using Nebula.Server.SharedSession;
+using Nebula.Server.Users;
 using Nebula.Shared.Packets;
 using Nebula.Shared.Packets.C2S;
 
@@ -18,18 +21,22 @@ namespace Nebula.Server
         public static  EventBasedNetListener       ServerListener        { get; }
         public static  SharedSessionsManager       SharedSessionsManager { get; }
         public static  NetPacketProcessor          PacketProcessor       { get; }
+        public static  CommandsManager             CommandsManager       { get; }
+        public static  NebulaServerUser            ServerUser            { get; } = new NebulaServerUser();
 
         static NebulaServer()
         {
             ServerListener = new EventBasedNetListener();
             PacketProcessor = new NetPacketProcessor();
             Server = new NetManager(ServerListener) {UnsyncedEvents = true, AutoRecycle = true};
-            SharedSessionsManager = new SharedSessionsManager();
+            CommandsManager = new CommandsManager();
+            CommandsManager.RegisterCommand(new StopServerCommand());
             ServerListener.ConnectionRequestEvent += OnConnectionRequestEvent;
             ServerListener.PeerConnectedEvent += OnPeerConnectedEvent;
             ServerListener.PeerDisconnectedEvent += OnPeerDisconnectedEvent;
             ServerListener.NetworkErrorEvent += OnNetworkErrorEvent;
             ServerListener.NetworkReceiveEvent += OnNetworkReceive;
+            SharedSessionsManager = new SharedSessionsManager();
             PacketProcessor.SubscribeReusable<UserInfosPacket, NetPeer>(OnReceiveUserInfos);
         }
 
@@ -37,8 +44,10 @@ namespace Nebula.Server
         {
             WriteLine("Starting Server...", ConsoleColor.Yellow);
             //Server.Start(9080);
-            Server.Start(IPAddress.Any, IPAddress.IPv6Any, 9080);
-            WriteLine($"Server started ! Listening on port {Server.LocalPort}", ConsoleColor.Green);
+            if (Server.Start(IPAddress.Any, IPAddress.IPv6Any, 9080))
+                WriteLine($"Server started ! Listening on port {Server.LocalPort}", ConsoleColor.Green);
+            else
+                WriteLine("Failed to start server.", ConsoleColor.Red);
             ReadLine();
         }
 
@@ -89,15 +98,8 @@ namespace Nebula.Server
         public static void ReadLine()
         {
             string value = Console.ReadLine();
-            if (value == "stop")
-            {
-                WriteLine("Stopping Server...", ConsoleColor.Yellow);
-                Server.Stop(true);
-                WriteLine("Server Stopped !", ConsoleColor.Red);
-                Environment.Exit(0);
-                return;
-            }
-
+            if (!string.IsNullOrWhiteSpace(value))
+                CommandsManager.ExecuteCommands(ServerUser, value.SplitWithoutQuotes());
             ReadLine();
         }
 
@@ -132,7 +134,17 @@ namespace Nebula.Server
 
         private static void OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
-            PacketProcessor.ReadAllPackets(reader, peer);
+            try
+            {
+                PacketProcessor.ReadAllPackets(reader, peer);
+            }
+            catch
+            {
+                NebulaUser user = GetUserById(peer.Id);
+                user.BadPackets++;
+                if (user.BadPackets > 100)
+                    peer.Disconnect(NetDataWriter.FromString($"Too many bad packets. ({user.BadPackets})"));
+            }
         }
 
         private static void OnNetworkErrorEvent(IPEndPoint endpoint, SocketError socketError)

@@ -1,8 +1,11 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Navigation;
 using LiteNetLib;
 using Nebula.Core;
+using Nebula.Core.Dialogs;
 using Nebula.Shared.Packets.C2S;
 using Nebula.Shared.Packets.S2C;
 using Nebula.Shared.SharedSession;
@@ -36,18 +39,39 @@ namespace Nebula.UI.Pages
             NebulaClient.Network.SendPacket(new SharedSessionsListRequest());
         }
 
+        private async void OnCreateRoomClick(object sender, RoutedEventArgs e)
+        {
+            await new SharedSessionRoomCreationDialog().ShowDialogAsync();
+        }
+
         private void OnReceiveSharedSessions(SharedSessionsListResponse response, NetPeer peer)
         {
             NebulaClient.Invoke(() =>
             {
+                ListView.Items.Clear();
                 foreach (string sessionStr in response.Sessions)
                 {
                     SharedSessionInfo sessionInfo = SharedSessionInfo.FromString(sessionStr);
                     if (sessionInfo == null)
                         continue;
                     ListView.Items.Add(sessionInfo);
-                } 
+                }
             });
+        }
+
+        private async void OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (!(ListView.SelectedItem is SharedSessionInfo info))
+                return;
+            SharedSessionJoinRequest request = new SharedSessionJoinRequest {Id = info.Id.ToString(), Password = String.Empty};
+            if (info.PasswordProtected)
+            {
+                SharedSessionJoinDialog dialog = new SharedSessionJoinDialog();
+                await dialog.ShowDialogAsync();
+                request.Password = dialog.RoomPassword;
+            }
+
+            NebulaClient.Network.SendPacket(request);
         }
     }
 }

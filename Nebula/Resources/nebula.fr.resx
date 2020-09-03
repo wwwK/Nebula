@@ -255,4 +255,34 @@
     <data name="SharedSession" xml:space="preserve">
         <value>Session Partagée</value>
     </data>
+    <data name="SharedSessionRoomName" xml:space="preserve">
+        <value>Nom du salon</value>
+    </data>
+    <data name="SharedSessionRoomPassword" xml:space="preserve">
+        <value>Mot de passe du salon</value>
+    </data>
+    <data name="SharedSessionRoomSize" xml:space="preserve">
+        <value>Taille du salon</value>
+    </data>
+    <data name="SharedSessionCreateRoom" xml:space="preserve">
+        <value>Créer un salon</value>
+    </data>
+    <data name="SharedSessionRefreshList" xml:space="preserve">
+        <value>Rafraichir la liste des salons</value>
+    </data>
+    <data name="Users" xml:space="preserve">
+        <value>Utilisateurs</value>
+    </data>
+    <data name="SharedSessionPasswordRequired" xml:space="preserve">
+        <value>Mot de passe requis</value>
+    </data>
+    <data name="SharedSessionWrongPassword" xml:space="preserve">
+        <value>Mot de passe du salon incorrect</value>
+    </data>
+    <data name="SharedSessionCantJoin" xml:space="preserve">
+        <value>Impossible de rejoindre le salon</value>
+    </data>
+    <data name="SharedSessionJoin" xml:space="preserve">
+        <value>Rejoindre le salon</value>
+    </data>
 </root>
