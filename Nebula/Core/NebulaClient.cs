@@ -48,6 +48,7 @@ namespace Nebula.Core
             Playlists = new PlaylistsManager();
             KeyboardHooker = new KeyboardHooker();
             Network = new NebulaNetClient();
+            SharedSession = new NebulaSharedSession();
             Session = new NebulaSession(); //Needs to be latest
 
             MediaProviders.Add(new YoutubeMediaProvider());
@@ -122,6 +123,7 @@ namespace Nebula.Core
                 typeof(HomePage),
                 typeof(BrowsePage),
                 typeof(PlaylistsPage),
+                typeof(SharedSessionsPage),
                 typeof(SettingsPage)
             };
             int curIndex = types.IndexOf(currentPageType);
@@ -180,6 +182,17 @@ namespace Nebula.Core
             return default;
         }
 
+        public static IMediaProvider GetMediaProviderByName(string providerName)
+        {
+            foreach (IMediaProvider mediaProvider in MediaProviders)
+            {
+                if (mediaProvider.Name == providerName)
+                    return mediaProvider;
+            }
+
+            return default;
+        }
+
         public static async IAsyncEnumerable<IMediaInfo> Search(string searchQuery, params object[] args)
         {
             foreach (IMediaProvider provider in MediaProviders)
@@ -194,11 +207,6 @@ namespace Nebula.Core
             if (format == null || format.Length == 0)
                 return Resources.nebula.ResourceManager.GetString(key) ?? string.Empty;
             return string.Format(Resources.nebula.ResourceManager.GetString(key) ?? $"UNKNOWN_KEY({key})", format);
-        }
-
-        public static void SetSharedSession(NebulaSharedSession session)
-        {
-            SharedSession = session;
         }
 
         public static void Invoke(Action action)

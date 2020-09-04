@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Installer", "Nebula.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Server", "Nebula.Server\Nebula.Server.csproj", "{E1F10379-5CF6-405C-8305-095CE56A8EDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Shared", "Nebula.Shared\Nebula.Shared.csproj", "{F43974D1-77D0-44BB-8F2C-8E163941E4F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nebula.Net", "Nebula.Net\Nebula.Net.csproj", "{F84C2C25-76F4-44B0-85E4-BF50D8D97D24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +32,9 @@ Global
 		{E1F10379-5CF6-405C-8305-095CE56A8EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1F10379-5CF6-405C-8305-095CE56A8EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1F10379-5CF6-405C-8305-095CE56A8EDA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F43974D1-77D0-44BB-8F2C-8E163941E4F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F43974D1-77D0-44BB-8F2C-8E163941E4F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F43974D1-77D0-44BB-8F2C-8E163941E4F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F43974D1-77D0-44BB-8F2C-8E163941E4F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F84C2C25-76F4-44B0-85E4-BF50D8D97D24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F84C2C25-76F4-44B0-85E4-BF50D8D97D24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F84C2C25-76F4-44B0-85E4-BF50D8D97D24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F84C2C25-76F4-44B0-85E4-BF50D8D97D24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

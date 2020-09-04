@@ -3,6 +3,7 @@ using System.Text;
 using Nebula.Server.Commands;
 using Nebula.Server.Extensions;
 using Nebula.Server.Users;
+using static Nebula.Server.ServerApp;
 
 namespace Nebula.Server.SharedSession.Commands
 {
@@ -22,18 +23,18 @@ namespace Nebula.Server.SharedSession.Commands
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("--- Shared Sessions List :");
             int count = 0;
-            foreach (SharedSessionRoom room in NebulaServer.SharedSessionsManager.GetRooms())
+            foreach (SharedSessionRoom room in ServerApp.Server.SharedSessionsManager.GetRooms())
             {
-                builder.AppendLine($"\t - {room.Id}");
-                builder.AppendLine($"\t\t Name: {room.Name}");
-                builder.AppendLine($"\t\t Users: {room.UsersCount}/{room.MaxUsers}");
-                builder.AppendLine($"\t\t Protected: {room.PasswordProtected}");
+                builder.AppendLine($"\t\t - {room.Id}");
+                builder.AppendLine($"\t\t\t - Owner: {room.Owner?.Username ?? "NULL"}");
+                builder.AppendLine($"\t\t\t - Name: {room.Name}");
+                builder.AppendLine($"\t\t\t - Users: {room.UsersCount}/{room.MaximumUsers}");
+                builder.AppendLine($"\t\t\t - Protected: {room.PasswordProtected}");
                 count++;
             }
 
-            builder.AppendLine($"--- Total Rooms: {count}");
-
-            NebulaServer.WriteLine(builder.ToString(), ConsoleColor.Green);
+            WriteLine(builder.ToString(), ConsoleColor.Green);
+            WriteLine($"--- Total Rooms: {count}", ConsoleColor.Green);
         }
     }
 }

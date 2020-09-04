@@ -8,6 +8,7 @@ using CSCore.SoundOut;
 using Nebula.Core.Events;
 using Nebula.Core.Medias.Player.Events;
 using Nebula.Core.Medias.Playlist;
+using Nebula.Net.Packets.BOTH;
 
 namespace Nebula.Core.Medias.Player
 {
@@ -77,7 +78,7 @@ namespace Nebula.Core.Medias.Player
         public TimeSpan Position
         {
             get => WaveSource?.GetPosition() ?? TimeSpan.Zero;
-            set => WaveSource?.SetPosition(value);
+            private set => WaveSource?.SetPosition(value);
         }
 
         public int Volume
@@ -126,7 +127,7 @@ namespace Nebula.Core.Medias.Player
         /// <param name="manualStop">Is this a user manual stop</param>
         /// <param name="play">Should start playing right after init</param>
         /// <returns></returns>
-        public async Task OpenMedia(IMediaInfo mediaInfo, bool manualStop = false, bool play = true)
+        public async Task OpenMedia(IMediaInfo mediaInfo, bool manualStop = false, bool play = true, bool fromServer = false)
         {
             if (mediaInfo == null)
                 return;
@@ -141,7 +142,9 @@ namespace Nebula.Core.Medias.Player
             Setup(await mediaInfo.GetAudioStreamUri());
             CurrentMedia = mediaInfo;
             MediaChanged?.Invoke(this, new MediaChangedEventArgs(CurrentPlaylist, oldMedia, mediaInfo));
-            if (play)
+            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
+                NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket {MediaId = mediaInfo.Id, Provider = mediaInfo.GetMediaProvider().Name});
+            else if (play)
                 Play();
             _manualStop = false;
         }
@@ -157,10 +160,12 @@ namespace Nebula.Core.Medias.Player
         /// <summary>
         /// Pause playback.
         /// </summary>
-        public void Pause()
+        public void Pause(bool fromServer = false)
         {
             if (IsPaused)
                 return;
+            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
+                NebulaClient.Network.SendPacket(new SharedSessionPausePacket());
             SoundOut?.Pause();
             IsPaused = true;
             PlaybackPaused?.Invoke(this, new PlaybackPausedEventArgs());
@@ -169,10 +174,12 @@ namespace Nebula.Core.Medias.Player
         /// <summary>
         /// Resume playback.
         /// </summary>
-        public void Resume()
+        public void Resume(bool fromServer = false)
         {
             if (!IsPaused)
                 return;
+            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
+                NebulaClient.Network.SendPacket(new SharedSessionResumePacket());
             SoundOut?.Resume();
             IsPaused = false;
             PlaybackResumed?.Invoke(this, new PlaybackResumedEventArgs());
@@ -194,6 +201,13 @@ namespace Nebula.Core.Medias.Player
         public void Backward(bool manualStop = false)
         {
             OpenMedia(Queue.RewindDequeue(), manualStop);
+        }
+
+        public void SetPosition(double seconds, bool fromServer = false)
+        {
+            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
+                NebulaClient.Network.SendPacket(new SharedSessionPositionChangedPacket {NewPosition = seconds});
+            Position = TimeSpan.FromSeconds(seconds);
         }
 
         /// <summary>

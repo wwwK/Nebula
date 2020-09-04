@@ -529,6 +529,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Avatar.
+        /// </summary>
+        public static string ProfileAvatar {
+            get {
+                return ResourceManager.GetString("ProfileAvatar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Écoutés récemment.
         /// </summary>
         public static string RecentlyListened {
@@ -705,6 +714,15 @@ namespace Nebula.Resources {
         public static string SharedSessionJoin {
             get {
                 return ResourceManager.GetString("SharedSessionJoin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quitter le salon.
+        /// </summary>
+        public static string SharedSessionLeaveRoom {
+            get {
+                return ResourceManager.GetString("SharedSessionLeaveRoom", resourceCulture);
             }
         }
         

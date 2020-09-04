@@ -52,8 +52,13 @@ namespace Nebula.UI
         {
             if (args.IsSettingsInvoked)
                 NebulaClient.Navigate(typeof(SettingsPage));
-            else if (args.InvokedItemContainer is NavigationViewItem navItem)
-                NebulaClient.Navigate(navItem.Tag as Type);
+            else if (args.InvokedItemContainer is NavigationViewItem navItem && navItem.Tag is Type type)
+            {
+                if (type == typeof(SharedSessionsPage) && NebulaClient.SharedSession.IsSessionActive)
+                    NebulaClient.Navigate(typeof(SharedSessionPage));
+                else
+                    NebulaClient.Navigate(type);
+            }
         }
 
         private void OnSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

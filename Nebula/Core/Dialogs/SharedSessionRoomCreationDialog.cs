@@ -2,7 +2,7 @@
 using ModernWpf.Controls;
 using Nebula.Core.UI.Content;
 using Nebula.Core.UI.Content.Attributes;
-using Nebula.Shared.Packets.C2S;
+using Nebula.Net.Packets.C2S;
 
 namespace Nebula.Core.Dialogs
 {
@@ -35,11 +35,11 @@ namespace Nebula.Core.Dialogs
         {
             if (!NebulaClient.Network.IsConnected)
                 return;
-            SharedSessionRoomCreationRequest request = new SharedSessionRoomCreationRequest
+            SharedSessionCreationRequest request = new SharedSessionCreationRequest
             {
-                RoomName = RoomName,
-                RoomPassword = RoomPassword,
-                RoomMaxUsers = MaxUsers
+                Name = RoomName,
+                Password = RoomPassword,
+                Size = MaxUsers
             };
             NebulaClient.Network.SendPacket(request);
         }

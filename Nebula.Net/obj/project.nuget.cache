@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "G7HOtu+LTcpvReLeOumDk32Vnrm1ZBKwVYSPK89xAk8bRSt0S0BDlT/LRoNxh/sHz8KnI6mnPf+auTFseWR2/w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\doria\\Documents\\Developpement\\Rider\\Nebula\\Nebula.Net\\Nebula.Net.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\doria\\.nuget\\packages\\litenetlib\\0.9.3.2\\litenetlib.0.9.3.2.nupkg.sha512"
+  ],
+  "logs": []
+}

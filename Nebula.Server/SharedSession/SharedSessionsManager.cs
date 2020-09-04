@@ -2,28 +2,36 @@
 using System.Collections.Generic;
 using System.Linq;
 using LiteNetLib;
-using Nebula.Server.Extensions;
+using Nebula.Net.Packets;
+using Nebula.Net.Packets.BOTH;
+using Nebula.Net.Packets.C2S;
+using Nebula.Net.Packets.S2C;
+using Nebula.Server.Events;
 using Nebula.Server.SharedSession.Commands;
 using Nebula.Server.Users;
-using Nebula.Shared.Packets;
-using Nebula.Shared.Packets.C2S;
-using Nebula.Shared.Packets.S2C;
 
 namespace Nebula.Server.SharedSession
 {
     public class SharedSessionsManager
     {
-        public SharedSessionsManager()
+        public SharedSessionsManager(NebulaServer server)
         {
-            NebulaServer.CommandsManager.RegisterCommand(new SharedSessionsSubCommand());
-            NebulaServer.PacketProcessor.SubscribeReusable<SharedSessionRoomCreationRequest, NetPeer>(OnReceiveRoomCreationRequest);
-            NebulaServer.PacketProcessor.SubscribeReusable<SharedSessionsListRequest, NetPeer>(OnReceiveSessionsListRequest);
-            NebulaServer.PacketProcessor.SubscribeReusable<SharedSessionJoinRequest, NetPeer>(OnReceiveSessionJoinRequest);
-            SharedSessionRoom room = new SharedSessionRoom(null, "Test", "", "", 5);
-            Rooms.Add(room.Id, room);
+            Server = server;
+            Server.CommandsManager.RegisterCommand(new SharedSessionsSubCommand());
+            Server.PacketProcessor.SubscribeReusable<SharedSessionCreationRequest, NebulaUser>(OnReceiveRoomCreationRequest);
+            Server.PacketProcessor.SubscribeReusable<SharedSessionsPollRequest, NebulaUser>(OnReceiveSessionsPollRequest);
+            Server.PacketProcessor.SubscribeReusable<SharedSessionJoinRequest, NebulaUser>(OnReceiveSessionJoinRequest);
+            Server.PacketProcessor.SubscribeReusable<SharedSessionPlayMediaPacket, NebulaUser>(OnReceivePlayMediaPacket);
+            Server.PacketProcessor.SubscribeReusable<SharedSessionPlayReadyPacket, NebulaUser>(OnReceivePlayReadyPacket);
+            Server.PacketProcessor.SubscribeReusable<SharedSessionLeavePacket, NebulaUser>(OnReceiveSessionLeavePacket);
+            Server.PacketProcessor.SubscribeReusable<SharedSessionPausePacket, NebulaUser>(OnReceiveSessionPausePacket);
+            Server.PacketProcessor.SubscribeReusable<SharedSessionResumePacket, NebulaUser>(OnReceiveSessionResumePacket);
+            Server.PacketProcessor.SubscribeReusable<SharedSessionPositionChangedPacket, NebulaUser>(OnReceiveSessionPositionChangedPacket);
+            Server.UserDisconnected += OnUserDisconnected;
         }
 
-        private Dictionary<Guid, SharedSessionRoom> Rooms { get; } = new Dictionary<Guid, SharedSessionRoom>();
+        private Dictionary<Guid, SharedSessionRoom> Rooms  { get; } = new Dictionary<Guid, SharedSessionRoom>();
+        public  NebulaServer                        Server { get; }
 
         public IEnumerable<SharedSessionRoom> GetRooms()
         {
@@ -48,32 +56,28 @@ namespace Nebula.Server.SharedSession
             return !string.IsNullOrWhiteSpace(value) && value.Length >= minLenght && value.Length <= maxLenght;
         }
 
-        private void OnReceiveRoomCreationRequest(SharedSessionRoomCreationRequest request, NetPeer peer)
+        private void OnReceiveRoomCreationRequest(SharedSessionCreationRequest request, NebulaUser user)
         {
-            if (!NebulaServer.IsConnected(peer) || !ValidateString(request.RoomName, 3, 60) || request.RoomMaxUsers <= 1)
+            if (!ValidateString(request.Name, 3, 60) || request.Size <= 1)
                 return;
+
             SharedSessionRoom room =
-                new SharedSessionRoom(NebulaServer.GetUserById(peer.Id), request.RoomName, request.RoomPassword, request.RoomThumbnail, request.RoomMaxUsers);
+                new SharedSessionRoom(user, request.Name, request.Password, "", request.Size);
             CreateRoom(room);
         }
 
-        private void OnReceiveSessionsListRequest(SharedSessionsListRequest request, NetPeer peer)
+        private void OnReceiveSessionsPollRequest(SharedSessionsPollRequest request, NebulaUser user)
         {
-            SharedSessionsListResponse response = new SharedSessionsListResponse {Sessions = new string[Rooms.Count]};
+            SharedSessionsPollResponse response = new SharedSessionsPollResponse {Sessions = new SharedSessionInfo[Rooms.Count]};
             for (int i = Rooms.Count; i-- > 0;)
-                response.Sessions[i] = Rooms.ElementAt(i).Value.ToString();
-            NebulaServer.SendPacket(TestPacket.Create(), peer);
-            NebulaServer.SendPacket(response, peer);
+                response.Sessions[i] = Rooms.ElementAt(i).Value.AsSessionInfo();
+            Server.SendPacket(response, user.Peer);
         }
 
-        private void OnReceiveSessionJoinRequest(SharedSessionJoinRequest request, NetPeer peer)
+        private void OnReceiveSessionJoinRequest(SharedSessionJoinRequest request, NebulaUser user)
         {
-            if (!NebulaServer.IsConnected(peer))
-                return;
-            NebulaUser user = NebulaServer.GetUserById(peer.Id);
-            Guid parseId = Guid.Parse(request.Id);
-            SharedSessionRoom room = GetRoom(parseId);
-            SharedSessionJoinResponse response = new SharedSessionJoinResponse {RoomId = request.Id};
+            SharedSessionRoom room = GetRoom(request.Session.Id);
+            SharedSessionJoinResponse response = new SharedSessionJoinResponse();
             if (room == null)
                 response.ResponseCode = 10;
             else
@@ -82,27 +86,94 @@ namespace Nebula.Server.SharedSession
                     response.ResponseCode = 11;
                 else if (room.PasswordProtected && !room.VerifyPassword(request.Password))
                     response.ResponseCode = 12;
+                else if (room.IsFull())
+                    response.ResponseCode = 13;
                 else
                 {
                     room.AddUser(user);
                     response.ResponseCode = 0;
-                    response.RoomName = room.Name;
-                    response.MaxUsers = room.MaxUsers;
-                    response.PasswordProtected = room.PasswordProtected;
-                    if (room.UsersCount > 0)
-                    {
-                        response.Users = new string[room.UsersCount];
-                        int index = 0;
-                        foreach (NebulaUser roomUser in room.GetUsers())
-                        {
-                            response.Users[index] = roomUser.ToInfoPacketString();
-                            index++;
-                        }
-                    }
+                    response.Session = room.AsSessionInfo();
+                    response.Users = room.AsUsersArray();
                 }
             }
 
-            NebulaServer.SendPacket(response, peer);
+            Server.SendPacket(response, user.Peer);
+        }
+
+        private void OnReceiveSessionPausePacket(SharedSessionPausePacket packet, NebulaUser user)
+        {
+            if (user.SharedSessionRoom == null || !user.SharedSessionRoom.IsUserPresent(user))
+            {
+                Server.HandleBadPacket(user);
+                return;
+            }
+
+            user.SharedSessionRoom.SendToAll(packet, nebulaUser => nebulaUser != user);
+        }
+
+        private void OnReceiveSessionResumePacket(SharedSessionResumePacket packet, NebulaUser user)
+        {
+            if (user.SharedSessionRoom == null || !user.SharedSessionRoom.IsUserPresent(user))
+            {
+                Server.HandleBadPacket(user);
+                return;
+            }
+
+            user.SharedSessionRoom.SendToAll(packet, nebulaUser => nebulaUser != user);
+        }
+
+        private void OnReceivePlayMediaPacket(SharedSessionPlayMediaPacket request, NebulaUser user)
+        {
+            if (user.SharedSessionRoom == null || !user.SharedSessionRoom.IsUserPresent(user))
+            {
+                Server.HandleBadPacket(user);
+                return;
+            }
+
+            user.SharedSessionRoom.SetAllUnReady();
+            user.SharedSessionRoom.SendToAll(request, nebulaUser => nebulaUser != user);
+            user.SharedSessionRoom.SetReady(user);
+        }
+
+        private void OnReceivePlayReadyPacket(SharedSessionPlayReadyPacket request, NebulaUser user)
+        {
+            if (user.SharedSessionRoom == null || !user.SharedSessionRoom.IsUserPresent(user))
+            {
+                Server.HandleBadPacket(user);
+                return;
+            }
+
+            user.SharedSessionRoom.SetReady(user);
+        }
+
+        private void OnReceiveSessionPositionChangedPacket(SharedSessionPositionChangedPacket packet, NebulaUser user)
+        {
+            if (user.SharedSessionRoom == null || !user.SharedSessionRoom.IsUserPresent(user))
+            {
+                Server.HandleBadPacket(user);
+                return;
+            }
+
+            user.SharedSessionRoom.SendToAll(packet, nebulaUser => nebulaUser != user);
+        }
+
+        private void OnReceiveSessionLeavePacket(SharedSessionLeavePacket packet, NebulaUser user)
+        {
+            if (user.SharedSessionRoom == null || !user.SharedSessionRoom.IsUserPresent(user))
+            {
+                Server.HandleBadPacket(user);
+                return;
+            }
+
+            user.SharedSessionRoom.RemoveUser(user);
+        }
+
+        private void OnUserDisconnected(object sender, UserDisconnectedEventArgs e)
+        {
+            if (e.User == null)
+                return;
+            if (e.User.IsInRoom())
+                e.User.SharedSessionRoom.RemoveUser(e.User);
         }
     }
 }

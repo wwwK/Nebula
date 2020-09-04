@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Nebula.Net.Packets.S2C;
 using Nebula.Server.Commands;
 using Nebula.Server.Extensions;
 using Nebula.Server.Users;
-using Nebula.Shared.Packets.S2C;
+using static Nebula.Server.ServerApp;
 
 namespace Nebula.Server
 {
@@ -42,7 +43,7 @@ namespace Nebula.Server
                         return;
                     }
 
-                    string[] commandArgs = new string[args.Length - 1];
+                    string[] commandArgs = new string[argsLenght];
                     CopyArray(args, commandArgs, 1);
                     command.Execute(user, commandArgs);
                 }
@@ -52,9 +53,17 @@ namespace Nebula.Server
         public void SendCommandUsage(NebulaUser user, ICommand command)
         {
             if (user.IsServer())
-                NebulaServer.WriteLine($"---- Command Usage '{command.CommandPrefix}': {command.Usage}", ConsoleColor.Green);
+                WriteLine($"---- Command Usage '{command.CommandPrefix}': {command.Usage}", ConsoleColor.Green);
             else
-                NebulaServer.SendPacket(new CommandUsagePacket {CommandPrefix = command.CommandPrefix, CommandUsage = command.Usage}, user.Peer);
+                ServerApp.Server.SendPacket(new CommandUsagePacket {CommandPrefix = command.CommandPrefix, CommandUsage = command.Usage}, user.Peer);
+        }
+
+        public void HandleConsoleCommands()
+        {
+            string value = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(value))
+                ExecuteCommands(ServerApp.Server.ServerUser, value.Replace("Server > ", "").SplitWithoutQuotes());
+            HandleConsoleCommands();
         }
 
         private void CopyArray(string[] source, string[] destination, int startIndex)

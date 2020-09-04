@@ -18,11 +18,7 @@ namespace Nebula.Server.Commands
 
         public void Execute(NebulaUser user, params string[] args)
         {
-            WriteLine("Stopping Server...", ConsoleColor.Yellow);
-            NebulaServer.Server.Stop(true);
-            WriteLine("Server Stopped ! Press any key to exit.", ConsoleColor.Red);
-            Console.Read();
-            Environment.Exit(0);
+            ServerApp.Server.StopServer();
         }
     }
 }

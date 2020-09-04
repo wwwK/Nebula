@@ -1,26 +1,29 @@
 ﻿using System.Collections.Generic;
 using LiteNetLib;
-using Nebula.Server.Extensions;
-using Nebula.Shared;
+using Nebula.Net;
+using Nebula.Net.Packets;
+using Nebula.Server.SharedSession;
 
 namespace Nebula.Server.Users
 {
-    public class NebulaUser : IUser
+    public class NebulaUser : NetClient
     {
-        public NebulaUser(NetPeer peer, string name = "", string thumbnailUrl = "")
+        public NebulaUser(NetPeer peer, string username = "", string avatarUrl = "") : base(peer)
         {
-            Peer = peer;
-            Id = peer?.Id ?? -1;
-            Name = name;
-            ThumbnailUrl = thumbnailUrl;
+            Username = username;
+            AvatarUrl = avatarUrl;
         }
 
-        private Dictionary<string, object> Tags         { get; } = new Dictionary<string, object>();
-        public  NetPeer                    Peer         { get; }
-        public  int                        Id           { get; }
-        public  int                        BadPackets   { get; set; }
-        public  string                     Name         { get; set; }
-        public  string                     ThumbnailUrl { get; set; }
+        private Dictionary<string, object> Tags              { get; } = new Dictionary<string, object>();
+        public  string                     Username          { get; set; }
+        public  string                     AvatarUrl         { get; set; }
+        public  SharedSessionRoom          SharedSessionRoom { get; set; }
+        public  bool                       IsPlayReady       { get; set; } = false;
+
+        public bool IsInRoom()
+        {
+            return SharedSessionRoom != null && SharedSessionRoom.IsUserPresent(this);
+        }
 
         public T RegisterTag<T>(string key, T tag) where T : class
         {
@@ -37,9 +40,24 @@ namespace Nebula.Server.Users
             return Tags[key] as T;
         }
 
+        public bool HasTag(string key)
+        {
+            return Tags.ContainsKey(key);
+        }
+
         public bool RemoveTag(string key)
         {
             return Tags.Remove(key);
+        }
+
+        public UserInfo AsUserInfo()
+        {
+            return new UserInfo
+            {
+                Id = Id,
+                Username = Username,
+                AvatarUrl = AvatarUrl
+            };
         }
     }
 }

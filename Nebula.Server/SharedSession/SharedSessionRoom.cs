@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using LiteNetLib;
+using Nebula.Net.Packets;
+using Nebula.Net.Packets.S2C;
 using Nebula.Server.Users;
-using Nebula.Shared.SharedSession;
 
 namespace Nebula.Server.SharedSession
 {
-    public class SharedSessionRoom : ISharedSession
+    public class SharedSessionRoom
     {
         public SharedSessionRoom(NebulaUser owner, string name, string password, string thumbnailUrl, int maxUsers)
         {
@@ -14,7 +16,7 @@ namespace Nebula.Server.SharedSession
             Name = name;
             Password = password;
             ThumbnailUrl = thumbnailUrl;
-            MaxUsers = maxUsers;
+            MaximumUsers = maxUsers;
         }
 
         private List<NebulaUser> Users             { get; } = new List<NebulaUser>();
@@ -23,9 +25,14 @@ namespace Nebula.Server.SharedSession
         public  string           Name              { get; set; }
         public  string           Password          { get; set; }
         public  string           ThumbnailUrl      { get; set; }
-        public  int              MaxUsers          { get; } = 4;
+        public  int              MaximumUsers      { get; } = 4;
         public  int              UsersCount        => Users.Count;
         public  bool             PasswordProtected => !string.IsNullOrWhiteSpace(Password);
+
+        public bool IsFull()
+        {
+            return UsersCount >= MaximumUsers;
+        }
 
         public bool IsUserPresent(NebulaUser user)
         {
@@ -49,8 +56,9 @@ namespace Nebula.Server.SharedSession
 
         public void AddUser(NebulaUser user)
         {
-            //Todo send new user
             Users.Add(user);
+            user.SharedSessionRoom = this;
+            SendToAll(new SharedSessionUserJoinedPacket {User = user.AsUserInfo()}, nebulaUser => user != nebulaUser);
         }
 
         public void RemoveUser(NebulaUser user)
@@ -58,12 +66,73 @@ namespace Nebula.Server.SharedSession
             if (!IsUserPresent(user))
                 return;
             Users.Remove(user);
-            //Todo send user leave
+            user.SharedSessionRoom = null;
+            SendToAll(new SharedSessionUserLeftPacket() {User = user.AsUserInfo()});
         }
 
-        public override string ToString()
+        public void SetReady(NebulaUser user)
         {
-            return $"{Id.ToString()}@{Name}@{ThumbnailUrl}@{PasswordProtected}@{UsersCount}@{MaxUsers}";
+            user.IsPlayReady = true;
+            CheckReadyState();
+        }
+
+        public void SetAllUnReady()
+        {
+            foreach (NebulaUser nebulaUser in Users)
+                nebulaUser.IsPlayReady = false;
+        }
+
+        public bool IsReady(NebulaUser user)
+        {
+            return user.IsPlayReady;
+        }
+
+        public void SendToAll<T>(T packet, Predicate<NebulaUser> predicate = null) where T : class, new()
+        {
+            foreach (NebulaUser nebulaUser in Users.ToArray())
+            {
+                if (predicate == null)
+                    ServerApp.Server.SendPacket(packet, nebulaUser.Peer);
+                else if (predicate(nebulaUser))
+                    ServerApp.Server.SendPacket(packet, nebulaUser.Peer);
+            }
+        }
+
+        public SharedSessionInfo AsSessionInfo()
+        {
+            SharedSessionInfo sessionInfo = new SharedSessionInfo
+            {
+                Id = Id,
+                Name = Name,
+                CurrentUsers = UsersCount,
+                MaximumUsers = MaximumUsers,
+                PasswordProtected = PasswordProtected
+            };
+            return sessionInfo;
+        }
+
+        public UserInfo[] AsUsersArray()
+        {
+            UserInfo[] users = new UserInfo[UsersCount];
+            int index = 0;
+            foreach (NebulaUser nebulaUser in Users)
+                users[index++] = nebulaUser.AsUserInfo();
+            return users;
+        }
+
+        private void CheckReadyState()
+        {
+            bool allReady = true;
+            foreach (NebulaUser nebulaUser in GetUsers())
+            {
+                if (nebulaUser.IsPlayReady)
+                    continue;
+                allReady = false;
+                break;
+            }
+
+            if (allReady)
+                SendToAll(new SharedSessionStartPlayingPacket());
         }
     }
 }

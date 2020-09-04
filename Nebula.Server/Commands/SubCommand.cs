@@ -1,5 +1,4 @@
-﻿using System;
-using Nebula.Server.Users;
+﻿using Nebula.Server.Users;
 
 namespace Nebula.Server.Commands
 {
@@ -13,7 +12,6 @@ namespace Nebula.Server.Commands
 
         public void Execute(NebulaUser user, params string[] args)
         {
-            Console.WriteLine(string.Join(" - ", args));
             SubManager.ExecuteCommands(user, args);
         }
     }

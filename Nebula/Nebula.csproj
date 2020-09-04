@@ -92,12 +92,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Nebula.Shared\Nebula.Shared.csproj" />
+      <None Remove="Resources\nebula_app_icon.ico" />
+      <Resource Include="Resources\nebula_app_icon.ico" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Remove="Resources\nebula_app_icon.ico" />
-      <Resource Include="Resources\nebula_app_icon.ico" />
+      <ProjectReference Include="..\Nebula.Net\Nebula.Net.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿namespace Nebula.Shared.Packets.S2C
+﻿namespace Nebula.Net.Packets.S2C
 {
     public class CommandUsagePacket
     {

@@ -4,166 +4,139 @@ using System.Net;
 using System.Net.Sockets;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Nebula.Net;
+using Nebula.Net.Packets.C2S;
 using Nebula.Server.Commands;
-using Nebula.Server.Extensions;
+using Nebula.Server.Events;
 using Nebula.Server.SharedSession;
 using Nebula.Server.Users;
-using Nebula.Shared.Packets;
-using Nebula.Shared.Packets.C2S;
+using static Nebula.Server.ServerApp;
 
 namespace Nebula.Server
 {
-    public static class NebulaServer
+    public class NebulaServer : BaseNetManager
     {
-        private static Dictionary<int, NebulaUser> ConnectedUsers        { get; }      = new Dictionary<int, NebulaUser>();
-        private static int                         MaxUsers              { get; set; } = 1000;
-        public static  NetManager                  Server                { get; }
-        public static  EventBasedNetListener       ServerListener        { get; }
-        public static  SharedSessionsManager       SharedSessionsManager { get; }
-        public static  NetPacketProcessor          PacketProcessor       { get; }
-        public static  CommandsManager             CommandsManager       { get; }
-        public static  NebulaServerUser            ServerUser            { get; } = new NebulaServerUser();
-
-        static NebulaServer()
+        public NebulaServer()
         {
-            ServerListener = new EventBasedNetListener();
-            PacketProcessor = new NetPacketProcessor();
-            Server = new NetManager(ServerListener) {UnsyncedEvents = true, AutoRecycle = true};
-            CommandsManager = new CommandsManager();
+            SharedSessionsManager = new SharedSessionsManager(this);
+            PacketProcessor.SubscribeReusable<UserInfoPacket, NebulaUser>(OnReceiveUserInfos);
             CommandsManager.RegisterCommand(new StopServerCommand());
-            ServerListener.ConnectionRequestEvent += OnConnectionRequestEvent;
-            ServerListener.PeerConnectedEvent += OnPeerConnectedEvent;
-            ServerListener.PeerDisconnectedEvent += OnPeerDisconnectedEvent;
-            ServerListener.NetworkErrorEvent += OnNetworkErrorEvent;
-            ServerListener.NetworkReceiveEvent += OnNetworkReceive;
-            SharedSessionsManager = new SharedSessionsManager();
-            PacketProcessor.SubscribeReusable<UserInfosPacket, NetPeer>(OnReceiveUserInfos);
+            CommandsManager.RegisterCommand(new ClearConsoleCommand());
         }
 
-        private static void Main(string[] args)
+        private Dictionary<int, NebulaUser> ConnectedUsers        { get; } = new Dictionary<int, NebulaUser>();
+        public  CommandsManager             CommandsManager       { get; } = new CommandsManager();
+        public  SharedSessionsManager       SharedSessionsManager { get; }
+        public  NebulaServerUser            ServerUser            { get; } = new NebulaServerUser();
+        public  int                         MaximumConnections    { get; } = 1000;
+        public  int                         MaximumUserBadPackets { get; } = 100;
+        public  string                      ServerKey             { get; } = String.Empty;
+
+        public event EventHandler<UserDisconnectedEventArgs> UserDisconnected;
+
+        public void StartServer(int port = 9080)
         {
             WriteLine("Starting Server...", ConsoleColor.Yellow);
-            //Server.Start(9080);
-            if (Server.Start(IPAddress.Any, IPAddress.IPv6Any, 9080))
-                WriteLine($"Server started ! Listening on port {Server.LocalPort}", ConsoleColor.Green);
+            if (NetManager.Start(IPAddress.Any, IPAddress.IPv6Any, port))
+                WriteLine($"Server started ! Listening on port {NetManager.LocalPort}", ConsoleColor.Green);
             else
                 WriteLine("Failed to start server.", ConsoleColor.Red);
-            ReadLine();
         }
 
-        public static NebulaUser FindUser(Predicate<NebulaUser> predicate)
+        public void StopServer()
         {
-            for (int i = ConnectedUsers.Count; i-- > 0;)
-            {
-                NebulaUser nebulaUser = ConnectedUsers[i];
-                if (predicate(nebulaUser))
-                    return nebulaUser;
-            }
-
-            return null;
+            WriteLine("Stopping Server...", ConsoleColor.Yellow);
+            NetManager.Stop(true);
+            WriteLine("Server Stopped ! Press any key to exit.", ConsoleColor.Red);
+            Console.ReadLine();
+            Environment.Exit(0);
         }
 
-        public static NebulaUser GetUserById(int id)
+        public bool IsConnected(int userId)
         {
-            return ConnectedUsers.ContainsKey(id) ? ConnectedUsers[id] : null;
+            return ConnectedUsers.ContainsKey(userId);
         }
 
-        public static bool IsConnected(NetPeer peer)
+        public NebulaUser GetUser(int userId)
         {
-            return ConnectedUsers.ContainsKey(peer.Id);
+            if (!IsConnected(userId))
+                return null;
+            return ConnectedUsers[userId];
         }
 
-        public static NebulaUser GetUserByName(string name)
+        public void HandleBadPacket(NebulaUser user)
         {
-            return FindUser(user => user.Name == name);
+            user.BadPackets++;
+            if (user.BadPackets >= MaximumUserBadPackets)
+                user.Peer.Disconnect(NetDataWriter.FromString($"Too many bad packets ({user.BadPackets})"));
         }
 
-        public static NebulaUser GetUserByPeer(NetPeer peer)
-        {
-            return FindUser(user => user.Peer == peer);
-        }
-
-        public static void SendPacket<T>(T packet, NetPeer user, DeliveryMethod method = DeliveryMethod.ReliableOrdered) where T : class, new()
-        {
-            PacketProcessor.Send(user, packet, method);
-        }
-
-        public static void WriteLine(string content, ConsoleColor color = ConsoleColor.White)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine(content);
-            Console.ResetColor();
-        }
-
-        public static void ReadLine()
-        {
-            string value = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(value))
-                CommandsManager.ExecuteCommands(ServerUser, value.SplitWithoutQuotes());
-            ReadLine();
-        }
-
-        private static void OnConnectionRequestEvent(ConnectionRequest request)
+        public override void OnConnectionRequest(ConnectionRequest request)
         {
             WriteLine($"Connection Request from '{request.RemoteEndPoint.Address}:{request.RemoteEndPoint.Port}'", ConsoleColor.Cyan);
-            if (Server.ConnectedPeersCount >= MaxUsers)
+            if (NetManager.ConnectedPeersCount >= MaximumConnections)
             {
-                request.Reject(NetDataWriter.FromString("Server Full "));
+                request.Reject(NetDataWriter.FromString("Server Full"));
                 WriteLine($"Refused Connection from '{request.RemoteEndPoint.Address}:{request.RemoteEndPoint.Port}'. Reason: Server Full", ConsoleColor.DarkRed);
                 return;
             }
 
-            request.Accept();
+            if (!String.IsNullOrWhiteSpace(ServerKey))
+                request.AcceptIfKey(ServerKey);
+            else
+                request.Accept();
         }
 
-        private static void OnPeerConnectedEvent(NetPeer peer)
+        public override void OnPeerConnected(NetPeer peer)
         {
-            WriteLine($"Client Connected '{peer.EndPoint.Address}:{peer.EndPoint.Port}'", ConsoleColor.Cyan);
             ConnectedUsers.Add(peer.Id, new NebulaUser(peer));
+            WriteLine($"Client Connected '{peer.EndPoint.Address}:{peer.EndPoint.Port}'", ConsoleColor.Cyan);
         }
 
-        private static void OnPeerDisconnectedEvent(NetPeer peer, DisconnectInfo disconnectInfo)
+        public override void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
+            NebulaUser user = GetUser(peer.Id);
+            if (user != null)
+                ConnectedUsers.Remove(user.Id);
+            UserDisconnected?.Invoke(this, new UserDisconnectedEventArgs(user, disconnectInfo));
             WriteLine($"Client Disconnected '{peer.EndPoint.Address}:{peer.EndPoint.Port}'. Reason: {disconnectInfo.Reason} ({disconnectInfo.SocketErrorCode})",
                 ConsoleColor.Cyan);
-            NebulaUser user = GetUserById(peer.Id);
-            if (user == null)
-                return;
-            ConnectedUsers.Remove(user.Id);
         }
 
-        private static void OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
+        public override void OnNetworkError(IPEndPoint endPoint, SocketError socketError)
         {
-            try
-            {
-                PacketProcessor.ReadAllPackets(reader, peer);
-            }
-            catch
-            {
-                NebulaUser user = GetUserById(peer.Id);
-                user.BadPackets++;
-                if (user.BadPackets > 100)
-                    peer.Disconnect(NetDataWriter.FromString($"Too many bad packets. ({user.BadPackets})"));
-            }
+            WriteLine($"Network Error '{socketError.ToString()}' from {endPoint.Address}:{endPoint.Port}", ConsoleColor.Red);
         }
 
-        private static void OnNetworkErrorEvent(IPEndPoint endpoint, SocketError socketError)
+        public override void OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
-            WriteLine($"Network Error '{socketError.ToString()}' from {endpoint.Address}:{endpoint.Port}", ConsoleColor.Red);
-        }
-
-        private static void OnReceiveUserInfos(UserInfosPacket infosPacket, NetPeer peer)
-        {
-            NebulaUser user = GetUserById(peer.Id);
+            NebulaUser user = GetUser(peer.Id);
             if (user == null)
             {
                 peer.Disconnect(NetDataWriter.FromString("User not registered server side"));
-                WriteLine($"Received user informations from '{peer.EndPoint.Address}:{peer.EndPoint.Port}' but the peer is not registered.", ConsoleColor.Red);
+                WriteLine($"Received packet from '{peer.EndPoint.Address}:{peer.EndPoint.Port}' but the user is not registered.", ConsoleColor.Red);
                 return;
             }
 
-            user.Name = infosPacket.Name;
-            user.ThumbnailUrl = infosPacket.ThumbnailUrl;
+            try
+            {
+                PacketProcessor.ReadAllPackets(reader, user);
+            }
+            catch
+            {
+                HandleBadPacket(user);
+            }
+        }
+
+        private void OnReceiveUserInfos(UserInfoPacket infosPacket, NebulaUser user)
+        {
+            if (user.Username == infosPacket.UserInfo.Username && user.AvatarUrl == infosPacket.UserInfo.AvatarUrl)
+                HandleBadPacket(user);
+            else
+            {
+                user.Username = infosPacket.UserInfo.Username;
+                user.AvatarUrl = infosPacket.UserInfo.AvatarUrl;
+            }
         }
     }
 }

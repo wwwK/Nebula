@@ -62,7 +62,7 @@ namespace Nebula.UI.Controls
 
         private void OnPlaybackProgressOnMouseUp(object sender, MouseButtonEventArgs e)
         {
-            MediaPlayer.Position = TimeSpan.FromSeconds(e.GetPosition(PlaybackPosition).X / (PlaybackPosition.ActualWidth / PlaybackPosition.Maximum));
+            MediaPlayer.SetPosition(e.GetPosition(PlaybackPosition).X / (PlaybackPosition.ActualWidth / PlaybackPosition.Maximum));
         }
 
         private void OnPlaybackProgressMouseMove(object sender, MouseEventArgs e)

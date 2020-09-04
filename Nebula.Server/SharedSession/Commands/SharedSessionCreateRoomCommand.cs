@@ -2,6 +2,7 @@
 using Nebula.Server.Commands;
 using Nebula.Server.Extensions;
 using Nebula.Server.Users;
+using static Nebula.Server.ServerApp;
 
 namespace Nebula.Server.SharedSession.Commands
 {
@@ -23,10 +24,10 @@ namespace Nebula.Server.SharedSession.Commands
             string roomPassword = "";
             if (args.Length > 2)
                 roomPassword = args[2];
-            if (NebulaServer.SharedSessionsManager.CreateRoom(new SharedSessionRoom(NebulaServer.ServerUser, roomName, roomPassword, "", maxUsers)))
-                NebulaServer.WriteLine($"Successfully created shared session room '{roomName}'", ConsoleColor.Green);
+            if (ServerApp.Server.SharedSessionsManager.CreateRoom(new SharedSessionRoom(ServerApp.Server.ServerUser, roomName, roomPassword, "", maxUsers)))
+                WriteLine($"Successfully created shared session room '{roomName}'", ConsoleColor.Green);
             else
-                NebulaServer.WriteLine($"Failed to create created shared session room '{roomName}'", ConsoleColor.Red);
+                WriteLine($"Failed to create created shared session room '{roomName}'", ConsoleColor.Red);
         }
     }
 }

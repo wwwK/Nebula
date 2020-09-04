@@ -1,8 +1,6 @@
 ﻿using System.Windows.Controls;
-using ModernWpf.Controls;
 using Nebula.Core.UI.Content;
 using Nebula.Core.UI.Content.Attributes;
-using Nebula.Shared.Packets.C2S;
 
 namespace Nebula.Core.Dialogs
 {

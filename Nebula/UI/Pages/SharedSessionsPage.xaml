@@ -3,7 +3,6 @@
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-         xmlns:local="clr-namespace:Nebula.UI.Pages"
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:controls="clr-namespace:Nebula.UI.Controls"
          xmlns:resx="clr-namespace:Nebula.Resources"
@@ -20,8 +19,8 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding Name }" Header="{x:Static resx:nebula.SharedSessionRoomName}" Width="450" />
-                    <GridViewColumn DisplayMemberBinding="{Binding UsersCount }" Header="{x:Static resx:nebula.Users}" Width="250" />
-                    <GridViewColumn DisplayMemberBinding="{Binding MaxUsers  }" Header="{x:Static resx:nebula.SharedSessionRoomSize}" Width="250" />
+                    <GridViewColumn DisplayMemberBinding="{Binding CurrentUsers }" Header="{x:Static resx:nebula.Users}" Width="250" />
+                    <GridViewColumn DisplayMemberBinding="{Binding MaximumUsers  }" Header="{x:Static resx:nebula.SharedSessionRoomSize}" Width="250" />
                     <GridViewColumn DisplayMemberBinding="{Binding PasswordProtected  }" Header="{x:Static resx:nebula.SharedSessionPasswordRequired}" Width="250" />
                 </GridView>
             </ListView.View>

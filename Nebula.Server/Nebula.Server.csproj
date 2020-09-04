@@ -11,10 +11,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Nebula.Shared\Nebula.Shared.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="LiteNetLib" Version="0.9.3.2" />
     </ItemGroup>
 
@@ -32,6 +28,10 @@
 
     <ItemGroup>
       <Folder Include="Components" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Nebula.Net\Nebula.Net.csproj" />
     </ItemGroup>
 
 </Project>

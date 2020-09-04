@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using LiteNetLib;
 using Nebula.Core;
 using Nebula.Core.Dialogs;
-using Nebula.Shared.Packets.C2S;
-using Nebula.Shared.Packets.S2C;
-using Nebula.Shared.SharedSession;
+using Nebula.Net.Packets;
+using Nebula.Net.Packets.C2S;
+using Nebula.Net.Packets.S2C;
 using Page = ModernWpf.Controls.Page;
 
 namespace Nebula.UI.Pages
@@ -23,7 +22,7 @@ namespace Nebula.UI.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionsListResponse, NetPeer>(OnReceiveSharedSessions);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionsPollResponse, NetPeer>(OnReceiveSharedSessions);
             if (!NebulaClient.Network.IsConnected)
                 NebulaClient.Network.Connect();
         }
@@ -31,12 +30,12 @@ namespace Nebula.UI.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            NebulaClient.Network.PacketProcessor.RemoveSubscription<SharedSessionsListResponse>();
+            NebulaClient.Network.PacketProcessor.RemoveSubscription<SharedSessionsPollResponse>();
         }
 
         private void OnRefreshClick(object sender, RoutedEventArgs e)
         {
-            NebulaClient.Network.SendPacket(new SharedSessionsListRequest());
+            NebulaClient.Network.SendPacket(new SharedSessionsPollRequest());
         }
 
         private async void OnCreateRoomClick(object sender, RoutedEventArgs e)
@@ -44,18 +43,13 @@ namespace Nebula.UI.Pages
             await new SharedSessionRoomCreationDialog().ShowDialogAsync();
         }
 
-        private void OnReceiveSharedSessions(SharedSessionsListResponse response, NetPeer peer)
+        private void OnReceiveSharedSessions(SharedSessionsPollResponse response, NetPeer peer)
         {
             NebulaClient.Invoke(() =>
             {
                 ListView.Items.Clear();
-                foreach (string sessionStr in response.Sessions)
-                {
-                    SharedSessionInfo sessionInfo = SharedSessionInfo.FromString(sessionStr);
-                    if (sessionInfo == null)
-                        continue;
+                foreach (SharedSessionInfo sessionInfo in response.Sessions)
                     ListView.Items.Add(sessionInfo);
-                }
             });
         }
 
@@ -63,7 +57,7 @@ namespace Nebula.UI.Pages
         {
             if (!(ListView.SelectedItem is SharedSessionInfo info))
                 return;
-            SharedSessionJoinRequest request = new SharedSessionJoinRequest {Id = info.Id.ToString(), Password = String.Empty};
+            SharedSessionJoinRequest request = new SharedSessionJoinRequest {Session = info, Password = String.Empty};
             if (info.PasswordProtected)
             {
                 SharedSessionJoinDialog dialog = new SharedSessionJoinDialog();

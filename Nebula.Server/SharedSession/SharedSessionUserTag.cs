@@ -1,11 +1,7 @@
-﻿using System;
-using LiteNetLib;
-using Nebula.Shared;
-
-namespace Nebula.Server.SharedSession
+﻿namespace Nebula.Server.SharedSession
 {
     public class SharedSessionUserTag
     {
-        public bool    IsPlayReady  { get; }
+        public bool IsPlayReady { get; }
     }
 }
