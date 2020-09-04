@@ -13,13 +13,15 @@
             <ui:AppBarButton Label="{x:Static resx:nebula.SharedSessionLeaveRoom}" Click="OnLeaveClick" />
         </ui:CommandBar>
         <controls:SimpleGrid Grid.Row="1">
+            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="128" Text="BETA" />
             <TextBlock Text="{Binding Name}" FontSize="24" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10 10 0 0" />
             <ui:ListView ItemsSource="{Binding Users}" Width="350" Background="#272727" Opacity="0.8" VerticalAlignment="Stretch" HorizontalAlignment="Right"
                          Margin="0 10 10 10">
                 <ui:ListView.ItemTemplate>
                     <DataTemplate>
                         <controls:SimpleGrid Columns="35,*" Rows="35,35">
-                            <ui:PersonPicture Width="35" Height="35" ProfilePicture="{Binding AvatarUrl}"  BadgeText="{Binding Username}" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" />
+                            <ui:PersonPicture Width="35" Height="35" ProfilePicture="{Binding AvatarUrl}" BadgeText="{Binding Username}" Grid.Column="0"
+                                              Grid.Row="0" Grid.RowSpan="2" />
                             <TextBlock Text="{Binding Username}" FontWeight="Bold" FontSize="14" Grid.Row="0" Grid.Column="1" Margin="5 15 0 0" />
                         </controls:SimpleGrid>
                     </DataTemplate>
