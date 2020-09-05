@@ -67,7 +67,10 @@ namespace Nebula.Server.SharedSession
                 return;
             Users.Remove(user);
             user.SharedSessionRoom = null;
-            SendToAll(new SharedSessionUserLeftPacket() {User = user.AsUserInfo()});
+            if (UsersCount > 0)
+                SendToAll(new SharedSessionUserLeftPacket {User = user.AsUserInfo()});
+            else if (!IsOwner(ServerApp.Server.ServerUser))
+                ServerApp.Server.SharedSessionsManager.RemoveRoom(this, "Room is empty");
         }
 
         public void SetReady(NebulaUser user)

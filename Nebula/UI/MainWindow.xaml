@@ -8,6 +8,7 @@
         xmlns:pages="clr-namespace:Nebula.UI.Pages"
         xmlns:resx="clr-namespace:Nebula.Resources"
         xmlns:controls="clr-namespace:Nebula.UI.Controls"
+        xmlns:notif="clr-namespace:Enterwell.Clients.Wpf.Notifications.Controls;assembly=Enterwell.Clients.Wpf.Notifications"
         mc:Ignorable="d"
         Title="Nebula"
         Width="1360"
@@ -66,7 +67,7 @@
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
 
-                <ui:NavigationViewItem x:Name="RecentlyListenedButton" Content="{x:Static resx:nebula.SharedSession}" 
+                <ui:NavigationViewItem x:Name="RecentlyListenedButton" Content="{x:Static resx:nebula.SharedSession}"
                                        Tag="{x:Type pages:SharedSessionsPage}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Glyph="&#xE716;" />
@@ -95,6 +96,8 @@
                 <Image Grid.Row="0" x:Name="ImageBackground" Stretch="UniformToFill" />
                 <!--- Pages Frame -->
                 <ui:Frame Grid.Row="0" x:Name="ContentFrame" />
+                <!--- Notifications -->
+                <notif:NotificationMessageContainer Grid.Row="0" VerticalAlignment="Bottom" MaxWidth="650" x:Name="NotificationMessageContainer" />
                 <!--- Media Player Controller -->
                 <controls:MediaPlayerControl Grid.Row="1" Height="70" />
             </controls:SimpleGrid>

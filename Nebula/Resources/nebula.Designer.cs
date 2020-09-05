@@ -421,6 +421,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Info.
+        /// </summary>
+        public static string NotificationsBadgeInfo {
+            get {
+                return ResourceManager.GetString("NotificationsBadgeInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pause.
         /// </summary>
         public static string Pause {
@@ -592,6 +601,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sercer connection lost.
+        /// </summary>
+        public static string ServerConnectionLost {
+            get {
+                return ResourceManager.GetString("ServerConnectionLost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string Settings {
@@ -723,6 +741,33 @@ namespace Nebula.Resources {
         public static string SharedSessionLeaveRoom {
             get {
                 return ResourceManager.GetString("SharedSessionLeaveRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Started playing &apos;{0}&apos;.
+        /// </summary>
+        public static string SharedSessionMessagePlayMedia {
+            get {
+                return ResourceManager.GetString("SharedSessionMessagePlayMedia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Joined session..
+        /// </summary>
+        public static string SharedSessionMessageUserJoined {
+            get {
+                return ResourceManager.GetString("SharedSessionMessageUserJoined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Left session..
+        /// </summary>
+        public static string SharedSessionMessageUserLeft {
+            get {
+                return ResourceManager.GetString("SharedSessionMessageUserLeft", resourceCulture);
             }
         }
         

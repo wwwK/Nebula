@@ -291,4 +291,16 @@
     <data name="SharedSessionLeaveRoom" xml:space="preserve">
         <value>Quitter le salon</value>
     </data>
+    <data name="ServerConnectionLost" xml:space="preserve">
+        <value>Connexion au serveur perdue</value>
+    </data>
+    <data name="SharedSessionMessagePlayMedia" xml:space="preserve">
+        <value>A lancé la lecture de '{0}'</value>
+    </data>
+    <data name="SharedSessionMessageUserJoined" xml:space="preserve">
+        <value>A rejoint le salon.</value>
+    </data>
+    <data name="SharedSessionMessageUserLeft" xml:space="preserve">
+        <value>A quitté le salon.</value>
+    </data>
 </root>

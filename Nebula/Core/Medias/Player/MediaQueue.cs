@@ -27,8 +27,10 @@ namespace Nebula.Core.Medias.Player
         {
             if (clear)
                 Clear();
+            System.Diagnostics.Debug.Print("PLAYLIST: "  + playlist.MediasCount);
             foreach (IMediaInfo mediaInfo in playlist)
                 Queue.Add(mediaInfo);
+            System.Diagnostics.Debug.Print("QUEUE: "  + Queue.Count);
         }
 
         /// <summary>

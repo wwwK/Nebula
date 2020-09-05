@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using EasySharp.Windows.Hookers;
 using EasySharp.Windows.Hookers.Keyboard;
+using Enterwell.Clients.Wpf.Notifications;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core.Dialogs;
@@ -15,7 +16,9 @@ using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Provider;
 using Nebula.Core.Medias.Provider.Providers.Youtube;
 using Nebula.Core.Networking;
+using Nebula.Core.Notifications;
 using Nebula.Core.Settings;
+using Nebula.Core.SharedSessions;
 using Nebula.Core.Updater;
 using Nebula.UI;
 using Nebula.UI.Pages;
@@ -32,6 +35,7 @@ namespace Nebula.Core
         public static  NebulaSharedSession  SharedSession  { get; private set; }
         public static  NebulaSettings       Settings       { get; }
         public static  NebulaNetClient      Network        { get; }
+        public static  NebulaNotifications  Notifications  { get; }
         public static  PlaylistsManager     Playlists      { get; }
         public static  KeyboardHooker       KeyboardHooker { get; }
 
@@ -48,6 +52,7 @@ namespace Nebula.Core
             Playlists = new PlaylistsManager();
             KeyboardHooker = new KeyboardHooker();
             Network = new NebulaNetClient();
+            Notifications = new NebulaNotifications();
             SharedSession = new NebulaSharedSession();
             Session = new NebulaSession(); //Needs to be latest
 
@@ -77,7 +82,7 @@ namespace Nebula.Core
                     e.Handled = true;
                     break;
                 case EVirtualKeys.MEDIA_STOP:
-                    MediaPlayer.Stop();
+                    MediaPlayer.Stop(true);
                     e.Handled = true;
                     break;
                 case EVirtualKeys.MEDIA_NEXT_TRACK:

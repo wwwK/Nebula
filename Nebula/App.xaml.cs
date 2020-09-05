@@ -50,7 +50,7 @@ namespace Nebula
         private void OnAppExit(object sender, ExitEventArgs e)
         {
             NebulaClient.KeyboardHooker.UnHook();
-            NebulaClient.MediaPlayer.Stop();
+            NebulaClient.MediaPlayer.Stop(true);
             NebulaClient.CancellationTokenSource.Cancel();
         }
     }

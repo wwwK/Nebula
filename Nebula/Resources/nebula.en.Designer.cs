@@ -583,6 +583,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Server connection lost.
+        /// </summary>
+        public static string ServerConnectionLost {
+            get {
+                return ResourceManager.GetString("ServerConnectionLost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string Settings {

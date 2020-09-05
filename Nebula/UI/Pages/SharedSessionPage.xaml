@@ -7,18 +7,22 @@
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:controls="clr-namespace:Nebula.UI.Controls"
          xmlns:resx="clr-namespace:Nebula.Resources"
+         xmlns:sharedSessions="clr-namespace:Nebula.Core.SharedSessions"
+         xmlns:packets="clr-namespace:Nebula.Net.Packets;assembly=Nebula.Net"
          mc:Ignorable="d">
     <controls:SimpleGrid Rows="40,*">
         <ui:CommandBar VerticalAlignment="Top" VerticalContentAlignment="Center" Grid.Row="0">
             <ui:AppBarButton Label="{x:Static resx:nebula.SharedSessionLeaveRoom}" Click="OnLeaveClick" />
+            <ui:CommandBar.Content>
+                <TextBlock Text="{Binding Name}" Margin="10 0 0 0" FontSize="24" />
+            </ui:CommandBar.Content>
         </ui:CommandBar>
-        <controls:SimpleGrid Grid.Row="1">
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="128" Text="BETA" />
-            <TextBlock Text="{Binding Name}" FontSize="24" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10 10 0 0" />
-            <ui:ListView ItemsSource="{Binding Users}" Width="350" Background="#272727" Opacity="0.8" VerticalAlignment="Stretch" HorizontalAlignment="Right"
+        <TextBlock Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="128" Text="BETA" />
+        <controls:SimpleGrid Grid.Row="1" Columns="*,350">
+            <ui:ListView Grid.Column="1" ItemsSource="{Binding Users}" Background="#272727" Opacity="0.8" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                          Margin="0 10 10 10">
                 <ui:ListView.ItemTemplate>
-                    <DataTemplate>
+                    <DataTemplate DataType="packets:UserInfo">
                         <controls:SimpleGrid Columns="35,*" Rows="35,35">
                             <ui:PersonPicture Width="35" Height="35" ProfilePicture="{Binding AvatarUrl}" BadgeText="{Binding Username}" Grid.Column="0"
                                               Grid.Row="0" Grid.RowSpan="2" />
@@ -27,6 +31,29 @@
                     </DataTemplate>
                 </ui:ListView.ItemTemplate>
             </ui:ListView>
+            <controls:SimpleGrid Rows="*,Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10 10 10 10">
+                <ui:ListView x:Name="MessageList" Grid.Row="0" ItemsSource="{Binding Messages}" Background="#272727" Opacity="0.8" VerticalAlignment="Stretch"
+                             HorizontalAlignment="Stretch">
+                    <ui:ListView.ItemTemplate>
+                        <DataTemplate DataType="sharedSessions:SharedSessionMessage">
+                            <controls:SimpleGrid Columns="35,*" Rows="35,Auto" Opacity="0.8" Width="{Binding ElementName=MessageList, Path=ActualWidth}">
+                                <ui:PersonPicture Width="35" Height="35" ProfilePicture="{Binding User.AvatarUrl}" BadgeText="{Binding User.Username}"
+                                                  Grid.Column="0"
+                                                  Grid.Row="0" Grid.RowSpan="2" />
+                                <TextBlock Text="{Binding User.Username}" Foreground="White" FontWeight="Bold" FontSize="14" Grid.Row="0"
+                                           Grid.Column="1" Margin="10 5 0 0" />
+                                <TextBlock TextWrapping="Wrap" Text="{Binding Message}" Foreground="{Binding Foreground}" FontSize="14" Grid.Row="1" Grid.Column="1" Margin="10 0 0 0"
+                                           VerticalAlignment="Top" />
+                            </controls:SimpleGrid>
+                        </DataTemplate>
+                    </ui:ListView.ItemTemplate>
+                </ui:ListView>
+                <controls:SimpleGrid Grid.Row="1" Columns="*,Auto,Auto" Background="#272727">
+                    <TextBox Grid.Column="0" x:Name="TextMessage" HorizontalAlignment="Stretch" KeyDown="OnTextMessageKeyDown" />
+                    <Button Grid.Column="1" Content="Send" Click="OnSendClick" />
+                    <Button Grid.Column="2" Content="Clear" Click="OnClearClick" />
+                </controls:SimpleGrid>
+            </controls:SimpleGrid>
         </controls:SimpleGrid>
     </controls:SimpleGrid>
 </ui:Page>

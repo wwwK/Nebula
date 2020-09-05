@@ -69,6 +69,7 @@ namespace Nebula.Server
             user.BadPackets++;
             if (user.BadPackets >= MaximumUserBadPackets)
                 user.Peer.Disconnect(NetDataWriter.FromString($"Too many bad packets ({user.BadPackets})"));
+            WriteLine($"Handled bad packet for user '{user.Id}'. User has a total of {user.BadPackets} bad packets.", ConsoleColor.Red);
         }
 
         public override void OnConnectionRequest(ConnectionRequest request)

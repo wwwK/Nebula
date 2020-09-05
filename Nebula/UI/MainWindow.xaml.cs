@@ -18,6 +18,7 @@ namespace Nebula.UI
         public MainWindow()
         {
             InitializeComponent();
+            NotificationMessageContainer.Manager = NebulaClient.Notifications.NotificationsManager;
         }
 
         /// <summary>

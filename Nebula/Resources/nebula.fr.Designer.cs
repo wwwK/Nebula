@@ -592,6 +592,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connexion au serveur perdue.
+        /// </summary>
+        public static string ServerConnectionLost {
+            get {
+                return ResourceManager.GetString("ServerConnectionLost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paramètres.
         /// </summary>
         public static string Settings {
@@ -723,6 +732,33 @@ namespace Nebula.Resources {
         public static string SharedSessionLeaveRoom {
             get {
                 return ResourceManager.GetString("SharedSessionLeaveRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A lancé la lecture de &apos;{0}&apos;.
+        /// </summary>
+        public static string SharedSessionMessagePlayMedia {
+            get {
+                return ResourceManager.GetString("SharedSessionMessagePlayMedia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A rejoint le salon..
+        /// </summary>
+        public static string SharedSessionMessageUserJoined {
+            get {
+                return ResourceManager.GetString("SharedSessionMessageUserJoined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A quitté le salon..
+        /// </summary>
+        public static string SharedSessionMessageUserLeft {
+            get {
+                return ResourceManager.GetString("SharedSessionMessageUserLeft", resourceCulture);
             }
         }
         

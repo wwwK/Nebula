@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using LiteNetLib;
 using Nebula.Net.Packets;
 using Nebula.Net.Packets.BOTH;
 using Nebula.Net.Packets.C2S;
@@ -28,6 +28,7 @@ namespace Nebula.Server.SharedSession
             Server.PacketProcessor.SubscribeReusable<SharedSessionPausePacket, NebulaUser>(OnReceiveSessionPausePacket);
             Server.PacketProcessor.SubscribeReusable<SharedSessionResumePacket, NebulaUser>(OnReceiveSessionResumePacket);
             Server.PacketProcessor.SubscribeReusable<SharedSessionPositionChangedPacket, NebulaUser>(OnReceiveSessionPositionChangedPacket);
+            Server.PacketProcessor.SubscribeReusable<SharedSessionUserMessagePacket, NebulaUser>(OnReceiveSessionUserMessagePacket);
             Server.UserDisconnected += OnUserDisconnected;
         }
 
@@ -49,8 +50,17 @@ namespace Nebula.Server.SharedSession
             if (Rooms.ContainsKey(room.Id))
                 return false;
             Rooms.Add(room.Id, room);
-            WriteLine($"User '{room.Owner.Username}' created shared session '{room.Name}'", ConsoleColor.DarkCyan);
+            WriteLine($"User '{room.Owner.Username}' created shared session '{room.Id}'", ConsoleColor.DarkCyan);
             return true;
+        }
+
+        public void RemoveRoom(SharedSessionRoom room, string reason = "")
+        {
+            if (!Rooms.ContainsKey(room.Id))
+                return;
+            Rooms.Remove(room.Id);
+            if (!string.IsNullOrWhiteSpace(reason))
+                WriteLine($"Removed shared session '{room.Id}'. Reason: {reason}", ConsoleColor.DarkCyan);
         }
 
         private bool ValidateString(string value, int minLenght, int maxLenght)
@@ -102,6 +112,18 @@ namespace Nebula.Server.SharedSession
             Server.SendPacket(response, user.Peer);
         }
 
+        private void OnReceiveSessionUserMessagePacket(SharedSessionUserMessagePacket packet, NebulaUser user)
+        {
+            if (user.SharedSessionRoom == null || !user.SharedSessionRoom.IsUserPresent(user) || packet.User != UserInfo.Empty)
+            {
+                Server.HandleBadPacket(user);
+                return;
+            }
+
+            packet.User = user.AsUserInfo();
+            user.SharedSessionRoom.SendToAll(packet);
+        }
+
         private void OnReceiveSessionPausePacket(SharedSessionPausePacket packet, NebulaUser user)
         {
             if (user.SharedSessionRoom == null || !user.SharedSessionRoom.IsUserPresent(user))
@@ -133,8 +155,8 @@ namespace Nebula.Server.SharedSession
             }
 
             user.SharedSessionRoom.SetAllUnReady();
-            user.SharedSessionRoom.SendToAll(request, nebulaUser => nebulaUser != user);
-            user.SharedSessionRoom.SetReady(user);
+            request.UserInfo = user.AsUserInfo();
+            user.SharedSessionRoom.SendToAll(request);
         }
 
         private void OnReceivePlayReadyPacket(SharedSessionPlayReadyPacket request, NebulaUser user)

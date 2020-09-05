@@ -135,6 +135,14 @@ namespace Nebula.Core.Medias.Player
             MediaChanging?.Invoke(this, mediaChangingEvent);
             if (mediaChangingEvent.Cancel)
                 return;
+            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
+            {
+                NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket
+                    {MediaId = mediaInfo.Id, MediaName = mediaInfo.Title, Provider = mediaInfo.GetMediaProvider().Name});
+                _manualStop = false;
+                return;
+            }
+
             IMediaInfo oldMedia = CurrentMedia;
             _manualStop = manualStop;
             Stop();
@@ -142,9 +150,7 @@ namespace Nebula.Core.Medias.Player
             Setup(await mediaInfo.GetAudioStreamUri());
             CurrentMedia = mediaInfo;
             MediaChanged?.Invoke(this, new MediaChangedEventArgs(CurrentPlaylist, oldMedia, mediaInfo));
-            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
-                NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket {MediaId = mediaInfo.Id, Provider = mediaInfo.GetMediaProvider().Name});
-            else if (play)
+            if (play && !fromServer)
                 Play();
             _manualStop = false;
         }
@@ -189,9 +195,9 @@ namespace Nebula.Core.Medias.Player
         /// Play the next queued media.
         /// </summary>
         /// <param name="manualStop">Is this a user manual stop</param>
-        public void Forward(bool manualStop = false)
+        public void Forward(bool manualStop = false, bool fromServer = false)
         {
-            OpenMedia(Queue.Dequeue(Shuffle), manualStop);
+            OpenMedia(Queue.Dequeue(Shuffle), manualStop, fromServer);
         }
 
         /// <summary>
@@ -213,10 +219,11 @@ namespace Nebula.Core.Medias.Player
         /// <summary>
         /// Stop playback.
         /// </summary>
-        public void Stop()
+        public void Stop(bool clearQueue = false)
         {
             Repeat = false;
-            Queue.Clear();
+            if (clearQueue)
+                Queue.Clear();
             SoundOut?.Stop();
         }
 

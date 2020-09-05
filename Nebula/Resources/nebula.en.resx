@@ -288,4 +288,7 @@
     <data name="SharedSessionLeaveRoom" xml:space="preserve">
         <value>Leave Session</value>
     </data>
+    <data name="ServerConnectionLost" xml:space="preserve">
+        <value>Server connection lost</value>
+    </data>
 </root>

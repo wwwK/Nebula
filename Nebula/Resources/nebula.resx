@@ -291,4 +291,19 @@
     <data name="SharedSessionLeaveRoom" xml:space="preserve">
         <value>Leave Session</value>
     </data>
+    <data name="ServerConnectionLost" xml:space="preserve">
+        <value>Sercer connection lost</value>
+    </data>
+    <data name="NotificationsBadgeInfo" xml:space="preserve">
+        <value>Info</value>
+    </data>
+    <data name="SharedSessionMessagePlayMedia" xml:space="preserve">
+        <value>Started playing '{0}'</value>
+    </data>
+    <data name="SharedSessionMessageUserJoined" xml:space="preserve">
+        <value>Joined session.</value>
+    </data>
+    <data name="SharedSessionMessageUserLeft" xml:space="preserve">
+        <value>Left session.</value>
+    </data>
 </root>
