@@ -21,6 +21,8 @@ namespace Nebula.Core.Settings
 
         public NebulaSettings()
         {
+            if (!SettingsDirectory.Exists)
+                SettingsDirectory.Create();
         }
 
         [JsonIgnore] public bool                    AutoSave    { get; set; } = false;
