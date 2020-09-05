@@ -9,6 +9,7 @@ using Nebula.Net.Packets.S2C;
 using Nebula.Server.Events;
 using Nebula.Server.SharedSession.Commands;
 using Nebula.Server.Users;
+using static Nebula.Server.ServerApp;
 
 namespace Nebula.Server.SharedSession
 {
@@ -48,6 +49,7 @@ namespace Nebula.Server.SharedSession
             if (Rooms.ContainsKey(room.Id))
                 return false;
             Rooms.Add(room.Id, room);
+            WriteLine($"User '{room.Owner.Username}' created shared session '{room.Name}'", ConsoleColor.DarkCyan);
             return true;
         }
 

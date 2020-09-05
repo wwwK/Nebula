@@ -100,7 +100,7 @@ namespace Nebula.Server
                 ConnectedUsers.Remove(user.Id);
             UserDisconnected?.Invoke(this, new UserDisconnectedEventArgs(user, disconnectInfo));
             WriteLine($"Client Disconnected '{peer.EndPoint.Address}:{peer.EndPoint.Port}'. Reason: {disconnectInfo.Reason} ({disconnectInfo.SocketErrorCode})",
-                ConsoleColor.Cyan);
+                ConsoleColor.Red);
         }
 
         public override void OnNetworkError(IPEndPoint endPoint, SocketError socketError)
