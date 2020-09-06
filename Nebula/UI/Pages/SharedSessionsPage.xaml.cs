@@ -26,9 +26,9 @@ namespace Nebula.UI.Pages
             NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionsPollResponse, NetPeer>(OnReceiveSharedSessions);
             NebulaClient.Network.Connected += OnNetworkConnected;
             if (!NebulaClient.Network.IsConnected)
-            {
                 NebulaClient.Network.Connect();
-            }
+            else
+                NebulaClient.Network.SendPacket(new SharedSessionsPollRequest());
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
