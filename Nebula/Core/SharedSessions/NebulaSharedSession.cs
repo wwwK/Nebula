@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using LiteNetLib;
 using ModernWpf.Media.Animation;
-using Nebula.Core.Dialogs;
+using Nebula.Core.UI.Dialogs;
 using Nebula.Net.Packets;
 using Nebula.Net.Packets.BOTH;
 using Nebula.Net.Packets.C2S;
@@ -89,14 +89,17 @@ namespace Nebula.Core.SharedSessions
 
         public void AddMessage(SharedSessionMessage message)
         {
-            if (IsSessionActive)
-                Messages.Add(message);
+            if (!IsSessionActive)
+                return;
+            Messages.Add(message);
+            
         }
 
         public void ClearMessages()
         {
-            if (IsSessionActive)
-                Messages.Clear();
+            if (!IsSessionActive)
+                return;
+            Messages.Clear();
         }
 
         private void OnReceiveSharedSessionJoinResponse(SharedSessionJoinResponse response, NetPeer peer)

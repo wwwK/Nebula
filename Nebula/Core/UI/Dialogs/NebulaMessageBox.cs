@@ -4,7 +4,7 @@ using ModernWpf.Controls;
 using Nebula.Core.UI.Content;
 using Nebula.Core.UI.Content.Attributes;
 
-namespace Nebula.Core.Dialogs
+namespace Nebula.Core.UI.Dialogs
 {
     public class NebulaMessageBox : DialogDataContent
     {
@@ -19,7 +19,7 @@ namespace Nebula.Core.Dialogs
             Cache.PrepareFor(this);
         }
 
-        [DataProperty(typeof(TextBlock), "TextProperty")]
+        [DataProperty(typeof(TextBlock))]
         public string Content { get; }
 
         public override DataContentCache GetCache()

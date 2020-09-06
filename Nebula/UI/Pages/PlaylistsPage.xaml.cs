@@ -6,11 +6,11 @@ using System.Windows.Input;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
-using Nebula.Core.Dialogs;
 using Nebula.Core.Extensions;
 using Nebula.Core.Medias.Playlist;
+using Nebula.Core.UI.Dialogs;
 using Page = ModernWpf.Controls.Page;
-using PlaylistImportDialog = Nebula.Core.Dialogs.PlaylistImportDialog;
+using PlaylistImportDialog = Nebula.Core.UI.Dialogs.PlaylistImportDialog;
 
 namespace Nebula.UI.Pages
 {

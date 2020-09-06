@@ -8,10 +8,10 @@ using System.Windows.Navigation;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
-using Nebula.Core.Dialogs;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Playlist.Playlists;
+using Nebula.Core.UI.Dialogs;
 using Page = ModernWpf.Controls.Page;
 
 namespace Nebula.UI.Pages

@@ -29,6 +29,7 @@ namespace Nebula.Core.Settings
         public              GeneralSettingsGroup    General     { get; set; } = new GeneralSettingsGroup();
         public              PrivacySettingsGroup    Privacy     { get; set; } = new PrivacySettingsGroup();
         public              AppearanceSettingsGroup Appearance  { get; set; } = new AppearanceSettingsGroup();
+        public              ServerSettingsGroup     Server      { get; set; } = new ServerSettingsGroup();
         public              UserProfileSettings     UserProfile { get; set; } = new UserProfileSettings();
 
         public void OnSettingsLoaded()
@@ -37,6 +38,10 @@ namespace Nebula.Core.Settings
             Privacy.SettingsChanged += OnSettingsChanged;
             Appearance.SettingsChanged += OnSettingsChanged;
             UserProfile.SettingsChanged += OnSettingsChanged;
+            Server.SettingsChanged += OnSettingsChanged;
+            General.OnSettingsLoaded();
+            Server.OnSettingsLoaded();
+            UserProfile.OnSettingsLoaded();
         }
 
         private void OnSettingsChanged(object sender, EventArgs e)

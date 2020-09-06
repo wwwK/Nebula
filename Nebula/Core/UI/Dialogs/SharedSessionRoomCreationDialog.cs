@@ -4,7 +4,7 @@ using Nebula.Core.UI.Content;
 using Nebula.Core.UI.Content.Attributes;
 using Nebula.Net.Packets.C2S;
 
-namespace Nebula.Core.Dialogs
+namespace Nebula.Core.UI.Dialogs
 {
     public class SharedSessionRoomCreationDialog : DialogDataContent
     {
@@ -17,13 +17,13 @@ namespace Nebula.Core.Dialogs
             Cache.PrepareFor(this);
         }
 
-        [DataProperty(typeof(TextBox), "TextProperty", "SharedSessionRoomName")]
+        [DataProperty(typeof(TextBox), "SharedSessionRoomName")]
         public string RoomName { get; set; }
 
-        [DataProperty(typeof(TextBox), "TextProperty", "SharedSessionRoomPassword")]
+        [DataProperty(typeof(TextBox), "SharedSessionRoomPassword")]
         public string RoomPassword { get; set; }
 
-        [DataProperty(typeof(NumberBox), "ValueProperty", "SharedSessionRoomSize")]
+        [DataProperty(typeof(NumberBox), "SharedSessionRoomSize", args: new object[] {1, 2, 20})]
         public int MaxUsers { get; set; }
 
         public override DataContentCache GetCache()

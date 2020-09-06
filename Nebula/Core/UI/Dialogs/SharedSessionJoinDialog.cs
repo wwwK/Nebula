@@ -2,7 +2,7 @@
 using Nebula.Core.UI.Content;
 using Nebula.Core.UI.Content.Attributes;
 
-namespace Nebula.Core.Dialogs
+namespace Nebula.Core.UI.Dialogs
 {
     public class SharedSessionJoinDialog : DialogDataContent
     {
@@ -15,7 +15,7 @@ namespace Nebula.Core.Dialogs
             Cache.PrepareFor(this);
         }
 
-        [DataProperty(typeof(TextBox), "TextProperty", "SharedSessionRoomPassword")]
+        [DataProperty(typeof(TextBox), "SharedSessionRoomPassword")]
         public string RoomPassword { get; set; }
 
 

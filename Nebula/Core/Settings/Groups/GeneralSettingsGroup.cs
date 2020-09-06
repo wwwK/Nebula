@@ -1,50 +1,29 @@
 ﻿using System;
-using System.Text.Json.Serialization;
-using System.Xml;
-using EasySharp.Reflection;
-using EasySharp.Reflection.Fast;
-using Nebula.Core.Extensions;
+using System.Windows.Controls;
+using ModernWpf.Controls;
+using Nebula.Core.UI.Content;
+using Nebula.Core.UI.Content.Attributes;
 
 namespace Nebula.Core.Settings.Groups
 {
-    public class GeneralSettingsGroup : ISettingsGroup
+    public class GeneralSettingsGroup : SimplePanelDataContent, ISettingsGroup
     {
-        private int    _searchMaxPages            = 1;
-        private int    _mediaKeySoundIncDecValue  = 5;
-        private int    _defaultSoundLevel         = 50;
-        private int    _playlistMaxMediasPerPages = 25;
-        private int    _serverPort                = 9080;
-        private bool   _mediaKeyEnabled           = true;
-        private bool   _connectCustomServer       = false;
-        private string _serverIp                  = "127.0.0.1";
-        private string _serverConnKey             = "";
+        private static readonly DataContentCache Cache = DataContentCache.BuildCache<GeneralSettingsGroup>();
+
+        private int  _searchMaxPages            = 1;
+        private int  _mediaKeySoundIncDecValue  = 5;
+        private int  _defaultSoundLevel         = 50;
+        private int  _playlistMaxMediasPerPages = 25;
+        private bool _mediaKeyEnabled           = true;
 
         public GeneralSettingsGroup()
         {
         }
 
-        public string GroupName { get; } = "General";
+        public string             GroupName { get; } = "General";
+        public event EventHandler SettingsChanged;
 
-        public bool MediaKeyEnabled
-        {
-            get => _mediaKeyEnabled;
-            set
-            {
-                _mediaKeyEnabled = value;
-                SettingsChanged?.Invoke(this, new EventArgs());
-            }
-        }
-
-        public int MediaKeySoundIncDecValue
-        {
-            get => _mediaKeySoundIncDecValue;
-            set
-            {
-                _mediaKeySoundIncDecValue = value;
-                SettingsChanged?.Invoke(this, new EventArgs());
-            }
-        }
-
+        [DataProperty(typeof(NumberBox), "SettingsDefaultSoundLevel", args: new object[] {1, 0, 100})]
         public int DefaultSoundLevel
         {
             get => _defaultSoundLevel;
@@ -55,6 +34,8 @@ namespace Nebula.Core.Settings.Groups
             }
         }
 
+        [DataCategory("Search")]
+        [DataProperty(typeof(NumberBox), "SettingsSearchMaxPages", args: new object[] {1, 1, 50})]
         public int SearchMaxPages
         {
             get => _searchMaxPages;
@@ -65,6 +46,8 @@ namespace Nebula.Core.Settings.Groups
             }
         }
 
+        [DataCategory("Playlists")]
+        [DataProperty(typeof(NumberBox), "SettingsMaxElementsPerPage", args: new object[] {1, 1, 100})]
         public int PlaylistMaxMediasPerPage
         {
             get => _playlistMaxMediasPerPages;
@@ -75,46 +58,37 @@ namespace Nebula.Core.Settings.Groups
             }
         }
 
-        public bool ConnectToCustomServer
+        [DataCategory("Keyboard")]
+        [DataProperty(typeof(CheckBox), "SettingsKeyboardMediaEnable")]
+        public bool MediaKeyEnabled
         {
-            get => _connectCustomServer;
+            get => _mediaKeyEnabled;
             set
             {
-                _connectCustomServer = value;
+                _mediaKeyEnabled = value;
                 SettingsChanged?.Invoke(this, new EventArgs());
             }
         }
 
-        public string ServerIp
+        [DataProperty(typeof(NumberBox), "SettingsKeyboardMediaSoundIncDecValue", args: new object[] {1, 1, 100})]
+        public int MediaKeySoundIncDecValue
         {
-            get => _serverIp;
+            get => _mediaKeySoundIncDecValue;
             set
             {
-                _serverIp = value;
+                _mediaKeySoundIncDecValue = value;
                 SettingsChanged?.Invoke(this, new EventArgs());
             }
         }
 
-        public int ServerPort
+        public override DataContentCache GetCache()
         {
-            get => _serverPort;
-            set
-            {
-                _serverPort = value;
-                SettingsChanged?.Invoke(this, new EventArgs());
-            }
+            return Cache;
         }
 
-        public string ServerConnectionKey
+        public void OnSettingsLoaded()
         {
-            get => _serverConnKey;
-            set
-            {
-                _serverConnKey = value;
-                SettingsChanged?.Invoke(this, new EventArgs());
-            }
+            Cache.PrepareFor(this);
         }
-
-        public event EventHandler SettingsChanged;
     }
 }

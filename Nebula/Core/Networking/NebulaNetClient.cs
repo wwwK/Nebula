@@ -38,9 +38,9 @@ namespace Nebula.Core.Networking
             if (IsConnected)
                 return;
             NetManager.Start();
-            if (NebulaClient.Settings.General.ConnectToCustomServer)
-                NetManager.Connect(NebulaClient.Settings.General.ServerIp, NebulaClient.Settings.General.ServerPort,
-                    NebulaClient.Settings.General.ServerConnectionKey);
+            if (NebulaClient.Settings.Server.ConnectToCustomServer)
+                NetManager.Connect(NebulaClient.Settings.Server.ServerIp, NebulaClient.Settings.Server.ServerPort,
+                    NebulaClient.Settings.Server.ServerConnectionKey);
             else
                 NetManager.Connect(OfficialIp, OfficialPort, string.Empty);
         }

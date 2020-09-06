@@ -5,7 +5,7 @@ using Nebula.Core.UI.Content;
 using Nebula.Core.UI.Content.Attributes;
 using Nebula.UI.Controls;
 
-namespace Nebula.Core.Dialogs
+namespace Nebula.Core.UI.Dialogs
 {
     public class PlaylistImportDialog : DialogDataContent
     {
@@ -18,7 +18,7 @@ namespace Nebula.Core.Dialogs
             Cache.PrepareFor(this);
         }
 
-        [DataProperty(typeof(PathSelectorControl), "TextProperty", "PlaylistPathUrl", args: new object[] {"Playlist files (*.playlist) | *.playlist"})]
+        [DataProperty(typeof(PathSelectorControl), "PlaylistPathUrl", args: new object[] {"Playlist files (*.playlist) | *.playlist"})]
         public string Path { get; set; }
 
         public override async void OnPrimaryClick()

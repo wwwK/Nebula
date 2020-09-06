@@ -4,6 +4,7 @@ using System.Windows.Navigation;
 using ModernWpf.Media.Animation;
 using Nebula.Core;
 using Nebula.Core.Settings;
+using Nebula.Core.UI.Content;
 using Nebula.UI.Pages.Settings;
 using Page = ModernWpf.Controls.Page;
 
@@ -19,28 +20,39 @@ namespace Nebula.UI.Pages
         private void NavigateTo(string pageTag)
         {
             string[] split = pageTag.Split('>');
-            switch (split[0])
+
+            SimplePanelDataContent dataContent = split[0] switch
             {
-                case "GENERAL":
-                    SettingsNavFrame.Navigate(typeof(GeneralPage), null,
-                        new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft});
-                    break;
-                case "PROFILE":
-                    SettingsNavFrame.Navigate(typeof(ProfilePage), null,
-                        new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft});
-                    break;
-                case "APPEARANCE":
-                    SettingsNavFrame.Navigate(typeof(AppearancePage), null,
-                        new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft});
-                    break;
-                case "PRIVACY":
-                    SettingsNavFrame.Navigate(typeof(PrivacyPage), null,
-                        new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft});
-                    break;
-                case "ABOUT":
-                    SettingsNavFrame.Navigate(typeof(AboutPage), split.Length == 2 ? split[1] : null,
-                        new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft});
-                    break;
+                "GENERAL"    => NebulaClient.Settings.General,
+                "SERVER"     => NebulaClient.Settings.Server,
+                "PROFILE"    => NebulaClient.Settings.UserProfile,
+                "APPEARANCE" => null,
+                "PRIVACY"    => null,
+                _            => null
+            };
+
+            if (dataContent != null)
+            {
+                SettingsNavFrame.Navigate(typeof(NebulaPage), dataContent,
+                    new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft});
+            }
+            else
+            {
+                switch (split[0])
+                {
+                    case "APPEARANCE":
+                        SettingsNavFrame.Navigate(typeof(AppearancePage),
+                            new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft});
+                        break;
+                    case "PRIVACY":
+                        SettingsNavFrame.Navigate(typeof(PrivacyPage),
+                            new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft});
+                        break;
+                    case "ABOUT":
+                        SettingsNavFrame.Navigate(typeof(AboutPage),
+                            new SlideNavigationTransitionInfo {Effect = SlideNavigationTransitionEffect.FromLeft});
+                        break;
+                }
             }
 
             Header.Text = (MenuListView.SelectedItem as ListViewItem)?.Content.ToString();
@@ -52,6 +64,12 @@ namespace Nebula.UI.Pages
 
             if (e.ExtraData is string page)
                 NavigateTo(page);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            SettingsNavFrame.Content = null;
         }
 
         private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -11,5 +11,10 @@ namespace Nebula.Core.Settings
         string GroupName { get; }
 
         event EventHandler SettingsChanged;
+
+        public void OnSettingsLoaded()
+        {
+            
+        }
     }
 }

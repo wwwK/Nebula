@@ -6,7 +6,7 @@ using Nebula.Core.UI.Content.Attributes;
 using Nebula.UI.Controls;
 using Nebula.UI.Pages;
 
-namespace Nebula.Core.Dialogs
+namespace Nebula.Core.UI.Dialogs
 {
     public class PlaylistEditDialog : DialogDataContent
     {
@@ -27,16 +27,16 @@ namespace Nebula.Core.Dialogs
 
         public IPlaylist Playlist { get; }
 
-        [DataProperty(typeof(TextBox), "TextProperty", "Name")]
+        [DataProperty(typeof(TextBox), "Name")]
         public string Name { get; set; }
 
-        [DataProperty(typeof(TextBox), "TextProperty", "Description")]
+        [DataProperty(typeof(TextBox), "Description")]
         public string Description { get; set; }
 
-        [DataProperty(typeof(TextBox), "TextProperty", "Author")]
+        [DataProperty(typeof(TextBox), "Author")]
         public string Author { get; set; }
 
-        [DataProperty(typeof(PathSelectorControl), "TextProperty", "Thumbnail")]
+        [DataProperty(typeof(PathSelectorControl), "Thumbnail")]
         public string Thumbnail { get; set; }
 
         public override DataContentCache GetCache()

@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using ModernWpf.Controls.Primitives;
-using Nebula.Core.Extensions;
 using Nebula.Core.UI.Content.Attributes;
 using Nebula.Core.UI.Content.Controls;
+using Nebula.Core.UI.Content.Controls.Handlers;
 
 namespace Nebula.Core.UI.Content
 {
@@ -18,7 +16,15 @@ namespace Nebula.Core.UI.Content
         private static readonly BindingFlags PropertyBindingFlags =
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty | BindingFlags.SetProperty;
 
-        private static readonly BindingFlags FieldBindingFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.Default;
+        private static readonly Dictionary<Type, IControlCacheHandler> ControlCacheHandlers = new Dictionary<Type, IControlCacheHandler>();
+        private static readonly BaseControlHandler                     BaseControlHandler   = new BaseControlHandler();
+
+        static DataContentCache()
+        {
+            RegisterControlHandler(new TextBoxHandler());
+            RegisterControlHandler(new CheckBoxHandler());
+            RegisterControlHandler(new NumberBoxHandler());
+        }
 
         public DataContentCache(Type type)
         {
@@ -58,6 +64,13 @@ namespace Nebula.Core.UI.Content
             }
         }
 
+        public static void RegisterControlHandler(IControlCacheHandler cacheHandler)
+        {
+            if (ControlCacheHandlers.ContainsKey(cacheHandler.ControlType))
+                return;
+            ControlCacheHandlers.Add(cacheHandler.ControlType, cacheHandler);
+        }
+
         public static DataContentCache BuildCache<T>()
         {
             return BuildCache(typeof(T));
@@ -83,39 +96,10 @@ namespace Nebula.Core.UI.Content
                 DataCategory dataCategory = propertyInfo.GetCustomAttribute<DataCategory>();
                 if (dataCategory != null)
                     dataContentCache.AddElement(new TextBlock {Text = NebulaClient.GetLocString(dataCategory.Category), FontSize = 24});
-                DependencyProperty dependencyProperty;
-                if (frameworkElement is IDataControlsContainer dataBindable)
-                {
-                    FrameworkElement bindableElement = dataBindable.GetBindableElement();
-                    bindableElement.Tag = dataProperty.Tag;
-                    if (!string.IsNullOrWhiteSpace(dataProperty.ToolTipKey))
-                        bindableElement.ToolTip = NebulaClient.GetLocString(dataProperty.ToolTipKey);
-                    if (bindableElement is Control control)
-                    {
-                        ControlHelper.SetHeader(control, NebulaClient.GetLocString(dataProperty.HeaderKey));
-                        ControlHelper.SetPlaceholderText(control, NebulaClient.GetLocString(dataProperty.PlaceholderKey));
-                        ControlHelper.SetDescription(control, NebulaClient.GetLocString(dataProperty.DescriptionKey));
-                    }
-
-                    dependencyProperty =
-                        bindableElement.GetType().GetField(dataProperty.DependencyProperty, FieldBindingFlags)?.GetValue(bindableElement) as DependencyProperty;
-                }
-                else
-                {
-                    frameworkElement.Tag = dataProperty.Tag;
-                    if (!string.IsNullOrWhiteSpace(dataProperty.ToolTipKey))
-                        frameworkElement.ToolTip = NebulaClient.GetLocString(dataProperty.ToolTipKey);
-                    if (frameworkElement is Control control)
-                    {
-                        ControlHelper.SetHeader(control, NebulaClient.GetLocString(dataProperty.HeaderKey));
-                        ControlHelper.SetPlaceholderText(control, NebulaClient.GetLocString(dataProperty.PlaceholderKey));
-                        ControlHelper.SetDescription(control, NebulaClient.GetLocString(dataProperty.DescriptionKey));
-                    }
-
-                    dependencyProperty =
-                        frameworkElement.GetType().GetField(dataProperty.DependencyProperty, FieldBindingFlags)?.GetValue(frameworkElement) as DependencyProperty;
-                }
-
+                DependencyProperty dependencyProperty = null;
+                BaseControlHandler.HandleControl(frameworkElement, propertyInfo, dataCategory, dataProperty, ref dependencyProperty);
+                if (ControlCacheHandlers.ContainsKey(dataProperty.ControlType))
+                    ControlCacheHandlers[dataProperty.ControlType].HandleControl(frameworkElement, propertyInfo, dataCategory, dataProperty, ref dependencyProperty);
                 dataContentCache.AddElement(frameworkElement, dependencyProperty, propertyInfo);
             }
 

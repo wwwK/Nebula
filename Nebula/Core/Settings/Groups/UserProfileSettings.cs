@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Windows.Controls;
+using Nebula.Core.UI.Content;
+using Nebula.Core.UI.Content.Attributes;
 
 namespace Nebula.Core.Settings.Groups
 {
-    public class UserProfileSettings : ISettingsGroup
+    public class UserProfileSettings : SimplePanelDataContent, ISettingsGroup
     {
+        private static readonly DataContentCache Cache = DataContentCache.BuildCache<UserProfileSettings>();
+
         private string _username = "NebulaUser";
         private string _avatar   = "";
 
@@ -11,8 +16,10 @@ namespace Nebula.Core.Settings.Groups
         {
         }
 
-        public string GroupName { get; } = "UserProfile";
+        public string             GroupName { get; } = "UserProfile";
+        public event EventHandler SettingsChanged;
 
+        [DataProperty(typeof(TextBox), "Username")]
         public string Username
         {
             get => _username;
@@ -23,6 +30,7 @@ namespace Nebula.Core.Settings.Groups
             }
         }
 
+        [DataProperty(typeof(TextBox), "ProfileAvatar")]
         public string Avatar
         {
             get => _avatar;
@@ -35,6 +43,14 @@ namespace Nebula.Core.Settings.Groups
             }
         }
 
-        public event EventHandler SettingsChanged;
+        public override DataContentCache GetCache()
+        {
+            return Cache;
+        }
+
+        public void OnSettingsLoaded()
+        {
+            Cache.PrepareFor(this);
+        }
     }
 }

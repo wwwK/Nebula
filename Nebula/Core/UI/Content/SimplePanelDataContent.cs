@@ -1,12 +1,16 @@
-﻿namespace Nebula.Core.UI.Content
+﻿using System;
+using System.Text.Json.Serialization;
+
+namespace Nebula.Core.UI.Content
 {
     public class SimplePanelDataContent : BaseDataContent
     {
-        public int Spacing { get; set; } = 10;
+        [JsonIgnore] public int Spacing  { get; set; } = 10;
+        [JsonIgnore] public int MaxWidth { get; set; } = -1;
 
         public override DataContentCache GetCache()
         {
-            return null;
+            throw new NotImplementedException();
         }
     }
 }

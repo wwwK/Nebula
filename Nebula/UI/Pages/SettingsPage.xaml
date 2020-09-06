@@ -13,6 +13,7 @@
                   SelectionChanged="OnSelectionChanged">
             <ListView.Items>
                 <ListViewItem Content="{x:Static resx:nebula.General}" Tag="GENERAL" />
+                <ListViewItem Content="{x:Static resx:nebula.Server}" Tag="SERVER" />
                 <ListViewItem Content="{x:Static resx:nebula.Profile}" Tag="PROFILE" />
                 <ListViewItem Content="{x:Static resx:nebula.Appearance}" Tag="APPEARANCE" />
                 <ListViewItem Content="{x:Static resx:nebula.Privacy}" Tag="PRIVACY" />

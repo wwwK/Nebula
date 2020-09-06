@@ -4,11 +4,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using ModernWpf.Controls;
 using Nebula.Core;
-using Nebula.Core.Dialogs;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Events;
 using Nebula.Core.Medias.Playlist;
-using PlaylistEditDialog = Nebula.Core.Dialogs.PlaylistEditDialog;
+using Nebula.Core.UI.Dialogs;
+using PlaylistEditDialog = Nebula.Core.UI.Dialogs.PlaylistEditDialog;
 
 namespace Nebula.UI.Pages
 {
