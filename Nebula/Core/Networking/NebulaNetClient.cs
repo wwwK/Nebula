@@ -1,7 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using LiteNetLib;
 using Nebula.Core.Medias;
 using Nebula.Core.Medias.Provider;
+using Nebula.Core.Networking.Events;
 using Nebula.Core.SharedSessions;
 using Nebula.Net;
 using Nebula.Net.Packets;
@@ -13,6 +15,9 @@ namespace Nebula.Core.Networking
 {
     public class NebulaNetClient : BaseNetManager
     {
+        private const string OfficialIp   = "40.68.246.138";
+        private const int    OfficialPort = 9080;
+
         public NebulaNetClient()
         {
             PacketProcessor.SubscribeReusable<SharedSessionPlayMediaPacket, NetPeer>(OnReceivePlayMediaPacket);
@@ -25,12 +30,19 @@ namespace Nebula.Core.Networking
         private NetPeer ServerPeer  { get; set; }
         public  bool    IsConnected => ServerPeer != null;
 
+        public event EventHandler<ConnectedToServerEventArgs>      Connected;
+        public event EventHandler<DisconnectedFromServerEventArgs> Disconnected;
+
         public void Connect()
         {
             if (IsConnected)
                 return;
             NetManager.Start();
-            NetManager.Connect(NebulaClient.Settings.General.ServerIp, NebulaClient.Settings.General.ServerPort, "");
+            if (NebulaClient.Settings.General.ConnectToCustomServer)
+                NetManager.Connect(NebulaClient.Settings.General.ServerIp, NebulaClient.Settings.General.ServerPort,
+                    NebulaClient.Settings.General.ServerConnectionKey);
+            else
+                NetManager.Connect(OfficialIp, OfficialPort, string.Empty);
         }
 
         public void Disconnect()
@@ -60,6 +72,8 @@ namespace Nebula.Core.Networking
                     AvatarUrl = NebulaClient.Settings.UserProfile.Avatar,
                 }
             });
+            if (Connected != null)
+                NebulaClient.Invoke(() => Connected.Invoke(this, new ConnectedToServerEventArgs(peer)));
         }
 
         public override void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
@@ -68,6 +82,7 @@ namespace Nebula.Core.Networking
             NebulaClient.BeginInvoke(() =>
             {
                 NebulaClient.Notifications.NotifyOk("", "ServerConnectionLost", "#ff0000");
+                Disconnected?.Invoke(this, new DisconnectedFromServerEventArgs(peer, disconnectInfo));
                 if (!NebulaClient.SharedSession.IsSessionActive)
                     return;
                 NebulaClient.SharedSession.Leave();

@@ -303,4 +303,10 @@
     <data name="SharedSessionMessageUserLeft" xml:space="preserve">
         <value>A quitté le salon.</value>
     </data>
+    <data name="SettingsServerConnectPrivate" xml:space="preserve">
+        <value>Se connecter a un serveur privé</value>
+    </data>
+    <data name="SettingsServerConnectionKey" xml:space="preserve">
+        <value>Clé de connexion</value>
+    </data>
 </root>

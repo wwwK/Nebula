@@ -306,4 +306,10 @@
     <data name="SharedSessionMessageUserLeft" xml:space="preserve">
         <value>Left session.</value>
     </data>
+    <data name="SettingsServerConnectPrivate" xml:space="preserve">
+        <value>Connect to a private server</value>
+    </data>
+    <data name="SettingsServerConnectionKey" xml:space="preserve">
+        <value>Connection Key</value>
+    </data>
 </root>

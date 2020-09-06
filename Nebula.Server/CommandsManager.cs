@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nebula.Net.Packets.S2C;
 using Nebula.Server.Commands;
 using Nebula.Server.Extensions;
@@ -58,14 +59,6 @@ namespace Nebula.Server
                 ServerApp.Server.SendPacket(new CommandUsagePacket {CommandPrefix = command.CommandPrefix, CommandUsage = command.Usage}, user.Peer);
         }
 
-        public void HandleConsoleCommands()
-        {
-            string value = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(value))
-                ExecuteCommands(ServerApp.Server.ServerUser, value.Replace("Server > ", "").SplitWithoutQuotes());
-            HandleConsoleCommands();
-        }
-
         private void CopyArray(string[] source, string[] destination, int startIndex)
         {
             if (startIndex > source.Length || startIndex < 0)
@@ -77,6 +70,20 @@ namespace Nebula.Server
                     break;
                 destination[i] = source[index++];
             }
+        }
+
+        public static void HandleConsoleCommands()
+        {
+            if (!IsUnix)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+                Console.Write("Server > ");
+            }
+
+            string value = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(value))
+                ServerApp.Server.CommandsManager.ExecuteCommands(ServerApp.Server.ServerUser, value.Replace("Server > ", "").SplitWithoutQuotes());
+            HandleConsoleCommands();
         }
     }
 }

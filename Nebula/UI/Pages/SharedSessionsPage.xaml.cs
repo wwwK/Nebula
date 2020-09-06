@@ -5,6 +5,7 @@ using System.Windows.Navigation;
 using LiteNetLib;
 using Nebula.Core;
 using Nebula.Core.Dialogs;
+using Nebula.Core.Networking.Events;
 using Nebula.Net.Packets;
 using Nebula.Net.Packets.C2S;
 using Nebula.Net.Packets.S2C;
@@ -23,14 +24,23 @@ namespace Nebula.UI.Pages
         {
             base.OnNavigatedTo(e);
             NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionsPollResponse, NetPeer>(OnReceiveSharedSessions);
+            NebulaClient.Network.Connected += OnNetworkConnected;
             if (!NebulaClient.Network.IsConnected)
+            {
                 NebulaClient.Network.Connect();
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
             NebulaClient.Network.PacketProcessor.RemoveSubscription<SharedSessionsPollResponse>();
+            NebulaClient.Network.Connected -= OnNetworkConnected;
+        }
+
+        private void OnNetworkConnected(object sender, ConnectedToServerEventArgs e)
+        {
+            NebulaClient.Network.SendPacket(new SharedSessionsPollRequest());
         }
 
         private void OnRefreshClick(object sender, RoutedEventArgs e)

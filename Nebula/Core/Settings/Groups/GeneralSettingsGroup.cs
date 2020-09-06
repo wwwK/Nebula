@@ -15,7 +15,9 @@ namespace Nebula.Core.Settings.Groups
         private int    _playlistMaxMediasPerPages = 25;
         private int    _serverPort                = 9080;
         private bool   _mediaKeyEnabled           = true;
+        private bool   _connectCustomServer       = false;
         private string _serverIp                  = "127.0.0.1";
+        private string _serverConnKey             = "";
 
         public GeneralSettingsGroup()
         {
@@ -73,6 +75,16 @@ namespace Nebula.Core.Settings.Groups
             }
         }
 
+        public bool ConnectToCustomServer
+        {
+            get => _connectCustomServer;
+            set
+            {
+                _connectCustomServer = value;
+                SettingsChanged?.Invoke(this, new EventArgs());
+            }
+        }
+
         public string ServerIp
         {
             get => _serverIp;
@@ -89,6 +101,16 @@ namespace Nebula.Core.Settings.Groups
             set
             {
                 _serverPort = value;
+                SettingsChanged?.Invoke(this, new EventArgs());
+            }
+        }
+
+        public string ServerConnectionKey
+        {
+            get => _serverConnKey;
+            set
+            {
+                _serverConnKey = value;
                 SettingsChanged?.Invoke(this, new EventArgs());
             }
         }

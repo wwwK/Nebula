@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Nebula.Net;
@@ -32,10 +34,22 @@ namespace Nebula.Server
         public  int                         MaximumUserBadPackets { get; } = 100;
         public  string                      ServerKey             { get; } = String.Empty;
 
+        private void PollEvents()
+        {
+            while (NetManager.IsRunning)
+            {
+                NetManager.PollEvents();
+                Thread.Sleep(15);
+            }
+        }
+
         public event EventHandler<UserDisconnectedEventArgs> UserDisconnected;
 
         public void StartServer(int port = 9080)
         {
+            WriteLine(
+                $"OS {Environment.OSVersion.Platform.ToString()}-{(Environment.Is64BitOperatingSystem ? "x64" : "x32")} Version {Environment.OSVersion.Version}",
+                ConsoleColor.Yellow);
             WriteLine("Starting Server...", ConsoleColor.Yellow);
             if (NetManager.Start(IPAddress.Any, IPAddress.IPv6Any, port))
                 WriteLine($"Server started ! Listening on port {NetManager.LocalPort}", ConsoleColor.Green);

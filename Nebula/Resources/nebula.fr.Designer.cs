@@ -673,6 +673,24 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clé de connexion.
+        /// </summary>
+        public static string SettingsServerConnectionKey {
+            get {
+                return ResourceManager.GetString("SettingsServerConnectionKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Se connecter a un serveur privé.
+        /// </summary>
+        public static string SettingsServerConnectPrivate {
+            get {
+                return ResourceManager.GetString("SettingsServerConnectPrivate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IP du Serveur.
         /// </summary>
         public static string SettingsServerIp {
