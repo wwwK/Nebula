@@ -22,6 +22,7 @@ namespace Nebula.Core.UI.Content
         static DataContentCache()
         {
             RegisterControlHandler(new TextBoxHandler());
+            RegisterControlHandler(new TextBlockHandler());
             RegisterControlHandler(new CheckBoxHandler());
             RegisterControlHandler(new NumberBoxHandler());
         }

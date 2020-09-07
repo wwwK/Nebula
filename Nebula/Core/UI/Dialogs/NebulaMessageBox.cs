@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using ModernWpf.Controls;
 using Nebula.Core.UI.Content;
@@ -19,8 +20,7 @@ namespace Nebula.Core.UI.Dialogs
             Cache.PrepareFor(this);
         }
 
-        [DataProperty(typeof(TextBlock))]
-        public string Content { get; }
+        [DataProperty(typeof(TextBlock))] public string Content { get; }
 
         public override DataContentCache GetCache()
         {
