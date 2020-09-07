@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows;
 using CSCore;
 using CSCore.Codecs;
 using CSCore.SoundOut;
@@ -135,6 +136,8 @@ namespace Nebula.Core.Medias.Player
             MediaChanging?.Invoke(this, mediaChangingEvent);
             if (mediaChangingEvent.Cancel)
                 return;
+            MessageBox.Show(
+                $"Shared: {NebulaClient.SharedSession.IsSessionActive}{Environment.NewLine}Manual: {_manualStop}{Environment.NewLine}Server: {fromServer}");
             if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
             {
                 NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket
@@ -197,7 +200,7 @@ namespace Nebula.Core.Medias.Player
         /// <param name="manualStop">Is this a user manual stop</param>
         public void Forward(bool manualStop = false, bool fromServer = false)
         {
-            OpenMedia(Queue.Dequeue(Shuffle), manualStop, fromServer);
+            OpenMedia(Queue.Dequeue(Shuffle), manualStop, true, fromServer);
         }
 
         /// <summary>
