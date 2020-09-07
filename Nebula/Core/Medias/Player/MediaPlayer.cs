@@ -197,7 +197,7 @@ namespace Nebula.Core.Medias.Player
         /// <param name="manualStop">Is this a user manual stop</param>
         public void Forward(bool manualStop = false, bool fromServer = false)
         {
-            OpenMedia(Queue.Dequeue(Shuffle), manualStop, fromServer);
+            OpenMedia(Queue.Dequeue(Shuffle), manualStop, true, fromServer);
         }
 
         /// <summary>
