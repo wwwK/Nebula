@@ -309,4 +309,13 @@
     <data name="SettingsServerConnectionKey" xml:space="preserve">
         <value>Clé de connexion</value>
     </data>
+    <data name="ErrorCantOpenMedia" xml:space="preserve">
+        <value>L'ouverture du média a échoué.</value>
+    </data>
+    <data name="Error" xml:space="preserve">
+        <value>Erreur</value>
+    </data>
+    <data name="PlayVideo" xml:space="preserve">
+        <value>Lire la vidéo</value>
+    </data>
 </root>

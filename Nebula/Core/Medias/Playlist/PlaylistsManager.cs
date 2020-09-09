@@ -179,8 +179,8 @@ namespace Nebula.Core.Medias.Playlist
 
         private void OnPlaylistMediaAdded(object sender, PlaylistMediaAddedEventArgs e)
         {
-            if (NebulaClient.MediaPlayer.CurrentPlaylist == e.Playlist && !NebulaClient.MediaPlayer.Queue.IsEmpty)
-                NebulaClient.MediaPlayer.Queue.Enqueue(e.AddedMedia);
+            if (NebulaClient.MediaPlayer.CurrentPlaylist == e.Playlist && !NebulaClient.MediaPlayer.MediaQueue.IsEmpty)
+                NebulaClient.MediaPlayer.MediaQueue.Enqueue(e.AddedMedia);
         }
     }
 }

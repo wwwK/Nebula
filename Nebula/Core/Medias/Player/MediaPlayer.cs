@@ -1,49 +1,85 @@
 ﻿using System;
-using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
-using CSCore;
-using CSCore.Codecs;
-using CSCore.SoundOut;
-using Nebula.Core.Events;
+using System.Windows;
+using System.Windows.Media;
 using Nebula.Core.Medias.Player.Events;
 using Nebula.Core.Medias.Playlist;
+using Nebula.Core.Medias.Provider;
+using Nebula.Core.Networking;
+using Nebula.Core.SharedSessions;
 using Nebula.Net.Packets.BOTH;
+using Nebula.Net.Packets.C2S;
+using Nebula.Net.Packets.S2C;
+using Unosquare.FFME;
+using Unosquare.FFME.Common;
 
 namespace Nebula.Core.Medias.Player
 {
-    public class MediaPlayer : Component
+    public class MediaPlayer
     {
-        private bool     _repeat;
-        private bool     _muted;
-        private bool     _shuffle;
-        private bool     _manualStop;
-        private int      _volume;
-        private TimeSpan _lastPosition = TimeSpan.Zero;
+        private IMediaInfo _currentMedia;
+        private IPlaylist  _currentPlaylist;
+        private bool       _shuffle;
+        private bool       _repeat;
+        private bool       _stoppedByUSer;
+        private double     _volume;
 
         public MediaPlayer()
         {
-            NebulaClient.Tick += OnNebulaClientTick;
-            _volume = NebulaClient.Settings.General.DefaultSoundLevel;
+            Library.FFmpegDirectory = Path.Combine(NebulaClient.AssemblyDirectory, "ffmpeg", "x64");
+            MediaElement = new MediaElement
+            {
+                Background = new SolidColorBrush(Colors.Black),
+                LoadedBehavior = MediaPlaybackState.Manual,
+                UnloadedBehavior = MediaPlaybackState.Manual,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Visibility = Visibility.Visible,
+                VerticalSyncEnabled = true
+            };
+            MediaElement.MediaReady += OnMediaReady;
+            MediaElement.MediaEnded += OnMediaEnded;
+            MediaElement.MediaFailed += OnMediaFailed;
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionPlayMediaPacket, NebulaNetClient>(OnReceivePlayMediaPacket);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionStartPlayingPacket, NebulaNetClient>(OnReceivePlayPacket);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionPausePacket, NebulaNetClient>(OnReceiveSessionPausePacket);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionResumePacket, NebulaNetClient>(OnReceiveSessionResumePacket);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionPositionChangedPacket, NebulaNetClient>(OnReceiveSessionPositionChangedPacket);
+            Volume = NebulaClient.Settings.General.DefaultSoundLevel;
         }
 
-        public  PlaybackState PlaybackState    => SoundOut?.PlaybackState ?? PlaybackState.Stopped;
-        public  TimeSpan      Length           => WaveSource?.GetLength() ?? TimeSpan.Zero;
-        public  MediaQueue    Queue            { get; } = new MediaQueue();
-        public  IMediaInfo    CurrentMedia     { get; private set; }
-        public  IPlaylist     CurrentPlaylist  { get; private set; }
-        public  bool          IsPaused         { get; private set; }
-        private ISoundOut     SoundOut         { get; set; }
-        private IWaveSource   WaveSource       { get; set; }
-        private int           VolumeBeforeMute { get; set; }
+        public IMediaInfo CurrentMedia
+        {
+            get => _currentMedia;
+            private set
+            {
+                IMediaInfo oldMedia = _currentMedia;
+                _currentMedia = value;
+                MediaChanged?.Invoke(this, new MediaChangedEventArgs(null, oldMedia, value));
+            }
+        }
+
+        public IPlaylist CurrentPlaylist
+        {
+            get => _currentPlaylist;
+            private set
+            {
+                IPlaylist oldPlaylist = _currentPlaylist;
+                _currentPlaylist = value;
+                PlaylistChanged?.Invoke(this, new PlaylistChangedEventArgs(oldPlaylist, value));
+            }
+        }
 
         public bool Repeat
         {
             get => _repeat;
             set
             {
+                if (_repeat == value)
+                    return;
                 _repeat = value;
-                RepeatChanged?.Invoke(this, new PlaybackRepeatChangedEventArgs(value));
+                RepeatChanged?.Invoke(this, new RepeatChangedEventArgs(value));
             }
         }
 
@@ -52,247 +88,304 @@ namespace Nebula.Core.Medias.Player
             get => _shuffle;
             set
             {
+                if (_shuffle == value)
+                    return;
                 _shuffle = value;
-                ShuffleChanged?.Invoke(this, new PlaybackShuffleChangedEventArgs(value));
+                ShuffleChanged?.Invoke(this, new ShuffleChangedEventArgs(value));
             }
         }
 
         public bool IsMuted
         {
-            get => _muted;
+            get => MediaElement.IsMuted;
             set
             {
-                if (value)
-                {
-                    VolumeBeforeMute = Volume;
-                    Volume = 0;
-                }
-                else
-                    Volume = VolumeBeforeMute;
+                if (MediaElement.IsMuted == value)
+                    return;
+                MediaElement.IsMuted = value;
+                MuteChanged?.Invoke(this, new MuteChangedEventArgs(value));
+            }
+        }
 
-                _muted = value;
-                PlaybackMuteChanged?.Invoke(this, new PlaybackMuteChangedEventArgs(value));
+        public double Volume
+        {
+            get => _volume;
+            set
+            {
+                double oldVolume = _volume;
+                _volume = value < 0 ? 0 : value > 100 ? 100 : value;
+                MediaElement.Volume = _volume / 100;
+                VolumeChanged?.Invoke(this, new VolumeChangedEventArgs(oldVolume, value));
             }
         }
 
         public TimeSpan Position
         {
-            get => WaveSource?.GetPosition() ?? TimeSpan.Zero;
-            private set => WaveSource?.SetPosition(value);
+            get => MediaElement.Position;
+            private set => MediaElement.Position = value;
         }
 
-        public int Volume
+        public MediaElement     MediaElement      { get; }
+        public MediaQueue       MediaQueue        { get; }              = new MediaQueue();
+        public MediaPlayerState State             { get; private set; } = MediaPlayerState.Idle;
+        public bool             PlaylistAudioOnly { get; private set; }
+        public bool             IsIdle            => State == MediaPlayerState.Idle;
+        public bool             IsPreparing       => State == MediaPlayerState.Preparing;
+        public bool             IsPaused          => MediaElement.IsPaused;
+        public bool             IsPlaying         => MediaElement.IsPlaying;
+
+        public event EventHandler<StateChangedEventArgs>    StateChanged;
+        public event EventHandler<MediaChangedEventArgs>    MediaChanged;
+        public event EventHandler<PlaylistChangedEventArgs> PlaylistChanged;
+        public event EventHandler<MuteChangedEventArgs>     MuteChanged;
+        public event EventHandler<VolumeChangedEventArgs>   VolumeChanged;
+        public event EventHandler<ShuffleChangedEventArgs>  ShuffleChanged;
+        public event EventHandler<RepeatChangedEventArgs>   RepeatChanged;
+
+        public void Play(bool fromRemote = false)
         {
-            get => _volume;
-            set
+            if (IsPlaying)
+                return;
+            if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
+                return;
+            MediaElement.Play();
+            SetState(MediaPlayerState.Playing);
+        }
+
+        public void Pause(bool fromRemote = false)
+        {
+            if (!IsPlaying)
+                return;
+            if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
             {
-                int oldVolume = _volume;
-                _volume = value < 0 ? 0 : value > 100 ? 100 : value;
-                if (SoundOut != null)
-                    SoundOut.Volume = Math.Min(1.0f, Math.Max(value / 100f, 0f));
-                PlaybackVolumeChanged?.Invoke(this, new PlaybackVolumeChangedEventArgs(oldVolume, Volume));
-            }
-        }
-
-        public event EventHandler<PlaybackVolumeChangedEventArgs>  PlaybackVolumeChanged;
-        public event EventHandler<PlaybackMuteChangedEventArgs>    PlaybackMuteChanged;
-        public event EventHandler<TimeSpan>                        PlaybackPositionChanged;
-        public event EventHandler<PlaybackPausedEventArgs>         PlaybackPaused;
-        public event EventHandler<PlaybackResumedEventArgs>        PlaybackResumed;
-        public event EventHandler<PlaybackRepeatChangedEventArgs>  RepeatChanged;
-        public event EventHandler<PlaybackShuffleChangedEventArgs> ShuffleChanged;
-        public event EventHandler<PlaybackStoppedEventArgs>        PlaybackStopped;
-        public event EventHandler<MediaChangingEventArgs>          MediaChanging;
-        public event EventHandler<MediaChangedEventArgs>           MediaChanged;
-
-        /// <summary>
-        /// Open the specified <see cref="IPlaylist"/>
-        /// </summary>
-        /// <param name="playlist">Playlist to open</param>
-        /// <param name="manualStop">Is this a user manual stop</param>
-        /// <param name="play">Should start playing right after init</param>
-        public void OpenPlaylist(IPlaylist playlist, bool manualStop = false, bool play = true)
-        {
-            if (playlist.MediasCount == 0)
-                return;
-            Queue.Enqueue(playlist);
-            CurrentPlaylist = playlist;
-            OpenMedia(Queue.Dequeue(Shuffle), manualStop, play);
-        }
-
-        /// <summary>
-        /// Open the specified <see cref="IMediaInfo"/>
-        /// </summary>
-        /// <param name="mediaInfo">Media to open</param>
-        /// <param name="manualStop">Is this a user manual stop</param>
-        /// <param name="play">Should start playing right after init</param>
-        /// <returns></returns>
-        public async Task OpenMedia(IMediaInfo mediaInfo, bool manualStop = false, bool play = true, bool fromServer = false)
-        {
-            if (mediaInfo == null)
-                return;
-            MediaChangingEventArgs mediaChangingEvent = new MediaChangingEventArgs(CurrentMedia, mediaInfo);
-            MediaChanging?.Invoke(this, mediaChangingEvent);
-            if (mediaChangingEvent.Cancel)
-                return;
-            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
-            {
-                NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket
-                    {MediaId = mediaInfo.Id, MediaName = mediaInfo.Title, Provider = mediaInfo.GetMediaProvider().Name});
-                _manualStop = false;
-                return;
-            }
-
-            IMediaInfo oldMedia = CurrentMedia;
-            _manualStop = manualStop;
-            Stop();
-            Cleanup();
-            Setup(await mediaInfo.GetAudioStreamUri());
-            CurrentMedia = mediaInfo;
-            MediaChanged?.Invoke(this, new MediaChangedEventArgs(CurrentPlaylist, oldMedia, mediaInfo));
-            if (play && !fromServer)
-                Play();
-            _manualStop = false;
-        }
-
-        /// <summary>
-        /// Play playback.
-        /// </summary>
-        public void Play()
-        {
-            SoundOut?.Play();
-        }
-
-        /// <summary>
-        /// Pause playback.
-        /// </summary>
-        public void Pause(bool fromServer = false)
-        {
-            if (IsPaused)
-                return;
-            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
                 NebulaClient.Network.SendPacket(new SharedSessionPausePacket());
-            SoundOut?.Pause();
-            IsPaused = true;
-            PlaybackPaused?.Invoke(this, new PlaybackPausedEventArgs());
+                return;
+            }
+
+            MediaElement.Pause();
+            SetState(MediaPlayerState.Paused);
         }
 
-        /// <summary>
-        /// Resume playback.
-        /// </summary>
-        public void Resume(bool fromServer = false)
+        public void Resume(bool fromRemote = false)
         {
-            if (!IsPaused)
+            if (IsPlaying)
                 return;
-            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
+            if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
+            {
                 NebulaClient.Network.SendPacket(new SharedSessionResumePacket());
-            SoundOut?.Resume();
-            IsPaused = false;
-            PlaybackResumed?.Invoke(this, new PlaybackResumedEventArgs());
-        }
-
-        /// <summary>
-        /// Play the next queued media.
-        /// </summary>
-        /// <param name="manualStop">Is this a user manual stop</param>
-        public void Forward(bool manualStop = false, bool fromServer = false)
-        {
-            OpenMedia(Queue.Dequeue(Shuffle), manualStop, true, fromServer);
-        }
-
-        /// <summary>
-        /// Play the previous media.
-        /// </summary>
-        /// <param name="manualStop">Is this a user manual stop</param>
-        public void Backward(bool manualStop = false)
-        {
-            OpenMedia(Queue.RewindDequeue(), manualStop);
-        }
-
-        public void SetPosition(double seconds, bool fromServer = false)
-        {
-            if (NebulaClient.SharedSession.IsSessionActive && !fromServer)
-                NebulaClient.Network.SendPacket(new SharedSessionPositionChangedPacket {NewPosition = seconds});
-            Position = TimeSpan.FromSeconds(seconds);
-        }
-
-        /// <summary>
-        /// Stop playback.
-        /// </summary>
-        public void Stop(bool clearQueue = false)
-        {
-            Repeat = false;
-            if (clearQueue)
-                Queue.Clear();
-            SoundOut?.Stop();
-        }
-
-        /// <summary>
-        /// Setup playback.
-        /// </summary>
-        /// <param name="uri">Uri to media</param>
-        private void Setup(Uri uri)
-        {
-            if (uri.ToString().StartsWith("file") && !File.Exists(uri.LocalPath))
                 return;
-            WaveSource = CodecFactory.Instance.GetCodec(uri);
-            SoundOut = new WasapiOut();
-            SoundOut.Initialize(WaveSource);
-            SoundOut.Stopped += OnPlaybackStopped;
-            SoundOut.Volume = Math.Min(1.0f, Math.Max(Volume / 100f, 0f));
+            }
+
+            MediaElement.Play();
+            SetState(MediaPlayerState.Playing);
         }
 
-        /// <summary>
-        /// Perform playback cleanup.
-        /// </summary>
-        private void Cleanup()
+        public void Stop(bool byUser = false)
         {
-            if (SoundOut != null)
-            {
-                //SoundOut.Stopped -= OnPlaybackStopped;
-                SoundOut.Dispose();
-                SoundOut = null;
-            }
-
-            if (WaveSource != null)
-            {
-                WaveSource.Dispose();
-                WaveSource = null;
-            }
+            if (!IsPlaying)
+                return;
+            _stoppedByUSer = byUser;
+            MediaElement.Stop();
+            SetState(MediaPlayerState.Idle);
         }
 
-        private void OnNebulaClientTick(object sender, NebulaAppLoopEventArgs e)
+        public async Task Forward(bool byUser = false)
         {
-            if (WaveSource != null && _lastPosition != WaveSource.GetPosition())
-            {
-                _lastPosition = WaveSource.GetPosition();
-                PlaybackPositionChanged?.Invoke(this, _lastPosition);
-            }
-        }
-
-        private void OnPlaybackStopped(object sender, PlaybackStoppedEventArgs e)
-        {
-            if (Repeat && SoundOut != null && WaveSource != null)
-            {
-                Position = TimeSpan.Zero;
-                Play();
-            }
-            else if (!_manualStop && !Queue.IsEmpty)
-            {
-                Forward();
-            }
+            Stop(byUser);
+            if (PlaylistAudioOnly)
+                await OpenAudioOnly(MediaQueue.Dequeue(Shuffle));
             else
+                await Open(MediaQueue.Dequeue(_shuffle), true);
+        }
+
+        public async Task Backward()
+        {
+        }
+
+        public void SetPosition(double position, bool fromRemote = false)
+        {
+            if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
             {
-                CurrentPlaylist = null;
+                NebulaClient.Network.SendPacket(new SharedSessionPositionChangedPacket {NewPosition = position});
+                return;
             }
 
-            NebulaClient.BeginInvoke(() => PlaybackStopped?.Invoke(this, new PlaybackStoppedEventArgs()));
+            Position = TimeSpan.FromSeconds(position);
         }
 
-        protected override void Dispose(bool disposing)
+        public async Task OpenPlaylist(IPlaylist playlist, bool audioOnly = true)
         {
-            base.Dispose(disposing);
-            Cleanup();
+            if (playlist == null)
+                return;
+            CurrentPlaylist = playlist;
+            PlaylistAudioOnly = audioOnly;
+            MediaQueue.Enqueue(playlist);
+            await (audioOnly ? OpenAudioOnly(MediaQueue.Dequeue(Shuffle), true) : Open(MediaQueue.Dequeue(_shuffle), true));
         }
+
+        public async Task Open(IMediaInfo mediaInfo, bool byUser = false, bool fromRemote = false)
+        {
+            SetState(MediaPlayerState.Preparing);
+            try
+            {
+                Stop(byUser);
+                if (mediaInfo.SupportMuxed)
+                {
+                    if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
+                        NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket {MediaInfo = mediaInfo.AsMediaInfo(), PlayVideo = false});
+                    await MediaElement.Open(await mediaInfo.GetAudioVideoStreamUri());
+                }
+                else
+                {
+                    if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
+                        NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket {MediaInfo = mediaInfo.AsMediaInfo(), PlayVideo = false});
+                    await MediaElement.Open(await mediaInfo.GetAudioVideoStreamUri());
+                    //Todo: find a way to play audio and video together.
+                    //Possibilities:
+                    // - Playing audio at same time with another player 
+                    // - Writing audio data while playing video
+                    // - Merge two streams together via ffmpeg ( don't know if current wrapper lib support that)
+                }
+            }
+            catch
+            {
+                NebulaClient.Notifications.NotifyError("ErrorCantOpenMedia");
+                _stoppedByUSer = false;
+                SetState(MediaPlayerState.Idle);
+                return;
+            }
+
+            CurrentMedia = mediaInfo;
+            Play();
+            SetState(MediaPlayerState.Ready);
+        }
+
+        public async Task OpenAudioOnly(IMediaInfo mediaInfo, bool byUser = true, bool fromRemote = false)
+        {
+            SetState(MediaPlayerState.Preparing);
+            try
+            {
+                if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
+                    NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket {MediaInfo = mediaInfo.AsMediaInfo(), PlayVideo = false});
+                Stop(byUser);
+                await MediaElement.Open(await mediaInfo.GetAudioStreamUri());
+            }
+            catch
+            {
+                NebulaClient.Notifications.NotifyError("ErrorCantOpenMedia");
+                _stoppedByUSer = false;
+                SetState(MediaPlayerState.Idle);
+                return;
+            }
+
+            CurrentMedia = mediaInfo;
+            Play();
+            SetState(MediaPlayerState.Ready);
+        }
+
+        public async Task OpenVideoOnly(IMediaInfo mediaInfo, bool byUser = true, bool fromRemote = false)
+        {
+            SetState(MediaPlayerState.Preparing);
+            try
+            {
+                if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
+                    NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket {MediaInfo = mediaInfo.AsMediaInfo(), PlayVideo = true});
+                Stop(byUser);
+                await MediaElement.Open(await mediaInfo.GetVideoStreamUri());
+            }
+            catch
+            {
+                NebulaClient.Notifications.NotifyError("ErrorCantOpenMedia");
+                _stoppedByUSer = false;
+                SetState(MediaPlayerState.Idle);
+                return;
+            }
+
+            CurrentMedia = mediaInfo;
+            Play();
+            SetState(MediaPlayerState.Ready);
+        }
+
+        private void SetState(MediaPlayerState state)
+        {
+            MediaPlayerState oldState = State;
+            State = state;
+            StateChanged?.Invoke(this, new StateChangedEventArgs(oldState, state));
+        }
+
+        private void OnMediaFailed(object sender, MediaFailedEventArgs e)
+        {
+            NebulaClient.Notifications.NotifyError(e.ErrorException.Message);
+        }
+
+        private void OnMediaReady(object sender, EventArgs e)
+        {
+            MediaElement.Volume = Volume / 100;
+            _stoppedByUSer = false;
+            if (NebulaClient.SharedSession.IsSessionActive)
+                NebulaClient.Network.SendPacket(new SharedSessionPlayReadyPacket());
+        }
+
+        private async void OnMediaEnded(object sender, EventArgs e)
+        {
+            if (!_stoppedByUSer && !MediaQueue.IsEmpty)
+                await Forward();
+        }
+
+        #region Packet Handlers
+
+        private void OnReceivePlayMediaPacket(SharedSessionPlayMediaPacket packet, NebulaNetClient net)
+        {
+            if (!NebulaClient.SharedSession.IsSessionActive)
+                return;
+            NebulaClient.BeginInvoke(async () =>
+            {
+                NebulaClient.SharedSession.AddMessage(new SharedSessionMessage(packet.UserInfo,
+                    NebulaClient.GetLocString("SharedSessionMessagePlayMedia", packet.MediaInfo.Title), "#ffee00"));
+                IMediaProvider provider = NebulaClient.GetMediaProviderByName(packet.MediaInfo.Provider);
+                if (provider == null)
+                {
+                    NebulaClient.Network.Disconnect();
+                    //Todo: Error notification
+                    return;
+                }
+
+                IMediaInfo mediaInfo = await provider.GetMediaInfo(packet.MediaInfo.Id);
+                if (mediaInfo == null)
+                    return;
+                await OpenAudioOnly(mediaInfo, true, true);
+                net.SendPacket(new SharedSessionPlayReadyPacket()); //Todo: maybe move in media player class
+            });
+        }
+
+        private void OnReceivePlayPacket(SharedSessionStartPlayingPacket packet, NebulaNetClient net)
+        {
+            if (!NebulaClient.SharedSession.IsSessionActive)
+                return;
+            NebulaClient.BeginInvoke(() => Play(true));
+        }
+
+        private void OnReceiveSessionPausePacket(SharedSessionPausePacket packet, NebulaNetClient net)
+        {
+            if (!NebulaClient.SharedSession.IsSessionActive)
+                return;
+            NebulaClient.BeginInvoke(() => Pause(true));
+        }
+
+        private void OnReceiveSessionResumePacket(SharedSessionResumePacket packet, NebulaNetClient net)
+        {
+            if (!NebulaClient.SharedSession.IsSessionActive)
+                return;
+            NebulaClient.BeginInvoke(() => Resume(true));
+        }
+
+        private void OnReceiveSessionPositionChangedPacket(SharedSessionPositionChangedPacket packet, NebulaNetClient net)
+        {
+            if (!NebulaClient.SharedSession.IsSessionActive)
+                return;
+            NebulaClient.BeginInvoke(() => SetPosition(packet.NewPosition, true));
+        }
+
+        #endregion
     }
 }

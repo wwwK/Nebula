@@ -18,10 +18,17 @@ namespace Nebula.Core.Notifications
                                 .AnimationOutDuration(0.25)
                                 .Accent(accentColor)
                                 .Background("#333")
-                                .HasBadge(string.IsNullOrWhiteSpace(badgeKey) ? NebulaClient.GetLocString("NotificationsBadgeInfo") : badgeKey)
+                                .HasBadge(string.IsNullOrWhiteSpace(badgeKey)
+                                    ? NebulaClient.GetLocString("NotificationsBadgeInfo")
+                                    : NebulaClient.GetLocString(badgeKey))
                                 .HasMessage(NebulaClient.GetLocString(contentKey, args))
                                 .Dismiss().WithButton(NebulaClient.GetLocString("ButtonOk"), button => { })
                                 .Queue();
+        }
+
+        public void NotifyError(string contentKey, params object[] args)
+        {
+            NotifyOk("Error", contentKey, "#ff0000", args);
         }
     }
 }

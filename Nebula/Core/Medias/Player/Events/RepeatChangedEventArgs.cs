@@ -2,9 +2,9 @@
 
 namespace Nebula.Core.Medias.Player.Events
 {
-    public class PlaybackRepeatChangedEventArgs : EventArgs
+    public class RepeatChangedEventArgs : EventArgs
     {
-        public PlaybackRepeatChangedEventArgs(bool repeat)
+        public RepeatChangedEventArgs(bool repeat)
         {
             Repeat = repeat;
         }

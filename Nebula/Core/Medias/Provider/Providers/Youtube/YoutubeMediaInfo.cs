@@ -45,6 +45,8 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
 
         public string ThumbnailUrl { get; }
 
+        public bool SupportMuxed { get; } = false;
+
         public TimeSpan Duration { get; }
 
         public DateTime UploadDate { get; }
@@ -61,6 +63,22 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
                                                   .GetMediaProvider<YoutubeMediaProvider>().Youtube.Videos.Streams
                                                   .GetManifestAsync(new VideoId(Id));
             return new Uri(streamManifest.GetAudioOnly().WithHighestBitrate().Url);
+        }
+
+        public async Task<Uri> GetAudioVideoStreamUri()
+        {
+            StreamManifest streamManifest = await NebulaClient
+                                                  .GetMediaProvider<YoutubeMediaProvider>().Youtube.Videos.Streams
+                                                  .GetManifestAsync(new VideoId(Id));
+            return new Uri(streamManifest.GetMuxed().WithHighestVideoQuality().Url);
+        }
+
+        public async Task<Uri> GetVideoStreamUri()
+        {
+            StreamManifest streamManifest = await NebulaClient
+                                                  .GetMediaProvider<YoutubeMediaProvider>().Youtube.Videos.Streams
+                                                  .GetManifestAsync(new VideoId(Id));
+            return new Uri(streamManifest.GetVideo().WithHighestVideoQuality().Url);
         }
 
         public IMediaProvider GetMediaProvider()

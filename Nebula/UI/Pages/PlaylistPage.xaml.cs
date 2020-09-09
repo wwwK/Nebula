@@ -41,8 +41,8 @@ namespace Nebula.UI.Pages
         private void RemoveMedia(IMediaInfo mediaInfo)
         {
             Playlist.RemoveMedia(mediaInfo);
-            if (NebulaClient.MediaPlayer.Queue.IsQueued(mediaInfo))
-                NebulaClient.MediaPlayer.Queue.Remove(mediaInfo);
+            if (NebulaClient.MediaPlayer.MediaQueue.IsQueued(mediaInfo))
+                NebulaClient.MediaPlayer.MediaQueue.Remove(mediaInfo);
             Medias.Remove(mediaInfo);
         }
 
@@ -100,16 +100,16 @@ namespace Nebula.UI.Pages
             CurrentPageText.Text = $"{Medias.CurrentPage + 1}/{Playlist.Medias.TotalPages}";
         }
 
-        private void OnListenPlaylistClick(object sender, RoutedEventArgs e)
+        private async void OnListenPlaylistClick(object sender, RoutedEventArgs e)
         {
-            NebulaClient.MediaPlayer.OpenPlaylist(Playlist, true);
+            await NebulaClient.MediaPlayer.OpenPlaylist(Playlist);
         }
 
         private async void OnPlayClick(object sender, RoutedEventArgs e)
         {
             AppBarButton clicked = (AppBarButton) sender;
             if (clicked.DataContext is IMediaInfo mediaInfo)
-                await NebulaClient.MediaPlayer.OpenMedia(mediaInfo, true);
+                await NebulaClient.MediaPlayer.Open(mediaInfo, true);
         }
 
         private void OnRemoveClick(object sender, RoutedEventArgs e)

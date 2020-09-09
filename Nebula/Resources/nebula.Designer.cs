@@ -232,7 +232,7 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create playlist.
+        ///   Looks up a localized string similar to Create Playlist.
         /// </summary>
         public static string CreatePlaylist {
             get {
@@ -282,6 +282,24 @@ namespace Nebula.Resources {
         public static string EditPlaylist {
             get {
                 return ResourceManager.GetString("EditPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to open media..
+        /// </summary>
+        public static string ErrorCantOpenMedia {
+            get {
+                return ResourceManager.GetString("ErrorCantOpenMedia", resourceCulture);
             }
         }
         
@@ -520,6 +538,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Play Video.
+        /// </summary>
+        public static string PlayVideo {
+            get {
+                return ResourceManager.GetString("PlayVideo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Privacy.
         /// </summary>
         public static string Privacy {
@@ -601,7 +628,7 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sercer connection lost.
+        ///   Looks up a localized string similar to Server connection lost.
         /// </summary>
         public static string ServerConnectionLost {
             get {
@@ -736,7 +763,7 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create  Room.
+        ///   Looks up a localized string similar to Create Room.
         /// </summary>
         public static string SharedSessionCreateRoom {
             get {

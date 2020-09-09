@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Nebula.Core.Medias.Provider;
+using Nebula.Net.Packets;
 
 namespace Nebula.Core.Medias
 {
@@ -40,6 +41,11 @@ namespace Nebula.Core.Medias
         public string ThumbnailUrl { get; }
 
         /// <summary>
+        /// Does this media type support muxed audio and vidao at any quality
+        /// </summary>
+        public bool SupportMuxed { get; }
+
+        /// <summary>
         /// Media Total Duration
         /// </summary>
         TimeSpan Duration { get; }
@@ -62,9 +68,24 @@ namespace Nebula.Core.Medias
         Task<Uri> GetAudioStreamUri();
 
         /// <summary>
+        /// Returns media video stream uri
+        /// </summary>
+        /// <returns>Uri</returns>
+        Task<Uri> GetVideoStreamUri();
+
+        /// <summary>
+        /// Returns media audi and video stream uri
+        /// Note: Support Muxed must be true
+        /// </summary>
+        /// <returns>Uri</returns>
+        Task<Uri> GetAudioVideoStreamUri();
+
+        /// <summary>
         /// Media Provider
         /// </summary>
         /// <returns>Media Provider</returns>
         IMediaProvider GetMediaProvider();
+
+        MediaInfo AsMediaInfo() => new MediaInfo {Id = Id, Title = Title, Provider = GetMediaProvider().Name};
     }
 }

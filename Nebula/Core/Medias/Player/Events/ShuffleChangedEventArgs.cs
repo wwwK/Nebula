@@ -2,9 +2,9 @@
 
 namespace Nebula.Core.Medias.Player.Events
 {
-    public class PlaybackShuffleChangedEventArgs : EventArgs
+    public class ShuffleChangedEventArgs : EventArgs
     {
-        public PlaybackShuffleChangedEventArgs(bool shuffle)
+        public ShuffleChangedEventArgs(bool shuffle)
         {
             Shuffle = shuffle;
         }

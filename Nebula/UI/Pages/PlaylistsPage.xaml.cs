@@ -63,10 +63,10 @@ namespace Nebula.UI.Pages
                 button.Visibility = Visibility.Collapsed;
         }
 
-        private void OnPlayClicked(object sender, RoutedEventArgs e)
+        private async void OnPlayClicked(object sender, RoutedEventArgs e)
         {
             if (sender is AppBarButton button && button.DataContext is IPlaylist playlist)
-                NebulaClient.MediaPlayer.OpenPlaylist(playlist, true);
+                await NebulaClient.MediaPlayer.OpenPlaylist(playlist);
         }
 
         private void OnPlaylistElementMouseDown(object sender, MouseButtonEventArgs e)

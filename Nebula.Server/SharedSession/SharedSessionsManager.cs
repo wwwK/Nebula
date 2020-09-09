@@ -132,7 +132,7 @@ namespace Nebula.Server.SharedSession
                 return;
             }
 
-            user.SharedSessionRoom.SendToAll(packet, nebulaUser => nebulaUser != user);
+            user.SharedSessionRoom.SendToAll(packet);
         }
 
         private void OnReceiveSessionResumePacket(SharedSessionResumePacket packet, NebulaUser user)
@@ -143,7 +143,7 @@ namespace Nebula.Server.SharedSession
                 return;
             }
 
-            user.SharedSessionRoom.SendToAll(packet, nebulaUser => nebulaUser != user);
+            user.SharedSessionRoom.SendToAll(packet);
         }
 
         private void OnReceivePlayMediaPacket(SharedSessionPlayMediaPacket request, NebulaUser user)
@@ -154,6 +154,7 @@ namespace Nebula.Server.SharedSession
                 return;
             }
 
+            user.SharedSessionRoom.CurrentMedia = request.MediaInfo;
             user.SharedSessionRoom.SetAllUnReady();
             request.UserInfo = user.AsUserInfo();
             user.SharedSessionRoom.SendToAll(request);
@@ -178,7 +179,7 @@ namespace Nebula.Server.SharedSession
                 return;
             }
 
-            user.SharedSessionRoom.SendToAll(packet, nebulaUser => nebulaUser != user);
+            user.SharedSessionRoom.SendToAll(packet);
         }
 
         private void OnReceiveSessionLeavePacket(SharedSessionLeavePacket packet, NebulaUser user)

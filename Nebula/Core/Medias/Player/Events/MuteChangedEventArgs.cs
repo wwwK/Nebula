@@ -2,9 +2,9 @@
 
 namespace Nebula.Core.Medias.Player.Events
 {
-    public class PlaybackMuteChangedEventArgs : EventArgs
+    public class MuteChangedEventArgs : EventArgs
     {
-        public PlaybackMuteChangedEventArgs(bool muted)
+        public MuteChangedEventArgs(bool muted)
         {
             IsMuted = muted;
         }

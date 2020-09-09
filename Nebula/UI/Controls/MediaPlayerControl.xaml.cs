@@ -7,8 +7,10 @@ using System.Windows.Media.Imaging;
 using ModernWpf.Controls;
 using Nebula.Core;
 using Nebula.Core.Extensions;
+using Nebula.Core.Medias.Player;
 using Nebula.Core.Medias.Player.Events;
 using Nebula.Core.Medias.Provider;
+using Unosquare.FFME.Common;
 using MediaPlayer = Nebula.Core.Medias.Player.MediaPlayer;
 
 namespace Nebula.UI.Controls
@@ -18,21 +20,19 @@ namespace Nebula.UI.Controls
         public MediaPlayerControl()
         {
             InitializeComponent();
-
             MediaPlayer.MediaChanged += OnMediaChanged;
-            MediaPlayer.PlaybackPositionChanged += OnPlaybackPositionChanged;
-            MediaPlayer.PlaybackPaused += OnPlaybackPaused;
-            MediaPlayer.PlaybackResumed += OnPlaybackResumed;
-            MediaPlayer.PlaybackMuteChanged += OnPlaybackMuteChanged;
-            MediaPlayer.PlaybackVolumeChanged += (sender, args) => PlaybackVolume.Value = args.NewVolume;
+            MediaPlayer.StateChanged += OnPlayerStateChanged;
+            MediaPlayer.MuteChanged += OnPlayerMuteChanged;
+            MediaPlayer.MediaElement.PositionChanged += OnPositionChanged;
+            MediaPlayer.VolumeChanged += (sender, args) => PlaybackVolume.Value = args.NewVolume;
             MediaPlayer.ShuffleChanged += (sender, args) => PlaybackShuffle.IsChecked = args.Shuffle;
             MediaPlayer.RepeatChanged += (sender, args) => PlaybackRepeat.IsChecked = args.Repeat;
+            PlaybackVolume.ValueChanged += (sender, args) => MediaPlayer.Volume = args.NewValue;
             PlaybackShuffle.Click += (sender, args) => MediaPlayer.Shuffle = !MediaPlayer.Shuffle;
             PlaybackRepeat.Click += (sender, args) => MediaPlayer.Repeat = !MediaPlayer.Repeat;
             PlaybackMute.Click += (sender, args) => MediaPlayer.IsMuted = !MediaPlayer.IsMuted;
-            PlaybackBack.Click += (sender, args) => MediaPlayer.Backward(true);
-            PlaybackVolume.ValueChanged += (sender, args) => MediaPlayer.Volume = (int) args.NewValue;
-            PlaybackForward.Click += (sender, args) => MediaPlayer.Forward(true);
+            PlaybackBack.Click += async (sender, args) => await MediaPlayer.Backward();
+            PlaybackForward.Click += async (sender, args) => await MediaPlayer.Forward(true);
             PlaybackVolume.Value = MediaPlayer.Volume;
         }
 
@@ -90,19 +90,7 @@ namespace Nebula.UI.Controls
             UpdateMediaInfoWidth();
         }
 
-        private void OnPlaybackResumed(object sender, PlaybackResumedEventArgs e)
-        {
-            PlaybackPlay.Icon = new SymbolIcon(Symbol.Pause);
-            PlaybackPlay.Label = NebulaClient.GetLocString("Pause");
-        }
-
-        private void OnPlaybackPaused(object sender, PlaybackPausedEventArgs e)
-        {
-            PlaybackPlay.Icon = new SymbolIcon(Symbol.Play);
-            PlaybackPlay.Label = NebulaClient.GetLocString("Play");
-        }
-
-        private void OnPlaybackMuteChanged(object sender, PlaybackMuteChangedEventArgs e)
+        private void OnPlayerMuteChanged(object sender, MuteChangedEventArgs e)
         {
             if (e.IsMuted)
             {
@@ -116,12 +104,27 @@ namespace Nebula.UI.Controls
             }
         }
 
-        private void OnPlaybackPositionChanged(object sender, TimeSpan e)
+        private void OnPositionChanged(object sender, PositionChangedEventArgs e)
         {
-            PlaybackPosition.Value = e.TotalSeconds;
-            PlaybackPositionText.Text = e.ToFormattedHMS();
+            PlaybackPosition.Value = e.Position.TotalSeconds;
+            PlaybackPositionText.Text = e.Position.ToFormattedHMS();
             if (MediaPlayer.CurrentMedia != null)
-                PlaybackRemaining.Text = (MediaPlayer.CurrentMedia.Duration - e).ToFormattedHMS();
+                PlaybackRemaining.Text = (MediaPlayer.CurrentMedia.Duration - e.Position).ToFormattedHMS();
+        }
+
+        private void OnPlayerStateChanged(object sender, StateChangedEventArgs e)
+        {
+            switch (e.NewState)
+            {
+                case MediaPlayerState.Paused:
+                    PlaybackPlay.Icon = new SymbolIcon(Symbol.Play);
+                    PlaybackPlay.Label = NebulaClient.GetLocString("Play");
+                    break;
+                case MediaPlayerState.Playing:
+                    PlaybackPlay.Icon = new SymbolIcon(Symbol.Pause);
+                    PlaybackPlay.Label = NebulaClient.GetLocString("Pause");
+                    break;
+            }
         }
     }
 }

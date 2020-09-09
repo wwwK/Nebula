@@ -22,6 +22,7 @@ namespace Nebula.Server.SharedSession
         private List<NebulaUser> Users             { get; } = new List<NebulaUser>();
         public  Guid             Id                { get; }
         public  NebulaUser       Owner             { get; set; }
+        public  MediaInfo        CurrentMedia      { get; set; }
         public  string           Name              { get; set; }
         public  string           Password          { get; set; }
         public  string           ThumbnailUrl      { get; set; }

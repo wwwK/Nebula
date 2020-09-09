@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Windows.Navigation;
 using LiteNetLib;
 using Nebula.Core;
+using Nebula.Core.Networking;
 using Nebula.Core.Networking.Events;
 using Nebula.Core.UI.Dialogs;
 using Nebula.Net.Packets;
@@ -23,7 +24,7 @@ namespace Nebula.UI.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionsPollResponse, NetPeer>(OnReceiveSharedSessions);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionsPollResponse, NebulaNetClient>(OnReceiveSharedSessions);
             NebulaClient.Network.Connected += OnNetworkConnected;
             if (!NebulaClient.Network.IsConnected)
                 NebulaClient.Network.Connect();
@@ -53,7 +54,7 @@ namespace Nebula.UI.Pages
             await new SharedSessionRoomCreationDialog().ShowDialogAsync();
         }
 
-        private void OnReceiveSharedSessions(SharedSessionsPollResponse response, NetPeer peer)
+        private void OnReceiveSharedSessions(SharedSessionsPollResponse response, NebulaNetClient net)
         {
             NebulaClient.Invoke(() =>
             {

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using LiteNetLib;
 using ModernWpf.Media.Animation;
+using Nebula.Core.Networking;
 using Nebula.Core.UI.Dialogs;
 using Nebula.Net.Packets;
 using Nebula.Net.Packets.BOTH;
@@ -17,10 +18,10 @@ namespace Nebula.Core.SharedSessions
     {
         public NebulaSharedSession()
         {
-            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionJoinResponse, NetPeer>(OnReceiveSharedSessionJoinResponse);
-            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionUserJoinedPacket, NetPeer>(OnReceiveSharedSessionUserJoin);
-            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionUserLeftPacket, NetPeer>(OnReceiveSharedSessionUserLeft);
-            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionUserMessagePacket, NetPeer>(OnReceiveSessionUserMessagePacket);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionJoinResponse, NebulaNetClient>(OnReceiveSharedSessionJoinResponse);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionUserJoinedPacket, NebulaNetClient>(OnReceiveSharedSessionUserJoin);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionUserLeftPacket, NebulaNetClient>(OnReceiveSharedSessionUserLeft);
+            NebulaClient.Network.PacketProcessor.SubscribeReusable<SharedSessionUserMessagePacket, NebulaNetClient>(OnReceiveSessionUserMessagePacket);
         }
 
         public ObservableCollection<UserInfo>             Users             { get; } = new ObservableCollection<UserInfo>();
@@ -102,7 +103,7 @@ namespace Nebula.Core.SharedSessions
             Messages.Clear();
         }
 
-        private void OnReceiveSharedSessionJoinResponse(SharedSessionJoinResponse response, NetPeer peer)
+        private void OnReceiveSharedSessionJoinResponse(SharedSessionJoinResponse response, NebulaNetClient net)
         {
             NebulaClient.BeginInvoke(async () =>
             {
@@ -123,7 +124,7 @@ namespace Nebula.Core.SharedSessions
             });
         }
 
-        private void OnReceiveSharedSessionUserJoin(SharedSessionUserJoinedPacket response, NetPeer peer)
+        private void OnReceiveSharedSessionUserJoin(SharedSessionUserJoinedPacket response, NebulaNetClient net)
         {
             if (!IsSessionActive)
                 return;
@@ -136,7 +137,7 @@ namespace Nebula.Core.SharedSessions
             });
         }
 
-        private void OnReceiveSharedSessionUserLeft(SharedSessionUserLeftPacket response, NetPeer peer)
+        private void OnReceiveSharedSessionUserLeft(SharedSessionUserLeftPacket response, NebulaNetClient net)
         {
             if (!IsSessionActive)
                 return;
@@ -150,7 +151,7 @@ namespace Nebula.Core.SharedSessions
             });
         }
 
-        private void OnReceiveSessionUserMessagePacket(SharedSessionUserMessagePacket packet, NetPeer peer)
+        private void OnReceiveSessionUserMessagePacket(SharedSessionUserMessagePacket packet, NebulaNetClient net)
         {
             if (!IsSessionActive)
                 return;

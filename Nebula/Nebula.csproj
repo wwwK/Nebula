@@ -5,9 +5,11 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
-        <AssemblyVersion>1.1.22.0</AssemblyVersion>
-        <FileVersion>1.1.22.0</FileVersion>
+        <AssemblyVersion>1.1.23.0</AssemblyVersion>
+        <FileVersion>1.1.23.0</FileVersion>
         <ApplicationIcon>Resources/nebula_app_icon.ico</ApplicationIcon>
+        <Configurations>Debug;Release</Configurations>
+        <Platforms>AnyCPU;x64</Platforms>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -18,6 +20,7 @@
     <ItemGroup>
       <PackageReference Include="CSCore" Version="1.2.1.2" />
       <PackageReference Include="Enterwell.Clients.Wpf.Notifications" Version="1.4.2" />
+      <PackageReference Include="FFME.Windows" Version="4.2.330" />
       <PackageReference Include="LiteNetLib" Version="0.9.3.2" />
       <PackageReference Include="Microsoft.AppCenter" Version="3.4.1" />
       <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.1" />
@@ -57,7 +60,7 @@
 
     <ItemGroup>
       <Folder Include="Core\Discord" />
-      <Folder Include="Core\Medias\Player\Filters" />
+      <Folder Include="Core\Medias\Player\Audio\Events" />
       <Folder Include="Core\Utils" />
       <Folder Include="UI\Windows" />
     </ItemGroup>

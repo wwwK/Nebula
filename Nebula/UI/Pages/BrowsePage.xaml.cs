@@ -67,19 +67,25 @@ namespace Nebula.UI.Pages
             if (!(sender is Image image) || !(image.DataContext is IMediaInfo mediaInfo))
                 return;
             if (e.ChangedButton == MouseButton.Left)
-                await NebulaClient.MediaPlayer.OpenMedia(mediaInfo, true);
+                await NebulaClient.MediaPlayer.OpenAudioOnly(mediaInfo);
             else if (e.ChangedButton == MouseButton.Right)
                 CurrentRightClick = mediaInfo;
         }
 
         private void OnAddToListeningSessionClicked(object sender, RoutedEventArgs e)
         {
-            NebulaClient.MediaPlayer.Queue.Enqueue(CurrentRightClick);
+            NebulaClient.MediaPlayer.MediaQueue.Enqueue(CurrentRightClick);
         }
 
         private async void OnMenuPlayClicked(object sender, RoutedEventArgs e)
         {
-            await NebulaClient.MediaPlayer.OpenMedia(CurrentRightClick);
+            await NebulaClient.MediaPlayer.OpenAudioOnly(CurrentRightClick);
+        }
+
+        private async void OnMenuPlayVideoClicked(object sender, RoutedEventArgs e)
+        {
+            await NebulaClient.MediaPlayer.Open(CurrentRightClick);
+            NebulaClient.Navigate(typeof(VideoPlayerPage));
         }
 
         private void OnSearchBoxTextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

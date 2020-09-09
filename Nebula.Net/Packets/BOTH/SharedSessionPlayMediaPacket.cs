@@ -2,9 +2,8 @@
 {
     public class SharedSessionPlayMediaPacket
     {
-        public UserInfo UserInfo  { get; set; } = UserInfo.Empty;
-        public string   MediaId   { get; set; }
-        public string   MediaName { get; set; }
-        public string   Provider  { get; set; }
+        public UserInfo  UserInfo  { get; set; } = UserInfo.Empty;
+        public MediaInfo MediaInfo { get; set; } = MediaInfo.Empty;
+        public bool      PlayVideo { get; set; } = false;
     }
 }

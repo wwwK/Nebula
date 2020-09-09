@@ -20,7 +20,7 @@ namespace Nebula.UI.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Medias = NebulaClient.MediaPlayer.Queue.GetPages();
+            Medias = NebulaClient.MediaPlayer.MediaQueue.GetPages();
             Medias.PageChanged += OnPageChanged;
             Username.Text = NebulaClient.GetLocString("HomeWelcome", NebulaClient.Settings.UserProfile.Username);
             TitlesDuration.Text = Medias.Collection.Count > 0 ? $"{NebulaClient.GetLocString("PlaylistTitles", Medias.Collection.Count)}" : "";

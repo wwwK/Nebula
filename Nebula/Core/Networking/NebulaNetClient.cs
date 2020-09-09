@@ -20,11 +20,7 @@ namespace Nebula.Core.Networking
 
         public NebulaNetClient()
         {
-            PacketProcessor.SubscribeReusable<SharedSessionPlayMediaPacket, NetPeer>(OnReceivePlayMediaPacket);
-            PacketProcessor.SubscribeReusable<SharedSessionStartPlayingPacket, NetPeer>(OnReceivePlayPacket);
-            PacketProcessor.SubscribeReusable<SharedSessionPausePacket, NetPeer>(OnReceiveSessionPausePacket);
-            PacketProcessor.SubscribeReusable<SharedSessionResumePacket, NetPeer>(OnReceiveSessionResumePacket);
-            PacketProcessor.SubscribeReusable<SharedSessionPositionChangedPacket, NetPeer>(OnReceiveSessionPositionChangedPacket);
+
         }
 
         private NetPeer ServerPeer  { get; set; }
@@ -89,55 +85,9 @@ namespace Nebula.Core.Networking
             });
         }
 
-        private void OnReceivePlayMediaPacket(SharedSessionPlayMediaPacket packet, NetPeer peer)
+        public override void OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod deliveryMethod)
         {
-            if (!NebulaClient.SharedSession.IsSessionActive)
-                return;
-            NebulaClient.BeginInvoke(async () =>
-            {
-                NebulaClient.SharedSession.AddMessage(new SharedSessionMessage(packet.UserInfo,
-                    NebulaClient.GetLocString("SharedSessionMessagePlayMedia", packet.MediaName), "#ffee00"));
-                IMediaProvider provider = NebulaClient.GetMediaProviderByName(packet.Provider);
-                if (provider == null)
-                {
-                    Disconnect();
-                    return;
-                }
-
-                IMediaInfo mediaInfo = await provider.GetMediaInfo(packet.MediaId);
-                if (mediaInfo == null)
-                    return;
-                await NebulaClient.MediaPlayer.OpenMedia(mediaInfo, true, false, true);
-                SendPacket(new SharedSessionPlayReadyPacket()); //Todo: maybe move in media player class
-            });
-        }
-
-        private void OnReceivePlayPacket(SharedSessionStartPlayingPacket packet, NetPeer peer)
-        {
-            if (!NebulaClient.SharedSession.IsSessionActive)
-                return;
-            NebulaClient.BeginInvoke(() => NebulaClient.MediaPlayer.Play());
-        }
-
-        private void OnReceiveSessionPausePacket(SharedSessionPausePacket packet, NetPeer peer)
-        {
-            if (!NebulaClient.SharedSession.IsSessionActive)
-                return;
-            NebulaClient.BeginInvoke(() => NebulaClient.MediaPlayer.Pause(true));
-        }
-
-        private void OnReceiveSessionResumePacket(SharedSessionResumePacket packet, NetPeer peer)
-        {
-            if (!NebulaClient.SharedSession.IsSessionActive)
-                return;
-            NebulaClient.BeginInvoke(() => NebulaClient.MediaPlayer.Resume(true));
-        }
-
-        private void OnReceiveSessionPositionChangedPacket(SharedSessionPositionChangedPacket packet, NetPeer peer)
-        {
-            if (!NebulaClient.SharedSession.IsSessionActive)
-                return;
-            NebulaClient.BeginInvoke(() => NebulaClient.MediaPlayer.SetPosition(packet.NewPosition, true));
+            PacketProcessor.ReadAllPackets(reader, this);
         }
     }
 }

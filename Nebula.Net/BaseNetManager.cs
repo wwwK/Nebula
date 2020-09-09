@@ -12,6 +12,7 @@ namespace Nebula.Net
         {
             NetManager = new NetManager(this) {UnsyncedEvents = true, AutoRecycle = true};
             PacketProcessor = new NetPacketProcessor();
+            PacketProcessor.RegisterNestedType<MediaInfo>();
             PacketProcessor.RegisterNestedType<SharedSessionInfo>();
             PacketProcessor.RegisterNestedType<UserInfo>();
         }

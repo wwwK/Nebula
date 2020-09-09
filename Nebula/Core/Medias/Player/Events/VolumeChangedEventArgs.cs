@@ -2,9 +2,9 @@
 
 namespace Nebula.Core.Medias.Player.Events
 {
-    public class PlaybackVolumeChangedEventArgs : EventArgs
+    public class VolumeChangedEventArgs : EventArgs
     {
-        public PlaybackVolumeChangedEventArgs(int oldVolume, int newVolume)
+        public VolumeChangedEventArgs(double oldVolume, double newVolume)
         {
             OldVolume = oldVolume;
             NewVolume = newVolume;
@@ -13,11 +13,11 @@ namespace Nebula.Core.Medias.Player.Events
         /// <summary>
         /// Previous volume value.
         /// </summary>
-        public int OldVolume { get; }
+        public double OldVolume { get; }
 
         /// <summary>
         /// New volume value.
         /// </summary>
-        public int NewVolume { get; }
+        public double NewVolume { get; }
     }
 }

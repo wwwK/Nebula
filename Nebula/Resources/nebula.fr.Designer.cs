@@ -286,6 +286,24 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erreur.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to L&apos;ouverture du média a échoué..
+        /// </summary>
+        public static string ErrorCantOpenMedia {
+            get {
+                return ResourceManager.GetString("ErrorCantOpenMedia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exporter une Playlist.
         /// </summary>
         public static string ExportPlaylist {
@@ -507,6 +525,15 @@ namespace Nebula.Resources {
         public static string PlaylistTotalDuration {
             get {
                 return ResourceManager.GetString("PlaylistTotalDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lire la vidéo.
+        /// </summary>
+        public static string PlayVideo {
+            get {
+                return ResourceManager.GetString("PlayVideo", resourceCulture);
             }
         }
         

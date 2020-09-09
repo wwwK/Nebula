@@ -73,7 +73,7 @@
         <value>Add to playlist</value>
     </data>
     <data name="CreatePlaylist" xml:space="preserve">
-        <value>Create playlist</value>
+        <value>Create Playlist</value>
     </data>
     <data name="Remove" xml:space="preserve">
         <value>Remove</value>
@@ -265,7 +265,7 @@
         <value>Room size</value>
     </data>
     <data name="SharedSessionCreateRoom" xml:space="preserve">
-        <value>Create  Room</value>
+        <value>Create Room</value>
     </data>
     <data name="SharedSessionRefreshList" xml:space="preserve">
         <value>Refresh Rooms List</value>
@@ -292,7 +292,7 @@
         <value>Leave Session</value>
     </data>
     <data name="ServerConnectionLost" xml:space="preserve">
-        <value>Sercer connection lost</value>
+        <value>Server connection lost</value>
     </data>
     <data name="NotificationsBadgeInfo" xml:space="preserve">
         <value>Info</value>
@@ -311,5 +311,14 @@
     </data>
     <data name="SettingsServerConnectionKey" xml:space="preserve">
         <value>Connection Key</value>
+    </data>
+    <data name="ErrorCantOpenMedia" xml:space="preserve">
+        <value>Failed to open media.</value>
+    </data>
+    <data name="Error" xml:space="preserve">
+        <value>Error</value>
+    </data>
+    <data name="PlayVideo" xml:space="preserve">
+        <value>Play Video</value>
     </data>
 </root>
