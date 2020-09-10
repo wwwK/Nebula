@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using LiteNetLib;
 using Nebula.Net.Packets;
+using Nebula.Net.Packets.BOTH;
 using Nebula.Net.Packets.S2C;
 using Nebula.Server.Users;
 
@@ -21,11 +22,11 @@ namespace Nebula.Server.SharedSession
 
         private List<NebulaUser> Users             { get; } = new List<NebulaUser>();
         public  Guid             Id                { get; }
-        public  NebulaUser       Owner             { get; set; }
-        public  MediaInfo        CurrentMedia      { get; set; }
-        public  string           Name              { get; set; }
-        public  string           Password          { get; set; }
-        public  string           ThumbnailUrl      { get; set; }
+        public  NebulaUser       Owner             { get; private set; }
+        public  MediaInfo        CurrentMedia      { get; private set; }
+        public  string           Name              { get; private set; }
+        public  string           Password          { get; private set; }
+        public  string           ThumbnailUrl      { get; private set; }
         public  int              MaximumUsers      { get; } = 4;
         public  int              UsersCount        => Users.Count;
         public  bool             PasswordProtected => !string.IsNullOrWhiteSpace(Password);
@@ -78,6 +79,13 @@ namespace Nebula.Server.SharedSession
         {
             user.IsPlayReady = true;
             CheckReadyState();
+        }
+
+        public void SetCurrentMedia(MediaInfo mediaInfo, UserInfo sender)
+        {
+            CurrentMedia = mediaInfo;
+            SetAllUnReady();
+            SendToAll(new SharedSessionPlayMediaPacket {MediaInfo = mediaInfo, UserInfo = sender});
         }
 
         public void SetAllUnReady()

@@ -250,8 +250,9 @@ namespace Nebula.Core
                     Invoke(() => Tick?.Invoke(Application.Current, new NebulaAppLoopEventArgs()));
                 }
             }
-            catch (OperationCanceledException e)
+            catch
             {
+                // ignored
             }
         }
     }

@@ -10,7 +10,6 @@ using Nebula.Core.Extensions;
 using Nebula.Core.Medias.Player;
 using Nebula.Core.Medias.Player.Events;
 using Nebula.Core.Medias.Provider;
-using Unosquare.FFME.Common;
 using MediaPlayer = Nebula.Core.Medias.Player.MediaPlayer;
 
 namespace Nebula.UI.Controls
@@ -23,16 +22,23 @@ namespace Nebula.UI.Controls
             MediaPlayer.MediaChanged += OnMediaChanged;
             MediaPlayer.StateChanged += OnPlayerStateChanged;
             MediaPlayer.MuteChanged += OnPlayerMuteChanged;
-            MediaPlayer.MediaElement.PositionChanged += OnPositionChanged;
+            MediaPlayer.PositionChanged += OnPositionChanged;
             MediaPlayer.VolumeChanged += (sender, args) => PlaybackVolume.Value = args.NewVolume;
             MediaPlayer.ShuffleChanged += (sender, args) => PlaybackShuffle.IsChecked = args.Shuffle;
             MediaPlayer.RepeatChanged += (sender, args) => PlaybackRepeat.IsChecked = args.Repeat;
-            PlaybackVolume.ValueChanged += (sender, args) => MediaPlayer.Volume = args.NewValue;
+            PlaybackVolume.ValueChanged += (sender, args) => MediaPlayer.Volume = (int) args.NewValue;
             PlaybackShuffle.Click += (sender, args) => MediaPlayer.Shuffle = !MediaPlayer.Shuffle;
             PlaybackRepeat.Click += (sender, args) => MediaPlayer.Repeat = !MediaPlayer.Repeat;
             PlaybackMute.Click += (sender, args) => MediaPlayer.IsMuted = !MediaPlayer.IsMuted;
             PlaybackBack.Click += async (sender, args) => await MediaPlayer.Backward();
             PlaybackForward.Click += async (sender, args) => await MediaPlayer.Forward(true);
+            PlaybackPlay.Click += (sender, args) =>
+            {
+                if (MediaPlayer.IsPaused)
+                    MediaPlayer.Resume();
+                else
+                    MediaPlayer.Pause();
+            };
             PlaybackVolume.Value = MediaPlayer.Volume;
         }
 
@@ -50,14 +56,6 @@ namespace Nebula.UI.Controls
             PlaybackPosition.Width =
                 ActualWidth - (PlaybackPositionText.ActualWidth + PlaybackRemaining.ActualWidth + 20); // 20 = Margin for Left & Right pos + Margin for progress
             UpdateMediaInfoWidth();
-        }
-
-        private void OnPlayClick(object sender, RoutedEventArgs e)
-        {
-            if (MediaPlayer.IsPaused)
-                MediaPlayer.Resume();
-            else
-                MediaPlayer.Pause();
         }
 
         private void OnPlaybackProgressOnMouseUp(object sender, MouseButtonEventArgs e)
@@ -94,11 +92,13 @@ namespace Nebula.UI.Controls
         {
             if (e.IsMuted)
             {
+                PlaybackMute.IsChecked = true;
                 PlaybackMute.Icon = new SymbolIcon(Symbol.Mute);
                 PlaybackMute.Label = NebulaClient.GetLocString("Unmute");
             }
             else
             {
+                PlaybackMute.IsChecked = false;
                 PlaybackMute.Icon = new SymbolIcon(Symbol.Volume);
                 PlaybackMute.Label = NebulaClient.GetLocString("Mute");
             }

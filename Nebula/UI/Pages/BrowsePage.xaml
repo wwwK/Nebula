@@ -43,7 +43,6 @@
                                 <Image.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Header="{x:Static resx:nebula.Play}" Click="OnMenuPlayClicked" />
-                                        <MenuItem Header="{x:Static resx:nebula.PlayVideo}" Click="OnMenuPlayVideoClicked" />
                                         <Separator />
                                         <MenuItem Header="{x:Static resx:nebula.AddToListeningSession}"
                                                   Click="OnAddToListeningSessionClicked" />

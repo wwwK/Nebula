@@ -154,10 +154,7 @@ namespace Nebula.Server.SharedSession
                 return;
             }
 
-            user.SharedSessionRoom.CurrentMedia = request.MediaInfo;
-            user.SharedSessionRoom.SetAllUnReady();
-            request.UserInfo = user.AsUserInfo();
-            user.SharedSessionRoom.SendToAll(request);
+            user.SharedSessionRoom.SetCurrentMedia(request.MediaInfo, user.AsUserInfo());
         }
 
         private void OnReceivePlayReadyPacket(SharedSessionPlayReadyPacket request, NebulaUser user)
