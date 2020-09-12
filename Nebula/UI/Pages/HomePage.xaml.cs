@@ -47,5 +47,10 @@ namespace Nebula.UI.Pages
         {
             Medias.NextPage();
         }
+
+        private void OnClearClick(object sender, RoutedEventArgs e)
+        {
+            NebulaClient.MediaPlayer.MediaQueue.Clear();
+        }
     }
 }

@@ -5,8 +5,8 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
-        <AssemblyVersion>1.1.24.0</AssemblyVersion>
-        <FileVersion>1.1.24.0</FileVersion>
+        <AssemblyVersion>1.1.25.0</AssemblyVersion>
+        <FileVersion>1.1.25.0</FileVersion>
         <ApplicationIcon>Resources/nebula_app_icon.ico</ApplicationIcon>
         <Configurations>Debug;Release</Configurations>
         <Platforms>AnyCPU;x64</Platforms>
@@ -25,7 +25,7 @@
       <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.1" />
       <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.1" />
       <PackageReference Include="ModernWpfUI" Version="0.9.1" />
-      <PackageReference Include="YoutubeExplode" Version="5.1.4" />
+      <PackageReference Include="YoutubeExplode" Version="5.1.5" />
     </ItemGroup>
 
     <ItemGroup>

@@ -318,4 +318,7 @@
     <data name="PlayVideo" xml:space="preserve">
         <value>Lire la vidéo</value>
     </data>
+    <data name="ListeningSessionClear" xml:space="preserve">
+        <value>Vider la session d'écoute</value>
+    </data>
 </root>

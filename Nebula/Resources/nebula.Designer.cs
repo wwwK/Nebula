@@ -403,6 +403,15 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear Listening Session.
+        /// </summary>
+        public static string ListeningSessionClear {
+            get {
+                return ResourceManager.GetString("ListeningSessionClear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Already Existing Content.
         /// </summary>
         public static string MediaAlreadyExists {

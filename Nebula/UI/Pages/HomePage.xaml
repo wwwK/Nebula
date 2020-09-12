@@ -23,6 +23,7 @@
             <StackPanel Orientation="Vertical" Grid.Row="0">
                 <TextBlock Text="{x:Static resx:nebula.ListeningSession}" HorizontalAlignment="Center" FontSize="27" />
                 <TextBlock x:Name="TitlesDuration" HorizontalAlignment="Center" FontSize="18" />
+                <Button Content="{x:Static resx:nebula.ListeningSessionClear}" HorizontalAlignment="Center" Click="OnClearClick"/>
                 <Grid>
                     <ui:AppBarButton Icon="Back" LabelPosition="Collapsed" HorizontalAlignment="Left" Click="OnBackClick" />
                     <TextBlock x:Name="PagesCount" Text="1/1" HorizontalAlignment="Center" FontSize="27" />

@@ -321,4 +321,7 @@
     <data name="PlayVideo" xml:space="preserve">
         <value>Play Video</value>
     </data>
+    <data name="ListeningSessionClear" xml:space="preserve">
+        <value>Clear Listening Session</value>
+    </data>
 </root>

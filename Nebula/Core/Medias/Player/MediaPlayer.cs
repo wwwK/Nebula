@@ -188,7 +188,7 @@ namespace Nebula.Core.Medias.Player
         public async Task Forward(bool byUser = false)
         {
             Stop(byUser);
-            await Open(MediaQueue.Dequeue(Shuffle));
+            await Open(MediaQueue.Dequeue(Shuffle), byUser);
         }
 
         public async Task Backward()
@@ -226,7 +226,11 @@ namespace Nebula.Core.Medias.Player
             try
             {
                 if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
+                {
                     NebulaClient.Network.SendPacket(new SharedSessionPlayMediaPacket {MediaInfo = mediaInfo.AsMediaInfo(), PlayVideo = false});
+                    return;
+                }
+
                 Stop(byUser);
                 SoundOut.Prepare(await mediaInfo.GetAudioStreamUri());
                 if (SoundOut.IsReady)
@@ -255,7 +259,7 @@ namespace Nebula.Core.Medias.Player
         private async void OnMediaStopped(object sender, PlaybackStoppedEventArgs e)
         {
             if (!_stoppedByUSer && !MediaQueue.IsEmpty)
-                await Forward();
+                await Forward(true);
         }
 
         private void OnAppTick(object sender, NebulaAppLoopEventArgs e)
