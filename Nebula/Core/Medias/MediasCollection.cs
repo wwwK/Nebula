@@ -8,9 +8,14 @@ namespace Nebula.Core.Medias
 {
     public class MediasCollection : ObservableCollection<IMediaInfo>
     {
-        public MediasCollection(int maxMediasPerPage = -1)
+        public MediasCollection(int maxMediasPerPage)
         {
-            MaxMediasPerPage = maxMediasPerPage == -1 ? NebulaClient.Settings.General.PlaylistMaxMediasPerPage : maxMediasPerPage;
+            MaxMediasPerPage = maxMediasPerPage < 1 ? NebulaClient.Settings.General.PlaylistMaxMediasPerPage : maxMediasPerPage;
+        }
+
+        public MediasCollection()
+        {
+            MaxMediasPerPage = NebulaClient.Settings.General.PlaylistMaxMediasPerPage;
         }
 
         public int      TotalPages       { get; private set; }

@@ -13,42 +13,37 @@ namespace Nebula.Core.Medias
         /// <summary>
         /// Media ID
         /// </summary>
-        public string Id { get; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Media Owner Id ( Channel, Profile )
         /// </summary>
-        public string OwnerId { get; }
+        public string OwnerId { get; set; }
 
         /// <summary>
         /// Media Name
         /// </summary>
-        public string Title { get; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Media Author
         /// </summary>
-        public string Author { get; }
+        public string Author { get; set; }
 
         /// <summary>
         /// Media Description
         /// </summary>
-        public string Description { get; }
+        public string Description { get; set; }
 
         /// <summary>
         /// Thumbnail Url
         /// </summary>
-        public string ThumbnailUrl { get; }
-
-        /// <summary>
-        /// Does this media type support muxed audio and vidao at any quality
-        /// </summary>
-        public bool SupportMuxed { get; }
+        public string ThumbnailUrl { get; set; }
 
         /// <summary>
         /// Media Total Duration
         /// </summary>
-        TimeSpan Duration { get; }
+        TimeSpan Duration { get; set; }
 
         /// <summary>
         /// Media Upload Date

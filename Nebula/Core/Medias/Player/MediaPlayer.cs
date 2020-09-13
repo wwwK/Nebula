@@ -187,7 +187,6 @@ namespace Nebula.Core.Medias.Player
 
         public async Task Forward(bool byUser = false)
         {
-            Stop(byUser);
             await Open(MediaQueue.Dequeue(Shuffle), byUser);
         }
 
@@ -222,7 +221,6 @@ namespace Nebula.Core.Medias.Player
         {
             if (mediaInfo == null)
                 return;
-            SetState(MediaPlayerState.Preparing);
             try
             {
                 if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
@@ -231,6 +229,7 @@ namespace Nebula.Core.Medias.Player
                     return;
                 }
 
+                SetState(MediaPlayerState.Preparing);
                 Stop(byUser);
                 SoundOut.Prepare(await mediaInfo.GetAudioStreamUri());
                 if (SoundOut.IsReady)

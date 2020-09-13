@@ -72,6 +72,17 @@ namespace Nebula.Core.UI.Content
             ControlCacheHandlers.Add(cacheHandler.ControlType, cacheHandler);
         }
 
+        public static void HandleControl(FrameworkElement element, PropertyInfo propertyInfo, DataCategory dataCategory, DataProperty dataProperty,
+                                         ref DependencyProperty dependencyProperty)
+        {
+            if (element is IDataControlsContainer container)
+                HandleControl(container.GetBindableElement(), propertyInfo, dataCategory, dataProperty, ref dependencyProperty);
+            Type elementType = element.GetType();
+            if (!ControlCacheHandlers.ContainsKey(element.GetType()))
+                return;
+            ControlCacheHandlers[elementType].HandleControl(element, propertyInfo, dataCategory, dataProperty, ref dependencyProperty);
+        }
+
         public static DataContentCache BuildCache<T>()
         {
             return BuildCache(typeof(T));
@@ -99,8 +110,7 @@ namespace Nebula.Core.UI.Content
                     dataContentCache.AddElement(new TextBlock {Text = NebulaClient.GetLocString(dataCategory.Category), FontSize = 24});
                 DependencyProperty dependencyProperty = null;
                 BaseControlHandler.HandleControl(frameworkElement, propertyInfo, dataCategory, dataProperty, ref dependencyProperty);
-                if (ControlCacheHandlers.ContainsKey(dataProperty.ControlType))
-                    ControlCacheHandlers[dataProperty.ControlType].HandleControl(frameworkElement, propertyInfo, dataCategory, dataProperty, ref dependencyProperty);
+                HandleControl(frameworkElement, propertyInfo, dataCategory, dataProperty, ref dependencyProperty);
                 dataContentCache.AddElement(frameworkElement, dependencyProperty, propertyInfo);
             }
 

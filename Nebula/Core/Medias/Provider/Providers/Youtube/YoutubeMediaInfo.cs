@@ -21,7 +21,7 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
             Duration = duration;
             UploadDate = uploadDate;
         }
-
+        
         public YoutubeMediaInfo(XmlElement element)
         {
             Id = element.GetAttribute("Id");
@@ -33,21 +33,24 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
             Duration = TimeSpan.FromSeconds(double.Parse(element.GetAttribute("Duration")));
         }
 
-        public string Id { get; }
+        public YoutubeMediaInfo()
+        {
+            
+        }
 
-        public string OwnerId { get; }
+        public string Id { get; set; }
 
-        public string Title { get; }
+        public string OwnerId { get; set; }
 
-        public string Description { get; }
+        public string Title { get; set; }
 
-        public string Author { get; }
+        public string Description { get; set; }
 
-        public string ThumbnailUrl { get; }
+        public string Author { get; set; }
 
-        public bool SupportMuxed { get; } = false;
+        public string ThumbnailUrl { get; set; }
 
-        public TimeSpan Duration { get; }
+        public TimeSpan Duration { get; set; }
 
         public DateTime UploadDate { get; }
 

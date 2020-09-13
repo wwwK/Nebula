@@ -148,7 +148,7 @@ namespace Nebula.UI.Pages
             }
 
             Medias.Clear();
-            foreach (IMediaInfo mediaInfo in Playlist)
+            foreach (IMediaInfo mediaInfo in Playlist.Medias)
             {
                 if (mediaInfo.Title.ToLower().Contains(SearchBox.Text.ToLower()))
                     Medias.Add(mediaInfo);

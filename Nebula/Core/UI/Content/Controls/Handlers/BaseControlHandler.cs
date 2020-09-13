@@ -17,7 +17,7 @@ namespace Nebula.Core.UI.Content.Controls.Handlers
                                   ref DependencyProperty dependencyProperty)
         {
             FrameworkElement bindableElement = element is IDataControlsContainer container ? container.GetBindableElement() : element;
-            bindableElement.Tag = element.Tag;
+            bindableElement.Tag = dataProperty.Tag;
             if (!string.IsNullOrWhiteSpace(dataProperty.ToolTipKey))
                 bindableElement.ToolTip = NebulaClient.GetLocString(dataProperty.ToolTipKey);
             if (bindableElement is Control control)

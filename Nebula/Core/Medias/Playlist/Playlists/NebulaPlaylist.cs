@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Nebula.Core.Medias.Playlist.Events;
 
 namespace Nebula.Core.Medias.Playlist.Playlists
@@ -19,15 +20,20 @@ namespace Nebula.Core.Medias.Playlist.Playlists
                 AddMedias(medias.ToArray());
         }
 
-        public string           Name          { get; set; }
-        public string           Description   { get; set; }
-        public string           Author        { get; set; }
-        public bool             AutoSave      { get; set; } = true;
-        public Uri              Thumbnail     { get; set; }
-        public object           Tag           { get; set; }
-        public MediasCollection Medias        { get; } = new MediasCollection();
-        public TimeSpan         TotalDuration => Medias.TotalDuration;
-        public int              MediasCount   => Medias.Count;
+        public NebulaPlaylist()
+        {
+            
+        }
+
+        public              string           Name          { get; set; }
+        public              string           Description   { get; set; }
+        public              string           Author        { get; set; }
+        [JsonIgnore] public bool             AutoSave      { get; set; } = true;
+        public              Uri              Thumbnail     { get; set; }
+        [JsonIgnore] public object           Tag           { get; set; }
+        public              MediasCollection Medias        { get; set; } = new MediasCollection();
+        [JsonIgnore] public TimeSpan         TotalDuration => Medias.TotalDuration;
+        [JsonIgnore] public int              MediasCount   => Medias.Count;
 
         public event EventHandler<PlaylistMediaAddedEventArgs> MediaAdded;
 
@@ -85,16 +91,6 @@ namespace Nebula.Core.Medias.Playlist.Playlists
         public override string ToString()
         {
             return Name;
-        }
-
-        public IEnumerator<IMediaInfo> GetEnumerator()
-        {
-            return Medias.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

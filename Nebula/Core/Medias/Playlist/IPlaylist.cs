@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Nebula.Core.Medias.Playlist.Events;
 
 namespace Nebula.Core.Medias.Playlist
 {
-    public interface IPlaylist : IEnumerable<IMediaInfo>
+    public interface IPlaylist
     {
         string           Name          { get; set; }
         string           Description   { get; set; }
         string           Author        { get; set; }
         Uri              Thumbnail     { get; set; }
         object           Tag           { get; set; }
-        MediasCollection Medias        { get; }
+        MediasCollection Medias        { get; set; }
         int              MediasCount   { get; }
         TimeSpan         TotalDuration { get; }
 

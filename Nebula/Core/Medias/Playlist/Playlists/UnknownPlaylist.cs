@@ -18,7 +18,7 @@ namespace Nebula.Core.Medias.Playlist.Playlists
         public string           Author        { get; set; }
         public Uri              Thumbnail     { get; set; }
         public object           Tag           { get; set; }
-        public MediasCollection Medias        { get; } = new MediasCollection();
+        public MediasCollection Medias        { get; set; } = new MediasCollection();
         public int              MediasCount   => Medias.Count;
         public TimeSpan         TotalDuration => Medias.TotalDuration;
 
@@ -61,16 +61,6 @@ namespace Nebula.Core.Medias.Playlist.Playlists
             if (index < 0 || index > MediasCount - 1)
                 throw new ArgumentOutOfRangeException(nameof(index));
             return Medias[index];
-        }
-
-        public IEnumerator<IMediaInfo> GetEnumerator()
-        {
-            return Medias.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public static async Task<UnknownPlaylist> FromArtist(IArtistInfo artistInfo, bool loadMedias = true)

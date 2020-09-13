@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Windows;
 using Nebula.Core.Medias.Playlist;
 using Nebula.Core.Medias.Provider.Providers.Youtube;
 using Nebula.Core.UI.Content;
@@ -34,10 +35,10 @@ namespace Nebula.Core.UI.Dialogs
             else
             {
                 playlist = NebulaClient.Playlists.LoadPlaylist(new FileInfo(Path));
+                NebulaClient.Playlists.SavePlaylist(playlist);
             }
-
-            NebulaClient.Playlists.SavePlaylist(playlist);
-            await NebulaMessageBox.ShowOk("PlaylistImport", "PlaylistImported", playlist.Name); //Todo migrate to new dialog system
+            
+            await NebulaMessageBox.ShowOk("PlaylistImport", "PlaylistImported", playlist.Name);
         }
 
         public override DataContentCache GetCache()
