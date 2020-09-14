@@ -20,31 +20,27 @@ namespace Nebula.UI.Pages
             InitializeComponent();
         }
 
-        private ScrollViewer MessagesScrollViewer { get; set; }
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (NebulaClient.SharedSession == null)
+            if (!NebulaClient.SharedSession.IsSessionActive)
                 return;
             DataContext = NebulaClient.SharedSession;
-            MessagesScrollViewer = MessageList.GetChildOfType<ScrollViewer>();
             NebulaClient.SharedSession.Messages.CollectionChanged += OnMessageAddedChanged;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            MessagesScrollViewer = null;
             NebulaClient.SharedSession.Messages.CollectionChanged += OnMessageAddedChanged;
         }
 
         private void OnMessageAddedChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action != NotifyCollectionChangedAction.Add || MessagesScrollViewer == null)
+            if (e.Action != NotifyCollectionChangedAction.Add)
                 return;
             MessageList.UpdateLayout();
-            MessagesScrollViewer.ScrollToBottom();
+            MessageList.GetChildOfType<ScrollViewer>()?.ScrollToBottom();
         }
 
         private void OnLeaveClick(object sender, RoutedEventArgs e)

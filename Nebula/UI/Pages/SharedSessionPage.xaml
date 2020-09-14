@@ -36,14 +36,16 @@
                              HorizontalAlignment="Stretch">
                     <ui:ListView.ItemTemplate>
                         <DataTemplate DataType="sharedSessions:SharedSessionMessage">
-                            <controls:SimpleGrid Columns="35,*" Rows="35,Auto" Opacity="0.8" Width="{Binding ElementName=MessageList, Path=ActualWidth}">
+                            <controls:SimpleGrid Columns="35,*" Width="{Binding ElementName=MessageList, Path=ActualWidth}">
                                 <ui:PersonPicture Width="35" Height="35" ProfilePicture="{Binding User.AvatarUrl}" BadgeText="{Binding User.Username}"
                                                   Grid.Column="0"
                                                   Grid.Row="0" Grid.RowSpan="2" />
-                                <TextBlock Text="{Binding User.Username}" Foreground="White" FontWeight="Bold" FontSize="14" Grid.Row="0"
-                                           Grid.Column="1" Margin="10 5 0 0" />
-                                <TextBlock TextWrapping="Wrap" Text="{Binding Message}" Foreground="{Binding Foreground}" FontSize="14" Grid.Row="1" Grid.Column="1" Margin="10 0 0 0"
-                                           VerticalAlignment="Top" />
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{Binding User.Username}" Foreground="White" FontWeight="Bold" FontSize="14"
+                                               Margin="10 5 0 0" />
+                                    <TextBlock TextWrapping="Wrap" TextAlignment="Left" Text="{Binding Message}" Foreground="{Binding Foreground}" FontSize="14" Margin="10 0 0 0"
+                                               VerticalAlignment="Top" />
+                                </StackPanel>
                             </controls:SimpleGrid>
                         </DataTemplate>
                     </ui:ListView.ItemTemplate>

@@ -142,8 +142,8 @@ namespace Nebula.Core.Medias.Player
                 return;
             if (NebulaClient.SharedSession.IsSessionActive && !fromRemote)
                 return;
-            SoundOut.Out.Play();
             _stoppedByUSer = false;
+            SoundOut.Out.Play();
             SetState(MediaPlayerState.Playing);
         }
 
@@ -177,16 +177,15 @@ namespace Nebula.Core.Medias.Player
 
         public void Stop(bool byUser = false)
         {
-            if (!IsPlaying || !SoundOut.IsReady)
+            if (IsIdle || !SoundOut.IsReady)
                 return;
             _stoppedByUSer = byUser;
-
             SoundOut.Out.Stop();
             SetState(MediaPlayerState.Idle);
         }
 
         public async Task Forward(bool byUser = false)
-        {
+        { 
             await Open(MediaQueue.Dequeue(Shuffle), byUser);
         }
 
@@ -231,6 +230,7 @@ namespace Nebula.Core.Medias.Player
 
                 SetState(MediaPlayerState.Preparing);
                 Stop(byUser);
+
                 SoundOut.Prepare(await mediaInfo.GetAudioStreamUri());
                 if (SoundOut.IsReady)
                     SoundOut.Out.Volume = Math.Min(1.0f, Math.Max(Volume / 100f, 0f));
@@ -245,7 +245,7 @@ namespace Nebula.Core.Medias.Player
 
             CurrentMedia = mediaInfo;
             SetState(MediaPlayerState.Ready);
-            Play();
+                        Play();
         }
 
         private void SetState(MediaPlayerState state)
@@ -258,7 +258,7 @@ namespace Nebula.Core.Medias.Player
         private async void OnMediaStopped(object sender, PlaybackStoppedEventArgs e)
         {
             if (!_stoppedByUSer && !MediaQueue.IsEmpty)
-                await Forward(true);
+                Forward(true);
         }
 
         private void OnAppTick(object sender, NebulaAppLoopEventArgs e)
