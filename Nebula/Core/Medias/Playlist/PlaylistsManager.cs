@@ -70,19 +70,13 @@ namespace Nebula.Core.Medias.Playlist
 
         public IPlaylist LoadPlaylist(FileInfo fileInfo)
         {
-            Stopwatch sw = Stopwatch.StartNew();
             try
             {
                 if (!fileInfo.Exists || !fileInfo.FullName.EndsWith(".playlist"))
                     return default;
                 NebulaPlaylist playlist = new NebulaPlaylist {File = new XmlDataFile(fileInfo)};
                 if (playlist.File.Load(playlist))
-                {
-                    sw.Stop();
-                    MessageBox.Show($"Data {playlist.Name} : {sw.Elapsed.TotalMilliseconds}ms");
                     return playlist;
-                }
-
                 NebulaClient.Notifications.NotifyError("ErrorFailedToLoadPlaylist", Path.GetFileNameWithoutExtension(fileInfo.FullName));
                 return default;
             }
