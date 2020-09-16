@@ -54,17 +54,17 @@ namespace Nebula.Core
             AssemblyDirectory = GetAssemblyDirectory();
             MainWindow = Application.Current.MainWindow as MainWindow;
             Settings = NebulaSettings.LoadSettings(); //Needs to be first 
+            Notifications = new NebulaNotifications();
             Network = new NebulaNetClient();
             MediaPlayer = new MediaPlayer();
             Updater = new NebulaUpdater();
             Playlists = new PlaylistsManager();
             KeyboardHooker = new KeyboardHooker();
-            Notifications = new NebulaNotifications();
             SharedSession = new NebulaSharedSession();
             Session = new NebulaSession(); //Needs to be latest
 
             MediaProviders.Add(new YoutubeMediaProvider());
-
+            
             KeyboardHooker.KeyDown += OnGlobalKeyDown;
             if (Settings.General.MediaKeyEnabled)
                 KeyboardHooker.Hook();

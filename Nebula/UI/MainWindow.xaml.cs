@@ -43,6 +43,7 @@ namespace Nebula.UI
 
         private void OnWindowLoaded(object sender, RoutedEventArgs args)
         {
+            NebulaClient.Playlists.LoadPlaylists();
             SetHitTestVisibleInChrome(true, SearchBox, HomeButton, BrowseButton, PlaylistsButton,
                 RecentlyListenedButton, SettingsButton);
             BackgroundWallpaper = NebulaClient.Settings.Appearance.GetBackgroundImageSource();

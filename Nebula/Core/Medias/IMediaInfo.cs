@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using System.Threading.Tasks;
+using Nebula.Core.Data;
 using Nebula.Core.Medias.Provider;
 using Nebula.Net.Packets;
 
@@ -8,17 +10,17 @@ namespace Nebula.Core.Medias
     /// <summary>
     /// Provide Media infos to implement by media provider results.
     /// </summary>
-    public interface IMediaInfo
+    public interface IMediaInfo : IDataSaveable, IDataLoadable
     {
         /// <summary>
         /// Media ID
         /// </summary>
-        public string Id { get; set; }
+        public string Id { get; protected set; }
 
         /// <summary>
         /// Media Owner Id ( Channel, Profile )
         /// </summary>
-        public string OwnerId { get; set; }
+        public string OwnerId { get; protected set; }
 
         /// <summary>
         /// Media Name
@@ -82,5 +84,30 @@ namespace Nebula.Core.Medias
         IMediaProvider GetMediaProvider();
 
         MediaInfo AsMediaInfo() => new MediaInfo {Id = Id, Title = Title, Provider = GetMediaProvider().Name};
+
+        bool IDataLoadable.OnLoad(IDataMember member)
+        {
+            Id = member.GetString("Id");
+            OwnerId = member.GetString("OwnerId");
+            Title = member.GetString("Title");
+            Description = member.GetString("Description");
+            Author = member.GetString("Author");
+            ThumbnailUrl = member.GetString("Thumbnail");
+            Duration = TimeSpan.FromSeconds(member.GetDouble("Duration"));
+            return true;
+        }
+
+        bool IDataSaveable.OnSave(IDataMember member)
+        {
+            member.SetValue("ProviderType", GetType().FullName);
+            member.SetValue("Id", Id);
+            member.SetValue("OwnerId", OwnerId);
+            member.SetValue("Title", Title);
+            member.SetValue("Description", Description);
+            member.SetValue("Author", Author);
+            member.SetValue("Thumbnail", ThumbnailUrl);
+            member.SetValue("Duration", Duration.TotalSeconds.ToString(CultureInfo.InvariantCulture));
+            return true;
+        }
     }
 }

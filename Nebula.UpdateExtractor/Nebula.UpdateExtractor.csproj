@@ -5,11 +5,12 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <Configurations>Debug;Release</Configurations>
         <Platforms>AnyCPU;x64</Platforms>
+        <LangVersion>8</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
       <DebugType>none</DebugType>
-      <OutputPath>C:\Users\doria\Documents\Developpement\Rider\Nebula\NebulaUEReleaseBuild</OutputPath>
+      <OutputPath>C:\Users\doria\Documents\Developpement\Rider\Nebula\Release\UpdateExtractor\</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>

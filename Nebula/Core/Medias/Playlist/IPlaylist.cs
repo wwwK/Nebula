@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Windows;
+using Nebula.Core.Data;
 using Nebula.Core.Medias.Playlist.Events;
 
 namespace Nebula.Core.Medias.Playlist
 {
-    public interface IPlaylist
+    public interface IPlaylist : IDataLoadable, IDataSaveable
     {
         string           Name          { get; set; }
         string           Description   { get; set; }
@@ -13,6 +14,7 @@ namespace Nebula.Core.Medias.Playlist
         Uri              Thumbnail     { get; set; }
         object           Tag           { get; set; }
         MediasCollection Medias        { get; set; }
+        IDataFile        File          { get; set; }
         int              MediasCount   { get; }
         TimeSpan         TotalDuration { get; }
 

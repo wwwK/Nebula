@@ -304,6 +304,24 @@ namespace Nebula.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Le chargement la playlist &apos;{0}&apos; a échoué..
+        /// </summary>
+        public static string ErrorFailedToLoadPlaylist {
+            get {
+                return ResourceManager.GetString("ErrorFailedToLoadPlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to L&apos;enregistrement de la playlist &apos;{0}&apos; a échoué..
+        /// </summary>
+        public static string ErrorFailedToSavePlaylist {
+            get {
+                return ResourceManager.GetString("ErrorFailedToSavePlaylist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exporter une Playlist.
         /// </summary>
         public static string ExportPlaylist {

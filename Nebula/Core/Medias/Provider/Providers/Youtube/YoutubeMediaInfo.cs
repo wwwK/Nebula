@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Xml;
 using YoutubeExplode.Videos;
@@ -9,11 +8,14 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
 {
     public class YoutubeMediaInfo : IMediaInfo
     {
+        private string _id;
+        private string _ownerId;
+
         public YoutubeMediaInfo(string id, string ownerId, string title, string description, string author,
                                 string thumbnail, TimeSpan duration, DateTime uploadDate)
         {
-            Id = id;
-            OwnerId = ownerId;
+            _id = id;
+            _ownerId = ownerId;
             Title = title;
             Description = description;
             Author = author;
@@ -21,11 +23,11 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
             Duration = duration;
             UploadDate = uploadDate;
         }
-        
+
         public YoutubeMediaInfo(XmlElement element)
         {
-            Id = element.GetAttribute("Id");
-            OwnerId = element.GetAttribute("OwnerId");
+            _id = element.GetAttribute("Id");
+            _ownerId = element.GetAttribute("OwnerId");
             Title = element.GetAttribute("Title");
             Description = element.GetAttribute("Description");
             Author = element.GetAttribute("Author");
@@ -35,12 +37,20 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
 
         public YoutubeMediaInfo()
         {
-            
         }
 
-        public string Id { get; set; }
 
-        public string OwnerId { get; set; }
+        string IMediaInfo.Id
+        {
+            get => _id;
+            set => _id = value;
+        }
+
+        string IMediaInfo.OwnerId
+        {
+            get => _ownerId;
+            set => _ownerId = value;
+        }
 
         public string Title { get; set; }
 
@@ -48,15 +58,13 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
 
         public string Author { get; set; }
 
-        public string ThumbnailUrl { get; set; }
-
-        public TimeSpan Duration { get; set; }
-
-        public DateTime UploadDate { get; }
+        public string   ThumbnailUrl { get; set; }
+        public TimeSpan Duration     { get; set; }
+        public DateTime UploadDate   { get; }
 
         public async Task<IArtistInfo> GetArtistInfo()
         {
-            IArtistInfo artistInfo = await NebulaClient.GetMediaProvider<YoutubeMediaProvider>().GetArtistInfo(OwnerId);
+            IArtistInfo artistInfo = await NebulaClient.GetMediaProvider<YoutubeMediaProvider>().GetArtistInfo(_ownerId);
             return artistInfo;
         }
 
@@ -64,7 +72,7 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
         {
             StreamManifest streamManifest = await NebulaClient
                                                   .GetMediaProvider<YoutubeMediaProvider>().Youtube.Videos.Streams
-                                                  .GetManifestAsync(new VideoId(Id));
+                                                  .GetManifestAsync(new VideoId(_id));
             return new Uri(streamManifest.GetAudioOnly().WithHighestBitrate().Url);
         }
 
@@ -72,7 +80,7 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
         {
             StreamManifest streamManifest = await NebulaClient
                                                   .GetMediaProvider<YoutubeMediaProvider>().Youtube.Videos.Streams
-                                                  .GetManifestAsync(new VideoId(Id));
+                                                  .GetManifestAsync(new VideoId(_id));
             return new Uri(streamManifest.GetMuxed().WithHighestVideoQuality().Url);
         }
 
@@ -80,7 +88,7 @@ namespace Nebula.Core.Medias.Provider.Providers.Youtube
         {
             StreamManifest streamManifest = await NebulaClient
                                                   .GetMediaProvider<YoutubeMediaProvider>().Youtube.Videos.Streams
-                                                  .GetManifestAsync(new VideoId(Id));
+                                                  .GetManifestAsync(new VideoId(_id));
             return new Uri(streamManifest.GetVideo().WithHighestVideoQuality().Url);
         }
 

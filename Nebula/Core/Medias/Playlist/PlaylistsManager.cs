@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Xml;
-using Nebula.Core.Files;
-using Nebula.Core.Files.Converters;
+using Nebula.Core.Data.Xml;
+using Nebula.Core.Extensions;
 using Nebula.Core.Medias.Playlist.Events;
 using Nebula.Core.Medias.Playlist.Playlists;
 using Nebula.Core.Settings;
@@ -29,12 +25,11 @@ namespace Nebula.Core.Medias.Playlist
                 new DirectoryInfo(Path.Combine(PlaylistsDirectory.FullName, PlaylistsThumbnailCacheFolderName));
             PlaylistsDirectory.Create();
             ThumbnailCacheDirectory.Create();
-            LoadPlaylists();
         }
 
         private List<IPlaylist> Playlists               { get; } = new List<IPlaylist>();
-        private DirectoryInfo   PlaylistsDirectory      { get; }
-        private DirectoryInfo   ThumbnailCacheDirectory { get; }
+        public  DirectoryInfo   PlaylistsDirectory      { get; }
+        public  DirectoryInfo   ThumbnailCacheDirectory { get; }
 
         public List<IPlaylist> GetPlaylists()
         {
@@ -63,122 +58,48 @@ namespace Nebula.Core.Medias.Playlist
             return Playlists.GetEnumerator();
         }
 
-        private void LoadPlaylists()
+        public void LoadPlaylists()
         {
+            Playlists.Clear();
             foreach (FileInfo fileInfo in PlaylistsDirectory.GetFiles())
-                LoadPlaylist(fileInfo);
+            {
+                if (LoadPlaylist(fileInfo) is { } playlist)
+                    AddPlaylist(playlist);
+            }
         }
 
-        public async Task<IPlaylist> LoadPlaylistJson(FileInfo fileInfo)
+        public IPlaylist LoadPlaylist(FileInfo fileInfo)
         {
-            if (!fileInfo.Exists || fileInfo.FullName.EndsWith(".playlist"))
-                return default;
+            Stopwatch sw = Stopwatch.StartNew();
             try
             {
-                Stopwatch sw = Stopwatch.StartNew();
-                IPlaylist playlist = await FilesManager.LoadJsonAsync<NebulaPlaylist>(fileInfo.FullName);
-                sw.Stop();
-                System.Diagnostics.Debug.Print("JSON Elapsed for : " + playlist.Name + " : " + sw.Elapsed.TotalMilliseconds.ToString("F") + "ms");
-                if (playlist != null)
-                    AddPlaylist(playlist);
-                return playlist;
+                if (!fileInfo.Exists || !fileInfo.FullName.EndsWith(".playlist"))
+                    return default;
+                NebulaPlaylist playlist = new NebulaPlaylist {File = new XmlDataFile(fileInfo)};
+                if (playlist.File.Load(playlist))
+                {
+                    sw.Stop();
+                    MessageBox.Show($"Data {playlist.Name} : {sw.Elapsed.TotalMilliseconds}ms");
+                    return playlist;
+                }
+
+                NebulaClient.Notifications.NotifyError("ErrorFailedToLoadPlaylist", Path.GetFileNameWithoutExtension(fileInfo.FullName));
+                return default;
             }
-            catch (Exception ex)
+            catch
             {
-                // Todo: Notify
+                NebulaClient.Notifications.NotifyError("ErrorFailedToLoadPlaylist", Path.GetFileNameWithoutExtension(fileInfo.FullName));
             }
 
             return default;
         }
 
-        public IPlaylist LoadPlaylist(FileInfo fileInfo)
+        public void SavePlaylist(IPlaylist playlist)
         {
-            try
-            {
-                if (!fileInfo.Exists || fileInfo.FullName.EndsWith(".nplaylist"))
-                    return null;
-                XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(fileInfo.FullName);
-                if (xmlDocument.DocumentElement == null)
-                    return null;
-                string playListName = xmlDocument.DocumentElement.GetAttribute("Name");
-                string playListDescription = xmlDocument.DocumentElement.GetAttribute("Description");
-                string playListAuthor = xmlDocument.DocumentElement.GetAttribute("Author");
-                string thumbnail = xmlDocument.DocumentElement.GetAttribute("Thumbnail");
-                Uri thumbnailUri;
-                if (thumbnail.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    if (!Uri.TryCreate(thumbnail, UriKind.RelativeOrAbsolute, out thumbnailUri))
-                        thumbnailUri = new Uri("https://i.imgur.com/Od5XogD.png");
-                }
-                else
-                    thumbnailUri = new Uri(Path.Combine(ThumbnailCacheDirectory.FullName,
-                        xmlDocument.DocumentElement.GetAttribute("Thumbnail")));
-
-                NebulaPlaylist playlist =
-                    new NebulaPlaylist(playListName, playListDescription, playListAuthor,
-                        thumbnailUri) {AutoSave = false};
-                foreach (XmlElement child in xmlDocument.DocumentElement.ChildNodes)
-                {
-                    Type type = Type.GetType(child.GetAttribute("ProviderType"));
-                    if (type == null)
-                        continue;
-                    object instance = Activator.CreateInstance(type, child);
-                    if (instance is IMediaInfo mediaInfo)
-                        playlist.AddMedia(mediaInfo);
-                }
-                playlist.AutoSave = true;
-                Playlists.Add(playlist);
-                return playlist;
-            }
-            catch (Exception ex)
-            {
-                
-            }
-
-            return null;
-        }
-
-        public async void SavePlaylist(IPlaylist playlist)
-        {
-            if (playlist == null || playlist.MediasCount < 1)
-                return;
-            XmlDocument xmlDocument = new XmlDocument();
-            XmlElement rootElement = xmlDocument.CreateElement(nameof(NebulaPlaylist));
-            rootElement.SetAttribute("Name", playlist.Name);
-            rootElement.SetAttribute("Description", playlist.Description);
-            rootElement.SetAttribute("Author", playlist.Author);
-            if (playlist.Thumbnail != null)
-            {
-                if (playlist.Thumbnail.ToString().StartsWith("http"))
-                    rootElement.SetAttribute("Thumbnail", playlist.Thumbnail.ToString());
-                else
-                {
-                    string thumbnailFileName =
-                        $"{playlist.Name}_thumbnail{Path.GetExtension(playlist.Thumbnail.LocalPath)}";
-                    rootElement.SetAttribute("Thumbnail", thumbnailFileName);
-                    string filePath = Path.Combine(ThumbnailCacheDirectory.FullName, thumbnailFileName);
-                    if (!File.Exists(filePath))
-                        File.Copy(playlist.Thumbnail.LocalPath, filePath);
-                }
-            }
-
-            xmlDocument.AppendChild(rootElement);
-            foreach (IMediaInfo mediaInfo in playlist.Medias)
-            {
-                XmlElement mediaElement = xmlDocument.CreateElement("Media");
-                mediaElement.SetAttribute("ProviderType", mediaInfo.GetType().FullName);
-                mediaElement.SetAttribute("Id", mediaInfo.Id);
-                mediaElement.SetAttribute("OwnerId", mediaInfo.OwnerId);
-                mediaElement.SetAttribute("Title", mediaInfo.Title);
-                mediaElement.SetAttribute("Description", mediaInfo.Description);
-                mediaElement.SetAttribute("Author", mediaInfo.Author);
-                mediaElement.SetAttribute("Thumbnail", mediaInfo.ThumbnailUrl);
-                mediaElement.SetAttribute("Duration", mediaInfo.Duration.TotalSeconds.ToString());
-                rootElement.AppendChild(mediaElement);
-            }
-
-            xmlDocument.Save(Path.Combine(PlaylistsDirectory.FullName, $"{playlist.Name}.playlist"));
+            playlist.Name = playlist.Name.ReplaceInvalidPathChars();
+            playlist.File ??= new XmlDataFile(new FileInfo(Path.Combine(PlaylistsDirectory.FullName, $"{playlist.Name}.playlist")));
+            if (!playlist.File.Save(playlist))
+                NebulaClient.Notifications.NotifyError("ErrorFailedToSavePlaylist", playlist.Name);
         }
 
         public void DeletePlaylist(IPlaylist playlist)
@@ -186,11 +107,6 @@ namespace Nebula.Core.Medias.Playlist
             string filePath = $"{Path.Combine(PlaylistsDirectory.FullName, playlist.Name)}.playlist";
             if (File.Exists(filePath))
                 File.Delete(filePath);
-        }
-
-        public string ReplaceInvalidChars(string filename)
-        {
-            return string.Join("", filename.Split(Path.GetInvalidFileNameChars()));
         }
 
         public void RenamePlaylist(string oldName, IPlaylist playlist)

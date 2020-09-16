@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
+using Nebula.Core.Data;
 using Nebula.Core.Medias.Playlist.Events;
 
 namespace Nebula.Core.Medias.Playlist.Playlists
@@ -22,18 +24,18 @@ namespace Nebula.Core.Medias.Playlist.Playlists
 
         public NebulaPlaylist()
         {
-            
         }
 
-        public              string           Name          { get; set; }
-        public              string           Description   { get; set; }
-        public              string           Author        { get; set; }
-        [JsonIgnore] public bool             AutoSave      { get; set; } = true;
-        public              Uri              Thumbnail     { get; set; }
-        [JsonIgnore] public object           Tag           { get; set; }
-        public              MediasCollection Medias        { get; set; } = new MediasCollection();
-        [JsonIgnore] public TimeSpan         TotalDuration => Medias.TotalDuration;
-        [JsonIgnore] public int              MediasCount   => Medias.Count;
+        public string           Name          { get; set; }
+        public string           Description   { get; set; }
+        public string           Author        { get; set; }
+        public bool             AutoSave      { get; set; } = true;
+        public Uri              Thumbnail     { get; set; }
+        public object           Tag           { get; set; }
+        public MediasCollection Medias        { get; set; } = new MediasCollection();
+        public IDataFile        File          { get; set; }
+        public TimeSpan         TotalDuration => Medias.TotalDuration;
+        public int              MediasCount   => Medias.Count;
 
         public event EventHandler<PlaylistMediaAddedEventArgs> MediaAdded;
 
@@ -86,6 +88,60 @@ namespace Nebula.Core.Medias.Playlist.Playlists
         private void Save()
         {
             NebulaClient.Playlists.SavePlaylist(this);
+        }
+
+        public bool OnLoad(IDataMember member)
+        {
+            Name = member.GetString("Name");
+            Description = member.GetString("Description");
+            Author = member.GetString("Author");
+            string thumbnail = member.GetString("Thumbnail");
+            if (thumbnail.StartsWith("http", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Thumbnail = Uri.TryCreate(thumbnail, UriKind.RelativeOrAbsolute, out Uri thumbnailUri) ? thumbnailUri : new Uri("https://i.imgur.com/Od5XogD.png");
+            }
+            else
+                Thumbnail = new Uri(Path.Combine(NebulaClient.Playlists.ThumbnailCacheDirectory.FullName,
+                    thumbnail));
+
+            foreach (IDataMember dataMember in member.GetChilds())
+            {
+                Type type = Type.GetType(dataMember.GetString("ProviderType"));
+                if (type == null)
+                    continue;
+                object instance = Activator.CreateInstance(type);
+                if (!(instance is IMediaInfo mediaInfo))
+                    continue;
+                mediaInfo.OnLoad(dataMember);
+                Medias.Add(mediaInfo);
+            }
+
+            return true;
+        }
+
+        public bool OnSave(IDataMember member)
+        {
+            member.SetValue("Name", Name);
+            member.SetValue("Description", Description);
+            member.SetValue("Author", Author);
+            if (Thumbnail != null)
+            {
+                if (Thumbnail.ToString().StartsWith("http"))
+                    member.SetValue("Thumbnail", Thumbnail.ToString());
+                else
+                {
+                    string thumbnailFileName =
+                        $"{Name}_thumbnail{Path.GetExtension(Thumbnail.LocalPath)}";
+                    member.SetValue("Thumbnail", thumbnailFileName);
+                    string filePath = Path.Combine(NebulaClient.Playlists.ThumbnailCacheDirectory.FullName, thumbnailFileName);
+                    if (!System.IO.File.Exists(filePath))
+                        System.IO.File.Copy(Thumbnail.LocalPath, filePath);
+                }
+            }
+
+            foreach (IMediaInfo mediaInfo in Medias)
+                member.CreateChild("Media", mediaInfo);
+            return true;
         }
 
         public override string ToString()

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nebula.Core.Data;
 using Nebula.Core.Medias.Playlist.Events;
 
 namespace Nebula.Core.Medias.Playlist.Playlists
@@ -19,6 +20,7 @@ namespace Nebula.Core.Medias.Playlist.Playlists
         public Uri              Thumbnail     { get; set; }
         public object           Tag           { get; set; }
         public MediasCollection Medias        { get; set; } = new MediasCollection();
+        public IDataFile        File          { get; set; }
         public int              MediasCount   => Medias.Count;
         public TimeSpan         TotalDuration => Medias.TotalDuration;
 
@@ -61,6 +63,16 @@ namespace Nebula.Core.Medias.Playlist.Playlists
             if (index < 0 || index > MediasCount - 1)
                 throw new ArgumentOutOfRangeException(nameof(index));
             return Medias[index];
+        }
+
+        public bool OnLoad(IDataMember member)
+        {
+            return false;
+        }
+
+        public bool OnSave(IDataMember member)
+        {
+            return false;
         }
 
         public static async Task<UnknownPlaylist> FromArtist(IArtistInfo artistInfo, bool loadMedias = true)

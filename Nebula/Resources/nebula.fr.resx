@@ -321,4 +321,10 @@
     <data name="ListeningSessionClear" xml:space="preserve">
         <value>Vider la session d'écoute</value>
     </data>
+    <data name="ErrorFailedToLoadPlaylist" xml:space="preserve">
+        <value>Le chargement la playlist '{0}' a échoué.</value>
+    </data>
+    <data name="ErrorFailedToSavePlaylist" xml:space="preserve">
+        <value>L'enregistrement de la playlist '{0}' a échoué.</value>
+    </data>
 </root>
