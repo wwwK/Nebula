@@ -21,11 +21,11 @@
       <PackageReference Include="CSCore" Version="1.2.1.2" />
       <PackageReference Include="Enterwell.Clients.Wpf.Notifications" Version="1.4.2" />
       <PackageReference Include="LiteNetLib" Version="0.9.3.2" />
-      <PackageReference Include="Microsoft.AppCenter" Version="3.4.1" />
-      <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.1" />
-      <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.1" />
-      <PackageReference Include="ModernWpfUI" Version="0.9.1" />
-      <PackageReference Include="YoutubeExplode" Version="5.1.5" />
+      <PackageReference Include="Microsoft.AppCenter" Version="3.4.3" />
+      <PackageReference Include="Microsoft.AppCenter.Analytics" Version="3.4.3" />
+      <PackageReference Include="Microsoft.AppCenter.Crashes" Version="3.4.3" />
+      <PackageReference Include="ModernWpfUI" Version="0.9.2" />
+      <PackageReference Include="YoutubeExplode" Version="5.1.6" />
     </ItemGroup>
 
     <ItemGroup>
