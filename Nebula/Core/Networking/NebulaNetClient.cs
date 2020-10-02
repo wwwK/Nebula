@@ -15,7 +15,7 @@ namespace Nebula.Core.Networking
 {
     public class NebulaNetClient : BaseNetManager
     {
-        private const string OfficialIp   = "40.68.246.138";
+        private const string OfficialIp   = "35.181.56.125";
         private const int    OfficialPort = 9080;
 
         public NebulaNetClient()
