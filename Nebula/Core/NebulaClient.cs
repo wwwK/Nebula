@@ -29,21 +29,18 @@ namespace Nebula.Core
 {
     public static class NebulaClient
     {
-        private static List<IMediaProvider> MediaProviders { get; } = new List<IMediaProvider>();
-
-        public static MainWindow MainWindow { get; }
-
-        //public static  MediaPlayerOld       MediaPlayerOld    { get; }
-        public static MediaPlayer         MediaPlayer       { get; }
-        public static NebulaUpdater       Updater           { get; }
-        public static NebulaSession       Session           { get; }
-        public static NebulaSharedSession SharedSession     { get; }
-        public static NebulaSettings      Settings          { get; }
-        public static NebulaNetClient     Network           { get; }
-        public static NebulaNotifications Notifications     { get; }
-        public static PlaylistsManager    Playlists         { get; }
-        public static KeyboardHooker      KeyboardHooker    { get; }
-        public static string              AssemblyDirectory { get; }
+        private static List<IMediaProvider> MediaProviders    { get; } = new List<IMediaProvider>();
+        public static  MainWindow           MainWindow        { get; }
+        public static  MediaPlayer          MediaPlayer       { get; }
+        public static  NebulaUpdater        Updater           { get; }
+        public static  NebulaSession        Session           { get; }
+        public static  NebulaSharedSession  SharedSession     { get; }
+        public static  NebulaSettings       Settings          { get; }
+        public static  NebulaNetClient      Network           { get; }
+        public static  NebulaNotifications  Notifications     { get; }
+        public static  PlaylistsManager     Playlists         { get; }
+        public static  KeyboardHooker       KeyboardHooker    { get; }
+        public static  string               AssemblyDirectory { get; }
 
         public static event EventHandler<NebulaAppLoopEventArgs> Tick;
 
@@ -64,7 +61,7 @@ namespace Nebula.Core
             Session = new NebulaSession(); //Needs to be latest
 
             MediaProviders.Add(new YoutubeMediaProvider());
-            
+
             KeyboardHooker.KeyDown += OnGlobalKeyDown;
             if (Settings.General.MediaKeyEnabled)
                 KeyboardHooker.Hook();
@@ -190,12 +187,11 @@ namespace Nebula.Core
         {
             switch (e.Key)
             {
-                case EVirtualKeys.MEDIA_PLAY_PAUSE when MediaPlayer.IsPaused:
-                    MediaPlayer.Resume();
-                    e.Handled = true;
-                    break;
-                case EVirtualKeys.MEDIA_PLAY_PAUSE when !MediaPlayer.IsPaused:
-                    MediaPlayer.Pause();
+                case EVirtualKeys.MEDIA_PLAY_PAUSE:
+                    if (MediaPlayer.IsPaused)
+                        MediaPlayer.Resume();
+                    else
+                        MediaPlayer.Resume();
                     e.Handled = true;
                     break;
                 case EVirtualKeys.MEDIA_STOP:
@@ -210,11 +206,11 @@ namespace Nebula.Core
                     MediaPlayer.IsMuted = !MediaPlayer.IsMuted;
                     e.Handled = true;
                     break;
-                case EVirtualKeys.VOLUME_UP when MediaPlayer.Volume < 100:
+                case EVirtualKeys.VOLUME_UP:
                     MediaPlayer.Volume += Settings.General.MediaKeySoundIncDecValue;
                     e.Handled = true;
                     break;
-                case EVirtualKeys.VOLUME_DOWN when MediaPlayer.Volume > 0:
+                case EVirtualKeys.VOLUME_DOWN:
                     MediaPlayer.Volume -= Settings.General.MediaKeySoundIncDecValue;
                     e.Handled = true;
                     break;

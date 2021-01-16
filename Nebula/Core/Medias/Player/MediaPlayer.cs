@@ -185,7 +185,7 @@ namespace Nebula.Core.Medias.Player
         }
 
         public async Task Forward(bool byUser = false)
-        { 
+        {
             await Open(MediaQueue.Dequeue(Shuffle), byUser);
         }
 
@@ -245,7 +245,7 @@ namespace Nebula.Core.Medias.Player
 
             CurrentMedia = mediaInfo;
             SetState(MediaPlayerState.Ready);
-                        Play();
+            Play();
         }
 
         private void SetState(MediaPlayerState state)
