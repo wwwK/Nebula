@@ -2,7 +2,6 @@
 
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
         <UseWPF>true</UseWPF>
         <LangVersion>8</LangVersion>
         <AssemblyVersion>1.1.30.0</AssemblyVersion>
@@ -10,6 +9,7 @@
         <ApplicationIcon>Resources/nebula_app_icon.ico</ApplicationIcon>
         <Configurations>Debug;Release</Configurations>
         <Platforms>AnyCPU;x64</Platforms>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
